@@ -193,3 +193,10 @@
 .hero-video {
   filter: brightness(0.85) saturate(1.1);
 }
+
+.servizi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}

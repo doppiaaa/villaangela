@@ -30,7 +30,9 @@ import {
   Star,
   User,
   Quote,
-  ShieldCheck
+  ShieldCheck,
+  Bone,
+  ShowerHead
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -62,7 +64,7 @@ interface Content {
     title: string;
     items: string[];
   };
-  location: { title: string; desc: string };
+  location: { title: string; galleryTitle: string; desc: string };
   gallery: string;
   reviews: { title: string };
   contact: {
@@ -133,8 +135,8 @@ const translations: Record<string, Content> = {
       title: "Our Accommodations",
       apartment: {
         name: "Holiday Apartment",
-        desc: "A warm, 4-star welcoming space located in Angri, perfect for families and friends. Experience the authentic Italian lifestyle with a fully equipped kitchen, free WiFi, and a balcony with a view.",
-        features: ["4 Stars", "Free WiFi", "Fully Equipped Kitchen", "Entire home for you", "150 m² size", "Free parking on premises", "Pets allowed", "Air conditioning", "Private bathroom", "Shower", "Washing machine"]
+        desc: "A warm, 4-star welcoming space located in <span class='script-title'>Angri</span>, perfect for families and friends. Experience the authentic Italian lifestyle with a fully equipped kitchen, free WiFi, and a balcony with a view.",
+        features: ["4 Stars", "Free WiFi", "Fully Equipped Kitchen", "Entire home for you", "150 m² size", "Free parking on premises", "Pets allowed", "Air conditioning", "Private bathroom", "Washing machine"]
       },
       luxury: {
         name: "Luxury House",
@@ -154,12 +156,12 @@ const translations: Record<string, Content> = {
         "Kitchen",
         "Air conditioning",
         "Private bathroom",
-        "Shower",
         "Washing machine"
       ]
     },
     location: {
-      title: "Explore the Surroundings",
+      title: "How to find us",
+      galleryTitle: "Explore the surroundings",
       desc: "Located in Angri, Campania. A short distance from Pompeii, Naples, and the Amalfi Coast. Ideal for those seeking tranquility without sacrificing convenience."
     },
     gallery: "Gallery",
@@ -232,8 +234,8 @@ const translations: Record<string, Content> = {
       title: "Le Nostre Sistemazioni",
       apartment: {
         name: "Casa Vacanza",
-        desc: "Uno spazio accogliente a 4 stelle situato ad Angri, perfetto per famiglie e amici. Vivete l'autentico stile di vita italiano con cucina attrezzata, WiFi gratuito e balcone con vista.",
-        features: ["4 Stelle", "WiFi Gratuito", "Cucina Attrezzata", "Intero alloggio tutto per te", "150 m² superficie", "Parcheggio gratuito sul posto", "Animali ammessi", "Aria condizionata", "Bagno privato", "Doccia", "Lavatrice"]
+        desc: "Uno spazio accogliente a 4 stelle situato ad <span class='script-title'>Angri</span>, perfetto per famiglie e amici. Vivete l'autentico stile di vita italiano con cucina attrezzata, WiFi gratuito e balcone con vista.",
+        features: ["4 Stelle", "WiFi Gratuito", "Cucina Attrezzata", "Intero alloggio tutto per te", "150 m² superficie", "Parcheggio gratuito sul posto", "Animali ammessi", "Aria condizionata", "Bagno privato", "Lavatrice"]
       },
       luxury: {
         name: "Luxury House",
@@ -253,12 +255,12 @@ const translations: Record<string, Content> = {
         "Cucina",
         "Aria condizionata",
         "Bagno privato",
-        "Doccia",
         "Lavatrice"
       ]
     },
     location: {
-      title: "Esplora i Dintorni",
+      title: "Come trovarci",
+      galleryTitle: "Esplora i dintorni",
       desc: "Situato ad Angri, in Campania. A breve distanza da Pompei, Napoli e la Costiera Amalfitana. Ideale per chi cerca tranquillità senza rinunciare alla comodità."
     },
     gallery: "Galleria",
@@ -331,8 +333,8 @@ const translations: Record<string, Content> = {
       title: "Nos Hébergements",
       apartment: {
         name: "Appartement de Vacances",
-        desc: "Un espace accueillant 4 étoiles situé à Angri, parfait pour la famille et les amis. Vivez l'art de vivre italien authentique avec une cuisine équipée, le WiFi gratuit et un balcon avec vue.",
-        features: ["4 Étoiles", "WiFi Gratuit", "Cuisine Équipée", "Logement entier", "150 m² de surface", "Parking gratuit", "Animaux acceptés", "Climatisation", "Salle de bain privée", "Douche", "Lave-linge"]
+        desc: "Un espace accueillant 4 étoiles situé à <span class='script-title'>Angri</span>, parfait pour la famille et les amis. Vivez l'art de vivre italien authentique avec une cuisine équipée, le WiFi gratuit et un balcon avec vue.",
+        features: ["4 Étoiles", "WiFi Gratuit", "Cuisine Équipée", "Logement entier", "150 m² de surface", "Parking gratuit", "Animaux acceptés", "Climatisation", "Salle de bain privée", "Lave-洗濯机"]
       },
       luxury: {
         name: "Maison de Luxe",
@@ -343,9 +345,9 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Services",
-      items: ["Logement entier", "150 m² de surface", "Parking gratuit", "Animaux acceptés", "WiFi gratuit", "Cuisine", "Climatisation", "Salle de bain privée", "Douche", "Lave-linge"]
+      items: ["Logement entier", "150 m² de surface", "Parking gratuit", "Animaux acceptés", "WiFi gratuit", "Cuisine", "Climatisation", "Salle de bain privée", "Lave-linge"]
     },
-    location: { title: "Explorez les Environs", desc: "Stratégiquement située, Villa Angela offre un accès facile aux destinations les plus emblématiques de la région." },
+    location: { title: "Comment nous trouver", galleryTitle: "Explorez les environs", desc: "Stratégiquement située, Villa Angela offre un accès facile aux destinations les plus emblématiques de la région." },
     gallery: "Galerie",
     reviews: {
       title: "Avis des Clients"
@@ -416,8 +418,8 @@ const translations: Record<string, Content> = {
       title: "Nuestros Alojamientos",
       apartment: {
         name: "Apartamento Vacacional",
-        desc: "Un acogedor espacio de 4 estrellas en Angri, perfecto para familias y amigos. Experimente el auténtico estilo de vida italiano con cocina equipada, WiFi gratis y balcón con vistas.",
-        features: ["4 Estrellas", "WiFi Gratis", "Cocina Equipada", "Alojamiento entero", "150 m² superficie", "Aparcamiento gratuito", "Se admiten mascotas", "Aire acondicionado", "Baño privado", "Ducha", "Lavadora"]
+        desc: "Un acogedor espacio de 4 estrellas en <span class='script-title'>Angri</span>, perfecto para familias y amigos. Experimente el auténtico estilo de vida italiano con cocina equipada, WiFi gratis y balcón con vistas.",
+        features: ["4 Estrellas", "WiFi Gratis", "Cocina Equipada", "Alojamiento entero", "150 m² superficie", "Aparcamiento gratuito", "Se admiten mascotas", "Aire acondicionado", "Baño privado", "Lavadora"]
       },
       luxury: {
         name: "Casa de Lujo",
@@ -428,9 +430,9 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Servicios",
-      items: ["Alojamiento entero", "150 m² superficie", "Aparcamiento gratuito", "Se admiten mascotas", "WiFi gratuito", "Cocina", "Aire acondicionado", "Baño privado", "Ducha", "Lavadora"]
+      items: ["Alojamiento entero", "150 m² superficie", "Aparcamiento gratuito", "Se admiten mascotas", "WiFi gratuito", "Cocina", "Aire acondicionado", "Baño privado", "Lavadora"]
     },
-    location: { title: "Explora los alrededores", desc: "Estratégicamente ubicada, Villa Angela tiene fácil acceso a los destinos más emblemáticos de la región." },
+    location: { title: "Cómo encontrarnos", galleryTitle: "Explora los alrededores", desc: "Estratégicamente ubicada, Villa Angela tiene fácil acceso a los destinos más emblemáticos de la región." },
     gallery: "Galería",
     reviews: {
       title: "Opiniones de huéspedes"
@@ -501,8 +503,8 @@ const translations: Record<string, Content> = {
       title: "Unsere Unterkünfte",
       apartment: {
         name: "Ferienwohnung",
-        desc: "Ein einladender 4-Sterne-Raum in Angri, ideal für Familien und Freunde. Erleben Sie den authentischen italienischen Lebensstil mit ausgestatteter Küche, kostenlosem WLAN und Balkon mit Aussicht.",
-        features: ["4 Sterne", "Kostenloses WLAN", "Ausgestattete Küche", "Ganze Unterkunft", "150 m² Wohnfläche", "Kostenloser Parkplatz", "Haustiere erlaubt", "Klimaanlage", "Eigenes Badezimmer", "Dusche", "Waschmaschine"]
+        desc: "Ein einladender 4-Sterne-Raum in <span class='script-title'>Angri</span>, ideal für Familien und Freunde. Erleben Sie den authentischen italienischen Lebensstil mit ausgestatteter Küche, kostenlosem WLAN und Balkon mit Aussicht.",
+        features: ["4 Sterne", "Kostenloses WLAN", "Ausgestattete Küche", "Ganze Unterkunft", "150 m² Wohnfläche", "Kostenloser Parkplatz", "Haustiere erlaubt", "Klimaanlage", "Eigenes Badezimmer", "Waschmaschine"]
       },
       luxury: {
         name: "Luxushaus",
@@ -513,9 +515,9 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Ausstattung",
-      items: ["Ganze Unterkunft", "150 m² Wohnfläche", "Kostenloser Parkplatz", "Haustiere erlaubt", "Kostenloses WLAN", "Küche", "Klimaanlage", "Eigenes Badezimmer", "Dusche", "Waschmaschine"]
+      items: ["Ganze Unterkunft", "150 m² Wohnfläche", "Kostenloser Parkplatz", "Haustiere erlaubt", "Kostenloses WLAN", "Küche", "Klimaanlage", "Eigenes Badezimmer", "Waschmaschine"]
     },
-    location: { title: "Die Umgebung erkunden", desc: "Strategisch günstig gelegen, bietet die Villa Angela einfachen Zugang zu den symbolträchtigsten Zielen der Region." },
+    location: { title: "Wie Sie uns finden", galleryTitle: "Die Umgebung erkunden", desc: "Strategisch günstig gelegen, bietet die Villa Angela einfachen Zugang zu den symbolträchtigsten Zielen der Region." },
     gallery: "Galerie",
     reviews: {
       title: "Gästebewertungen"
@@ -586,8 +588,8 @@ const translations: Record<string, Content> = {
       title: "Nasze zakwaterowanie",
       apartment: {
         name: "Apartament Wakacyjny",
-        desc: "Ciepła, 4-gwiazdkowa przestrzeń w Angri, idealna dla rodzin i przyjaciół. Doświadcz autentycznego włoskiego stylu życia z w pełni wyposażoną kuchnią, darmowym WiFi i balkonem z widokiem.",
-        features: ["4 Gwiazdki", "Darmowe WiFi", "Wyposażona Kuchnia", "Całe mieszkanie", "150 m² powierzchni", "Darmowy parking", "Zwierzęta akceptowane", "Klimatyzacja", "Prywatna łazienka", "Prysznic", "Pralka"]
+        desc: "Ciepła, 4-gwiazdkowa przestrzeń w <span class='script-title'>Angri</span>, idealna dla rodzin i przyjaciół. Doświadcz autentycznego włoskiego stylu życia z w pełni wyposażoną kuchnią, darmowym WiFi i balkonem z widokiem.",
+        features: ["4 Gwiazdki", "Darmowe WiFi", "Wyposażona Kuchnia", "Całe mieszkanie", "150 m² powierzchni", "Darmowy parking", "Zwierzęta akceptowane", "Klimatyzacja", "Prywatna łazienka", "Pralka"]
       },
       luxury: {
         name: "Luksusowy Dom",
@@ -598,9 +600,9 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Udogodnienia",
-      items: ["Całe mieszkanie", "150 m² powierzchni", "Darmowy parking", "Zwierzęta akceptowane", "Darmowe WiFi", "Kuchnia", "Klimatyzacja", "Prywatna łazienka", "Prysznic", "Pralka"]
+      items: ["Całe mieszkanie", "150 m² powierzchni", "Darmowy parking", "Zwierzęta akceptowane", "Darmowe WiFi", "Kuchnia", "Klimatyzacja", "Prywatna łazienka", "Pralka"]
     },
-    location: { title: "Odkryj okolicę", desc: "Strategicznie położona Villa Angela zapewnia łatwy dostęp do najbardziej kultowych miejsc w regionie." },
+    location: { title: "Jak nas znaleźć", galleryTitle: "Odkryj okolicę", desc: "Strategicznie położona Villa Angela zapewnia łatwy dostęp do najbardziej kultowych miejsc w regionie." },
     gallery: "Galeria",
     reviews: {
       title: "Opinie gości"
@@ -671,7 +673,7 @@ const translations: Record<string, Content> = {
       title: "我们的单位",
       apartment: {
         name: "度假公寓",
-        desc: "现代化的双人间，带私人阳台，坐拥壮丽海景。",
+        desc: "带私人阳台的现代双人间，可欣赏壮丽的海景。位于 <span class='script-title'>Angri</span>。",
         features: ["Wi-Fi", "空调", "私人露台", "海景"]
       },
       luxury: {
@@ -686,7 +688,8 @@ const translations: Record<string, Content> = {
       items: ["免费 Wi-Fi", "私人停车场", "空调", "海滨", "露台", "礼宾服务"]
     },
     location: { 
-      title: "发现周边", 
+      title: "如何找到我们", 
+      galleryTitle: "探索周边", 
       desc: "位于沿海最独特的地段之一，距离最好的海滩和繁华的市中心仅几步之遥。" 
     },
     gallery: "画廊",
@@ -757,7 +760,7 @@ const translations: Record<string, Content> = {
       title: "وحداتنا",
       apartment: {
         name: "شقة عطلات",
-        desc: "غرفة مزدوجة حديثة مع شرفة خاصة وإطلالة رائعة على البحر.",
+        desc: "غرفة مزدوجة حديثة مع شرفة خاصة وإطلالة رائعة على البحر. تقع في <span class='script-title'>Angri</span>。",
         features: ["واي فاي", "تكييف", "تراس خاص", "إطلالة على البحر"]
       },
       luxury: {
@@ -772,7 +775,8 @@ const translations: Record<string, Content> = {
       items: ["واي فاي مجاني", "موقف سيارات خاص", "تكييف", "على الشاطئ", "تراس", "خدمة الكونسيرج"]
     },
     location: { 
-      title: "استكشف الأماكن المجاورة", 
+      title: "كيف تجدنا", 
+      galleryTitle: "استكشف الأماكن المجاورة", 
       desc: "يقع في أحد أكثر المواقع حصرية على الساحل، على بعد خطوات قليلة من أفضل الشواطئ ووسط المدينة النابض بالحياة." 
     },
     gallery: "المعرض",
@@ -858,7 +862,8 @@ const translations: Record<string, Content> = {
       items: ["Gratis Wi-Fi", "Privat parkering", "Aircondition", "Ved stranden", "Terrasse", "Concierge service"]
     },
     location: { 
-      title: "Udforsk omgivelserne", 
+      title: "Sådan finder du os", 
+      galleryTitle: "Udforsk omgivelserne", 
       desc: "Beliggende i et af de mest eksklusive områder på kysten, kun få skridt fra de bedste strande og det pulserende centrum." 
     },
     gallery: "Galleri",
@@ -944,8 +949,9 @@ const translations: Record<string, Content> = {
       items: ["Gratis Wi-Fi", "Privat parkering", "Luftkonditionering", "Vid stranden", "Terrass", "Concierge-service"]
     },
     location: { 
-      title: "Utforska omgivningarna", 
-      desc: "Beläget i ett av de mest exklusiva områdena på kusten, bara några steg från de bästa stränderna och det livliga centrumet." 
+      title: "Hitta till oss", 
+      galleryTitle: "Utforska omgivningarna", 
+      desc: "Villa Angela är strategiskt belägen och erbjuder enkel tillgång till de mest ikoniska destinationerna i regionen." 
     },
     gallery: "Galleri",
     reviews: { title: "Gästrevensioner" },
@@ -1149,6 +1155,225 @@ const useHorizontalMarquee = (speed: number = 1.0) => {
 };
 
 // --- Components ---
+
+interface AmenityProps {
+  item: string;
+  index: number;
+  key?: number | string;
+}
+
+const AmenityCard = ({ item, index }: AmenityProps) => {
+  const icons = [Home, Maximize, Car, Dog, Wifi, Utensils, Snowflake, Bath, Shirt];
+  const Icon = icons[index] || Home;
+
+  // Animations for specific boxes
+  const isFirst = index === 0;
+  const isSecond = index === 1;
+  const isThird = index === 2;
+  const isFourth = index === 3;
+  const isSeventh = index === 6;
+
+  const boxAnimate = isFirst ? { 
+    boxShadow: [
+      "0 2px 8px rgba(0,0,0,0.06), 0 0 0px rgba(59, 43, 31, 0)", 
+      "0 4px 20px rgba(0,0,0,0.12), 0 0 40px rgba(59, 43, 31, 0.6)", 
+      "0 2px 8px rgba(0,0,0,0.06), 0 0 0px rgba(59, 43, 31, 0)"
+    ] 
+  } : {};
+
+  const iconAnimate = isSecond ? {
+    scale: [1, 1.35, 1]
+  } : (index === 8 ? {
+    rotate: 360
+  } : {});
+
+  const iconTransition = isSecond ? { 
+    repeat: Infinity, 
+    duration: 2.5, 
+    ease: "easeInOut" 
+  } : (index === 8 ? {
+    repeat: Infinity, 
+    duration: 4, 
+    ease: "linear"
+  } : {});
+
+  return (
+    <motion.div 
+      animate={boxAnimate}
+      transition={{ 
+        repeat: Infinity, 
+        duration: 4, 
+        ease: "easeInOut" 
+      }}
+      className={`flex items-center border-none bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-[14px] h-[64px] pointer-events-none fade-in relative overflow-hidden ${isSeventh ? 'p-[3.5px]' : 'px-5 py-3 gap-4'}`}
+    >
+      {/* Animated rotating gradient border ONLY for AC */}
+      {isSeventh && (
+        <>
+          {/* Subtle Glow Aura */}
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 3.5, ease: "linear" }}
+            style={{ 
+              background: 'conic-gradient(#60A5FA 0%, #60A5FA 25%, #FB923C 25%, #FB923C 75%, #60A5FA 75%, #60A5FA 100%)',
+              width: '280%',
+              height: '280%',
+              left: '-90%',
+              top: '-90%',
+              filter: 'blur(15px)',
+              opacity: 0.45
+            }}
+            className="absolute z-0"
+          />
+          {/* Main Sharp Border */}
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 3.5, ease: "linear" }}
+            style={{ 
+              background: 'conic-gradient(#60A5FA 0%, #60A5FA 25%, #FB923C 25%, #FB923C 75%, #60A5FA 75%, #60A5FA 100%)',
+              width: '250%',
+              height: '250%',
+              left: '-75%',
+              top: '-75%'
+            }}
+            className="absolute z-0"
+          />
+        </>
+      )}
+
+      <div className={`flex items-center w-full h-full relative z-10 ${isSeventh ? 'bg-white rounded-[11px] px-5 py-3 gap-4' : 'gap-4'}`}>
+        <div className="flex items-center gap-3 flex-shrink-0 relative z-10">
+          <motion.div 
+            animate={iconAnimate}
+            transition={iconTransition}
+            className="flex items-center justify-center flex-shrink-0"
+          >
+            <Icon size={20} strokeWidth={1.5} className="text-[#5C4A3A]" />
+          </motion.div>
+          <span className="text-[14px] font-sans font-normal tracking-wide text-[#3D2B1F] whitespace-nowrap">
+            {item}
+          </span>
+        </div>
+
+      {/* Moving car animation after the text only for Parcheggio */}
+      {isThird && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[40px]">
+          <motion.div
+            animate={{ x: ["-100%", "230%"] }}
+            transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
+            className="opacity-[0.6] pointer-events-none"
+          >
+            <Car size={24} strokeWidth={1.2} className="text-[#5C4A3A]" />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Moving bone animation after the text only for Animali */}
+      {isFourth && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[40px]">
+          <motion.div
+            animate={{ x: ["-100%", "230%"], rotate: [0, 45, 0, -45, 0] }}
+            transition={{ 
+              x: { repeat: Infinity, duration: 6, ease: "linear" },
+              rotate: { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
+            }}
+            className="opacity-[0.6] pointer-events-none"
+          >
+            <Bone size={24} strokeWidth={1.2} className="text-[#5C4A3A]" />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Animated network cable after the text only for WiFi */}
+      {index === 4 && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[60px] ml-2">
+          <svg width="40" height="20" viewBox="0 0 40 20" className="opacity-[0.7]">
+            <motion.path
+              d="M 0 10 L 30 10 M 30 5 L 38 5 L 38 15 L 30 15 Z"
+              fill="none"
+              stroke="#5C4A3A"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              initial={{ pathLength: 0.8, x: -5 }}
+              animate={{ x: [ -5, 2, -5] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            />
+            <motion.circle
+              cx="0"
+              cy="10"
+              r="2.5"
+              fill="#5C4A3A"
+              animate={{ cx: [0, 32] }}
+              transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+            />
+          </svg>
+        </div>
+      )}
+
+      {/* Steaming plate animation after the text only for Cucina */}
+      {index === 5 && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[50px] ml-2">
+          <svg width="40" height="24" viewBox="0 0 40 24" className="opacity-[0.8]">
+            {/* Plate */}
+            <path d="M 5 18 C 5 21, 35 21, 35 18 L 32 16 L 8 16 Z" fill="#5C4A3A" />
+            {/* Steam paths */}
+            {[10, 20, 30].map((x, i) => (
+              <motion.path
+                key={i}
+                d={`M ${x} 14 Q ${x+2} 10, ${x} 6`}
+                fill="none"
+                stroke="#5C4A3A"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                animate={{ 
+                  y: [2, -6],
+                  opacity: [0, 1, 0],
+                  pathLength: [0, 1, 0]
+                }}
+                transition={{ 
+                  repeat: Infinity, 
+                  duration: 1.8, 
+                  delay: i * 0.5,
+                  ease: "easeInOut" 
+                }}
+              />
+            ))}
+          </svg>
+        </div>
+      )}
+
+      {/* Shower head animation after the text only for Bagno */}
+      {index === 7 && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[50px] ml-2">
+          <div className="relative">
+            <ShowerHead size={24} strokeWidth={1.5} className="text-[#5C4A3A] opacity-80" />
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.5, y: 0 }}
+                animate={{ 
+                  opacity: [0, 1, 0], 
+                  y: [8, 18],
+                  x: [0, (i - 1) * 4]
+                }}
+                transition={{ 
+                  repeat: Infinity, 
+                  duration: 1, 
+                  delay: i * 0.3,
+                  ease: "easeIn" 
+                }}
+                className="absolute top-2 left-1/2 -ml-1 text-[#5C4A3A]"
+              >
+                <Droplet size={9} fill="currentColor" stroke="none" />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+      </div>
+    </motion.div>
+  );
+};
 
 const BackgroundGallery = ({ isActive }: { isActive: boolean }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -1842,22 +2067,22 @@ export default function App() {
         </div>
       </section>
 
-      {/* Amenities Section */}
-      <section className="py-32 px-6 md:px-12 bg-transparent">
-        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10 fade-in">{content.amenities.title}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-[1400px] mx-auto">
-          {content.amenities.items.map((item, idx) => {
-            const IconComponent = [Home, Maximize, Car, Dog, Wifi, Utensils, Snowflake, Bath, Droplet, Shirt][idx];
-            return (
-              <div 
-                key={idx} 
-                className="flex items-center gap-4 bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-xl px-5 py-4 hover:bg-white/40 transition-shadow fade-in"
-              >
-                <IconComponent size={18} strokeWidth={1.5} className="text-[#3D2B1F] flex-shrink-0" />
-                <span className="text-[13px] md:text-[14px] font-medium tracking-wide text-[#3D2B1F]">{item}</span>
-              </div>
-            );
-          })}
+      <section className="py-32 px-6 md:px-12 bg-transparent" id="servizi-section">
+        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10 fade-in">
+          {content.amenities.title}
+        </h2>
+        <div 
+          className="max-w-[1100px] mx-auto"
+          style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(3, 1fr)', 
+            gap: '12px', 
+            alignItems: 'stretch' 
+          }}
+        >
+          {content.amenities.items.map((item, idx) => (
+            <AmenityCard key={idx} item={item} index={idx} />
+          ))}
         </div>
       </section>
 
@@ -1886,7 +2111,7 @@ export default function App() {
       
       {/* Surroundings Horizontal Gallery */}
       <section className="py-32 px-0 bg-transparent overflow-hidden fade-in">
-        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.title}</h2>
+        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.galleryTitle}</h2>
         
         <div ref={locationContainerRef} className="w-full overflow-hidden relative cursor-grab active:cursor-grabbing select-none">
           <div ref={locationInnerRef} className="flex w-max will-change-transform">
@@ -1900,6 +2125,7 @@ export default function App() {
                   { name: "Maiori", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/maiori.jpg" },
                   { name: "Minori", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/minori.jpg" },
                   { name: "Salerno", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/salerno.jpg" },
+                  { name: "Vietri sul mare", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/Vietri%20sul%20mare.jpg" },
                   { name: "Napoli", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/napoli.jpg" }
                 ].map((place) => (
                   <div key={`${set}-${place.name}`} className="relative flex-none w-64 md:w-80 aspect-[3/4] rounded-2xl overflow-hidden group shadow-lg cursor-pointer">
