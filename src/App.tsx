@@ -1179,50 +1179,149 @@ const Concierge = ({ lang, today }: { lang: Language, today: string }) => {
     setIsOpen(false);
   };
 
+  // Form field variants for stagger animation
+  const formFieldVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        delay: i * 0.08,
+        type: "spring",
+        stiffness: 300,
+        damping: 24
+      }
+    })
+  };
+
   return (
     <>
-      <button 
+      {/* Floating WhatsApp Button with pulse animation */}
+      <motion.button 
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-[60px] h-[60px] bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:scale-110 transition-transform duration-300 border border-white/20"
+        className="fixed bottom-6 right-6 z-50 w-[60px] h-[60px] bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] border border-white/20"
+        // Continuous pulse/breathing animation
+        animate={{
+          scale: [1, 1.08, 1],
+          boxShadow: [
+            "0 4px 14px 0 rgba(37,211,102,0.39)",
+            "0 6px 24px 0 rgba(37,211,102,0.55)",
+            "0 4px 14px 0 rgba(37,211,102,0.39)"
+          ]
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        // Hover animation with scale and slight rotation
+        whileHover={{ 
+          scale: 1.15, 
+          rotate: 8,
+          boxShadow: "0 8px 30px 0 rgba(37,211,102,0.6)",
+          transition: { type: "spring", stiffness: 400, damping: 15 }
+        }}
+        whileTap={{ scale: 0.95 }}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+        <motion.svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          width="32" 
+          height="32" 
+          fill="currentColor" 
+          viewBox="0 0 16 16"
+          animate={isOpen ? { rotate: 90 } : { rotate: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
           <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
-        </svg>
-      </button>
+        </motion.svg>
+      </motion.button>
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            initial={{ opacity: 0, y: 60, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: 60, scale: 0.9 }}
+            transition={{ 
+              type: "spring",
+              stiffness: 300,
+              damping: 25,
+              duration: 0.4
+            }}
             className="fixed bottom-24 right-6 z-50 w-[350px] bg-[#171717] rounded-[1.25rem] shadow-2xl flex flex-col overflow-hidden border border-white/10"
           >
-            {/* Header */}
-            <div className="bg-[#075E54] text-white p-4 flex justify-between items-center relative">
-              <div className="flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" viewBox="0 0 16 16" className="text-[#25D366]">
+            {/* Header with separate animation */}
+            <motion.div 
+              className="bg-[#075E54] text-white p-4 flex justify-between items-center relative overflow-hidden"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.15, type: "spring", stiffness: 300, damping: 25 }}
+            >
+              {/* Animated background shimmer */}
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                initial={{ x: "-100%" }}
+                animate={{ x: "100%" }}
+                transition={{ 
+                  duration: 1.5, 
+                  delay: 0.3,
+                  ease: "easeInOut"
+                }}
+              />
+              <div className="flex items-center gap-3 relative z-10">
+                <motion.svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="36" 
+                  height="36" 
+                  fill="currentColor" 
+                  viewBox="0 0 16 16" 
+                  className="text-[#25D366]"
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 20 }}
+                >
                   <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
-                </svg>
+                </motion.svg>
                 <div>
                   <h3 className="font-serif text-[17px] tracking-widest uppercase font-normal text-white/95 leading-tight">Villa Angela</h3>
                   <p className="text-[11px] font-medium text-white/80 mt-0.5">{tf.waSub}</p>
                 </div>
               </div>
-            </div>
+              {/* Close button */}
+              <motion.button
+                onClick={() => setIsOpen(false)}
+                className="relative z-10 w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <X size={18} className="text-white/80" />
+              </motion.button>
+            </motion.div>
             
-            {/* Form Area */}
+            {/* Form Area with stagger animation */}
             <form onSubmit={handleSubmit} className="px-5 py-6 flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
+              <motion.div 
+                className="flex flex-col gap-1.5"
+                variants={formFieldVariants}
+                initial="hidden"
+                animate="visible"
+                custom={0}
+              >
                 <label className="text-[10px] font-bold text-white/50 tracking-wider">{tf.name}</label>
                 <input 
                   name="name" type="text" placeholder="..." required
                   className="bg-[#171717] border border-[#3b2b1f] rounded-lg px-3 py-2 text-[13px] text-white/90 outline-none focus:border-[#25D366] transition-colors placeholder:text-white/20"
                 />
-              </div>
+              </motion.div>
 
-              <div className="flex flex-col gap-1.5">
+              <motion.div 
+                className="flex flex-col gap-1.5"
+                variants={formFieldVariants}
+                initial="hidden"
+                animate="visible"
+                custom={1}
+              >
                 <label className="text-[10px] font-bold text-white/50 tracking-wider">{tf.unit}</label>
                 <select 
                   name="unit"
@@ -1231,9 +1330,15 @@ const Concierge = ({ lang, today }: { lang: Language, today: string }) => {
                   <option>Holiday Apartment ★★★★</option>
                   <option>Luxury House ★★★★★</option>
                 </select>
-              </div>
+              </motion.div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <motion.div 
+                className="grid grid-cols-2 gap-4"
+                variants={formFieldVariants}
+                initial="hidden"
+                animate="visible"
+                custom={2}
+              >
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] font-bold text-white/50 tracking-wider">{tf.checkin}</label>
                   <input 
@@ -1252,9 +1357,15 @@ const Concierge = ({ lang, today }: { lang: Language, today: string }) => {
                     className="bg-[#171717] border border-[#3b2b1f] rounded-lg px-3 py-2 text-[13px] text-white/90 outline-none focus:border-[#25D366] transition-colors [&::-webkit-calendar-picker-indicator]:invert-[0.6]"
                   />
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="flex flex-col gap-1.5">
+              <motion.div 
+                className="flex flex-col gap-1.5"
+                variants={formFieldVariants}
+                initial="hidden"
+                animate="visible"
+                custom={3}
+              >
                 <label className="text-[10px] font-bold text-white/50 tracking-wider">{tf.guests}</label>
                 <select 
                   name="guests"
@@ -1269,25 +1380,52 @@ const Concierge = ({ lang, today }: { lang: Language, today: string }) => {
                   <option>7</option>
                   <option>8</option>
                 </select>
-              </div>
+              </motion.div>
 
-              <div className="flex flex-col gap-1.5">
+              <motion.div 
+                className="flex flex-col gap-1.5"
+                variants={formFieldVariants}
+                initial="hidden"
+                animate="visible"
+                custom={4}
+              >
                 <label className="text-[10px] font-bold text-white/50 tracking-wider">{tf.msg}</label>
                 <textarea 
                   name="message" rows={2} placeholder="..."
                   className="bg-[#171717] border border-[#3b2b1f] rounded-lg px-3 py-2 text-[13px] text-white/90 outline-none focus:border-[#25D366] transition-colors placeholder:text-white/20 resize-none"
                 ></textarea>
-              </div>
+              </motion.div>
 
-              <button 
+              {/* Submit button with shimmer/glow effect */}
+              <motion.button 
                 type="submit"
-                className="mt-3 w-full flex items-center justify-center gap-2 border border-[#3b2b1f] bg-[#171717] text-white/90 font-bold text-[13px] py-2.5 rounded-[0.5rem] hover:bg-[#171717] transition-colors"
+                className="mt-3 w-full flex items-center justify-center gap-2 border border-[#25D366]/30 bg-[#171717] text-white/90 font-bold text-[13px] py-2.5 rounded-[0.5rem] relative overflow-hidden group"
+                variants={formFieldVariants}
+                initial="hidden"
+                animate="visible"
+                custom={5}
+                whileHover={{ 
+                  scale: 1.02,
+                  borderColor: "rgba(37, 211, 102, 0.6)",
+                  boxShadow: "0 0 20px rgba(37, 211, 102, 0.3), inset 0 0 20px rgba(37, 211, 102, 0.05)"
+                }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                {/* Shimmer effect on hover */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-[#25D366]/20 to-transparent opacity-0 group-hover:opacity-100"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: "100%" }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                />
+                {/* Glow background */}
+                <div className="absolute inset-0 bg-[#25D366]/0 group-hover:bg-[#25D366]/10 transition-colors duration-300" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="relative z-10 group-hover:text-[#25D366] transition-colors">
                   <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
                 </svg>
-                {tf.submit}
-              </button>
+                <span className="relative z-10 group-hover:text-[#25D366] transition-colors">{tf.submit}</span>
+              </motion.button>
             </form>
           </motion.div>
         )}
