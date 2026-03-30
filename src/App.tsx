@@ -158,7 +158,7 @@ const translations: Record<string, Content> = {
       ]
     },
     location: {
-      title: "Location & Surroundings",
+      title: "Explore the Surroundings",
       desc: "Located in Angri, Campania. A short distance from Pompeii, Naples, and the Amalfi Coast. Ideal for those seeking tranquility without sacrificing convenience."
     },
     gallery: "Gallery",
@@ -197,7 +197,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. How we use Cookies",
       cookieHowText: "This website respects your privacy by design:",
       cookieProfiling: "No Profiling Cookies: We do not use Google Analytics, Meta Pixel, or any native tracking tools to profile your behavior.",
-      cookieThirdParty: "Third-Party Content: We embed a background video via YouTube. To protect your privacy, we explicitly use the 'youtube-nocookie.com' domain, meaning YouTube will not install tracking cookies on your device.",
+      cookieThirdParty: "Media Assets: All images and videos are hosted on Supabase. This ensures high performance and privacy by design, without third-party tracking cookies.",
       cookieTechnical: "Technical Cookies: The site only utilizes technical elements necessary for the interface (such as remembering your chosen language) and these do not require prior consent.",
       lastUpdated: "Last updated",
       accept: "Accept",
@@ -257,7 +257,7 @@ const translations: Record<string, Content> = {
       ]
     },
     location: {
-      title: "Posizione e Dintorni",
+      title: "Esplora i Dintorni",
       desc: "Situato ad Angri, in Campania. A breve distanza da Pompei, Napoli e la Costiera Amalfitana. Ideale per chi cerca tranquillità senza rinunciare alla comodità."
     },
     gallery: "Galleria",
@@ -296,7 +296,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. Come usiamo i Cookie",
       cookieHowText: "Questo sito web tutela la tua privacy 'by design':",
       cookieProfiling: "Nessun Cookie di Profilazione: Non utilizziamo Google Analytics, Meta Pixel o altri sistemi nativi per tracciare il tuo comportamento.",
-      cookieThirdParty: "Contenuti di Terze Parti (YouTube): Abbiamo integrato un video di sfondo da YouTube utilizzando il dominio 'youtube-nocookie.com'. Questo garantisce che YouTube non rilasci cookie traccianti.",
+      cookieThirdParty: "Contenuti Multimediali: Tutte le immagini e i video sono ospitati su Supabase. Questo garantisce prestazioni elevate e privacy, senza cookie di tracciamento di terze parti.",
       cookieTechnical: "Cookie Tecnici: Il sito utilizza solo meccanismi essenziali per il funzionamento e l'esperienza visiva, che non richiedono raccolta di consenso.",
       lastUpdated: "Ultimo aggiornamento",
       accept: "Accetta",
@@ -381,7 +381,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. Comment nous utilisons les cookies",
       cookieHowText: "Ce site respecte votre vie privée dès la conception :",
       cookieProfiling: "Aucun cookie de profilage : Nous n'utilisons pas Google Analytics, Meta Pixel ou tout autre outil de suivi natif pour profiler votre comportement.",
-      cookieThirdParty: "Contenu tiers (YouTube) : Nous intégrons une vidéo de fond via YouTube en utilisant le domaine 'youtube-nocookie.com'. Cela garantit que YouTube n'installe pas de cookies de suivi.",
+      cookieThirdParty: "Contenus Multimédias: Toutes les images et vidéos sont hébergées sur Supabase. Cela garantit des performances élevées et le respect de la vie privée, sans cookies de suivi tiers.",
       cookieTechnical: "Cookies techniques : Le site n'utilise que les éléments techniques nécessaires à l'interface (comme mémoriser la langue choisie) et ceux-ci ne nécessitent pas de consentement préalable.",
       lastUpdated: "Dernière mise à jour",
       accept: "Accepter",
@@ -466,7 +466,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. Cómo usamos las cookies",
       cookieHowText: "Este sitio web respeta su privacidad por diseño:",
       cookieProfiling: "Sin cookies de perfilado: No utilizamos Google Analytics, Meta Pixel ni ninguna herramienta de seguimiento nativa para perfilar su comportamiento.",
-      cookieThirdParty: "Contenido de terceros (YouTube): Integramos un vídeo de fondo a través de YouTube utilizando el dominio 'youtube-nocookie.com'. Esto garantiza que YouTube no instale cookies de seguimiento.",
+      cookieThirdParty: "Contenidos Multimedia: Todas las imágenes y videos están alojados en Supabase. Esto garantiza un alto rendimiento y privacidad por diseño, sin cookies de seguimiento de terceros.",
       cookieTechnical: "Cookies técnicas: El sitio solo utiliza elementos técnicos necesarios para la interfaz (como recordar el idioma elegido) y estos no requieren consentimiento previo.",
       lastUpdated: "Última actualización",
       accept: "Aceptar",
@@ -551,7 +551,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. Wie wir Cookies verwenden",
       cookieHowText: "Diese Website respektiert Ihre Privatsphäre durch Design:",
       cookieProfiling: "Keine Profiling-Cookies: Wir verwenden weder Google Analytics, Meta Pixel noch andere native Tracking-Tools, um Ihr Verhalten zu profilieren.",
-      cookieThirdParty: "Inhalte von Drittanbietern (YouTube): Wir binden ein Hintergrundvideo über YouTube über die Domain 'youtube-nocookie.com' ein. Dies stellt sicher, dass YouTube keine Tracking-Cookies installiert.",
+      cookieThirdParty: "Medieninhalte: Alle Bilder und Videos werden auf Supabase gehostet. Dies gewährleistet hohe Leistung und Datenschutz ohne Tracking-Cookies von Drittanbietern.",
       cookieTechnical: "Technische Cookies: Die Website verwendet nur technische Elemente, die für die Schnittstelle erforderlich sind (z. B. das Merken der gewählten Sprache), und diese erfordern keine vorherige Zustimmung.",
       lastUpdated: "Zuletzt aktualisiert",
       accept: "Akzeptieren",
@@ -636,7 +636,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. Jak używamy plików cookie",
       cookieHowText: "Ta strona internetowa szanuje Twoją prywatność z założenia:",
       cookieProfiling: "Brak plików cookie profilujących: Nie używamy Google Analytics, Meta Pixel ani żadnych natywnych narzędzi śledzących do profilowania Twojego zachowania.",
-      cookieThirdParty: "Treści osób trzecich (YouTube): Osadzamy wideo w tle przez YouTube, korzystając z domeny 'youtube-nocookie.com'. Gwarantuje to, że YouTube nie zainstaluje plików cookie śledzących.",
+      cookieThirdParty: "Zawartość Multimedialna: Wszystkie obrazy i filmy są hostowane na Supabase. Zapewnia to wysoką wydajność i prywatność bez plików cookie śledzących osób trzecich.",
       cookieTechnical: "Techniczne pliki cookie: Strona wykorzystuje tylko elementy techniczne niezbędne dla interfejsu (takie jak zapamiętanie wybranego języka), a te nie wymagają wcześniejszej zgody.",
       lastUpdated: "Ostatnia aktualizacja",
       accept: "Akceptuj",
@@ -685,7 +685,7 @@ const translations: Record<string, Content> = {
       items: ["免费 Wi-Fi", "私人停车场", "空调", "海滨", "露台", "礼宾服务"]
     },
     location: { 
-      title: "位置", 
+      title: "发现周边", 
       desc: "位于沿海最独特的地段之一，距离最好的海滩和繁华的市中心仅几步之遥。" 
     },
     gallery: "画廊",
@@ -722,7 +722,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. 我们如何使用 Cookie",
       cookieHowText: "本网站尊重您的隐私：",
       cookieProfiling: "无分析 Cookie：我们不使用 Google Analytics、Meta Pixel 或任何原生的跟踪工具来分析您的行为。",
-      cookieThirdParty: "第三方内容：我们通过 YouTube 嵌入视频。为了保护您的隐私，我们明确使用 'youtube-nocookie.com' 域名，这意味着 YouTube 不会安装跟踪 Cookie。",
+      cookieThirdParty: "多媒体资产：所有图像和视频均托管在 Supabase 上。这确保了高性能和隐私设计，且没有第三方跟踪 Cookie。",
       cookieTechnical: "技术性 Cookie：本网站仅使用界面所需的必要技术元素（如记住您选择的语言），这些不需要事先同意。",
       lastUpdated: "最后更新",
       accept: "接受",
@@ -771,7 +771,7 @@ const translations: Record<string, Content> = {
       items: ["واي فاي مجاني", "موقف سيارات خاص", "تكييف", "على الشاطئ", "تراس", "خدمة الكونسيرج"]
     },
     location: { 
-      title: "الموقع", 
+      title: "استكشف الأماكن المجاورة", 
       desc: "يقع في أحد أكثر المواقع حصرية على الساحل، على بعد خطوات قليلة من أفضل الشواطئ ووسط المدينة النابض بالحياة." 
     },
     gallery: "المعرض",
@@ -808,7 +808,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. كيف نستخدم ملفات تعريف الارتباط",
       cookieHowText: "هذا الموقع يحترم خصوصيتك حسب التصميم:",
       cookieProfiling: "لا توجد ملفات تعريف ارتباط للتصفح: نحن لا نستخدم Google Analytics أو Meta Pixel أو أي أدوات تتبع أصلية لتحديد سلوكك.",
-      cookieThirdParty: "محتوى الطرف الثالث: نقوم بدمج فيديو عبر YouTube. لحماية خصوصيتك، نستخدم حصريًا نطاق 'youtube-nocookie.com'، مما يعني أن YouTube لن يقوم بتثبيت ملفات تعريف ارتباط للتتبع.",
+      cookieThirdParty: "الوسائط المتعددة: جميع الصور ومقاطع الفيديو مستضافة على Supabase. يضمن ذلك أداءً عالياً وخصوصية من خلال التصميم، دون ملفات تعريف ارتباط لتتبع طرف ثالث.",
       cookieTechnical: "ملفات تعريف الارتباط التقنية: يستخدم الموقع فقط العناصر التقنية اللازمة للواجهة (مثل تذكر لغتك المختارة)، وهذه لا تتطلب موافقة مسبقة.",
       lastUpdated: "آخر تحديث",
       accept: "قبول",
@@ -857,7 +857,7 @@ const translations: Record<string, Content> = {
       items: ["Gratis Wi-Fi", "Privat parkering", "Aircondition", "Ved stranden", "Terrasse", "Concierge service"]
     },
     location: { 
-      title: "Beliggenhed", 
+      title: "Udforsk omgivelserne", 
       desc: "Beliggende i et af de mest eksklusive områder på kysten, kun få skridt fra de bedste strande og det pulserende centrum." 
     },
     gallery: "Galleri",
@@ -894,7 +894,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. Hvordan vi bruger Cookies",
       cookieHowText: "Denne hjemmeside respekterer dit privatliv efter design:",
       cookieProfiling: "Ingen profileringscookies: Vi bruger ikke Google Analytics, Meta Pixel eller andre native sporingsværktøjer til at profilere din adfærd.",
-      cookieThirdParty: "Tredjepartsindhold: Vi integrerer en video via YouTube. For at beskytte dit privatliv bruger vi udelukkende domænet 'youtube-nocookie.com', hvilket betyder at YouTube ikke vil installere sporingscookies.",
+      cookieThirdParty: "Multimedieindhold: Alle billeder og videoer er hostet på Supabase. Dette sikrer høj ydeevne og privatliv, uden sporingscookies fra tredjeparter.",
       cookieTechnical: "Tekniske cookies: Siden benytter kun tekniske elementer, der er nødvendige for grænsefladen (såsom at huske dit valgte sprog), og disse kræver ikke forudgående samtykke.",
       lastUpdated: "Sidst opdateret",
       accept: "Accepter",
@@ -943,7 +943,7 @@ const translations: Record<string, Content> = {
       items: ["Gratis Wi-Fi", "Privat parkering", "Luftkonditionering", "Vid stranden", "Terrass", "Concierge-service"]
     },
     location: { 
-      title: "Läge", 
+      title: "Utforska omgivningarna", 
       desc: "Beläget i ett av de mest exklusiva områdena på kusten, bara några steg från de bästa stränderna och det livliga centrumet." 
     },
     gallery: "Galleri",
@@ -980,7 +980,7 @@ const translations: Record<string, Content> = {
       cookieHowTitle: "2. Hur vi använder Cookies",
       cookieHowText: "Denna webbplats respekterar din integritet genom design:",
       cookieProfiling: "Inga profileringscookies: Vi använder inte Google Analytics, Meta Pixel eller andra nativa spårningsverktyg för att profilera ditt beteende.",
-      cookieThirdParty: "Tredjepartsinnehåll: Vi integrerar en video via YouTube. För att skydda din integritet använder vi uteslutande domänen 'youtube-nocookie.com', vilket innebär att YouTube inte kommer att installera spårningscookies.",
+      cookieThirdParty: "Multimedietillgångar: Alla bilder och videor hostas på Supabase. Detta säkerställer hög prestanda och integritet, utan spårningscookies från tredje part.",
       cookieTechnical: "Tekniska cookies: Sidan använder endast tekniska element som är nödvändiga för gränssnittet (som att komma ihåg ditt valda språk), och dessa kräver inte förhandssamtycke.",
       lastUpdated: "Senast uppdaterad",
       accept: "Acceptera",
@@ -1011,12 +1011,12 @@ const translations: Record<string, Content> = {
 const BackgroundGallery = ({ isActive }: { isActive: boolean }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [
-    "/gallery/676096734.jpg",
-    "/gallery/683911497.jpg",
-    "/gallery/683911499.jpg",
-    "/gallery/683911510.jpg",
-    "/gallery/683911526.jpg",
-    "/gallery/722334701.jpg"
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911499.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911510.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911526.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334701.jpg"
   ];
 
   useEffect(() => {
@@ -1081,7 +1081,7 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
   return (
     <nav className={`fixed top-0 w-full z-50 py-4 px-4 md:px-12 flex justify-between items-center transition-all duration-300 ${isScrolled ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
       <div className="flex items-center gap-3 font-serif text-[1.1rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative">
-        <img src="/side-logo.png" alt="Villa Angela Logo" className="h-6 md:h-8 object-contain" />
+        <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/side-logo.png" alt="Villa Angela Logo" className="h-6 md:h-8 object-contain" />
         Villa Angela
       </div>
       <div className="flex items-center gap-2 lg:gap-8">
@@ -1306,7 +1306,13 @@ interface Review {
 }
 
 export default function App() {
-  const [lang, setLang] = useState<Language>('it');
+  const supportedLangs: Language[] = ['en', 'it', 'fr', 'es', 'de', 'pl', 'zh', 'ar', 'da', 'sv'];
+  const [lang, setLang] = useState<Language>(() => {
+    const browserLang = navigator.language.split('-')[0] as Language;
+    return supportedLangs.includes(browserLang) ? browserLang : 'en';
+  });
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [translationCache] = useState<Record<string, Review[]>>({});
   const [selectedUnit, setSelectedUnit] = useState<'apartment' | 'luxury' | null>(null);
   const [hoveredUnit, setHoveredUnit] = useState<'apartment' | 'luxury' | null>(null);
   const [showPrivacy, setShowPrivacy] = useState(false);
@@ -1362,30 +1368,75 @@ export default function App() {
   const content = translations[lang] || translations['en'];
 
   useEffect(() => {
-    const processReviews = (data: Review[]) => {
+    const translateContent = async (data: Review[], targetLang: Language) => {
+      if (targetLang === 'it') return data;
+      const cacheKey = `${targetLang}-${JSON.stringify(data.map(r => r.name))}`;
+      if (translationCache[cacheKey]) return translationCache[cacheKey];
+
+      setIsTranslating(true);
+      try {
+        // Prepare texts for batch translation
+        const textsToTranslate = data.flatMap(r => [r.metadata, r.date, r.quote]);
+        const joinedText = textsToTranslate.join(' [SEP] ');
+        
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl=${targetLang}&dt=t&q=${encodeURIComponent(joinedText)}`;
+        const res = await fetch(url);
+        const json = await res.json();
+        
+        // Extract translated chunks
+        const fullTranslation = json[0].map((item: any) => item[0]).join('');
+        const translatedParts = fullTranslation.split(' [SEP] ').map((s: string) => s.trim());
+
+        const translatedReviews = data.map((r, i) => ({
+          ...r,
+          metadata: translatedParts[i * 3] || r.metadata,
+          date: translatedParts[i * 3 + 1] || r.date,
+          quote: translatedParts[i * 3 + 2] || r.quote
+        }));
+
+        translationCache[cacheKey] = translatedReviews;
+        return translatedReviews;
+      } catch (error) {
+        console.error('Translation error:', error);
+        return data; // Fallback to Italian
+      } finally {
+        setIsTranslating(false);
+      }
+    };
+
+    const processReviews = async (data: Review[]) => {
+      const translated = await translateContent(data, lang);
       const savedReviews = localStorage.getItem('villa_angela_custom_reviews');
       if (savedReviews) {
         try {
           const custom = JSON.parse(savedReviews);
-          setLoadedReviews([...custom, ...data]);
+          setLoadedReviews([...custom, ...translated]);
         } catch(e) {
-          setLoadedReviews(data);
+          setLoadedReviews(translated);
         }
       } else {
-        setLoadedReviews(data);
+        setLoadedReviews(translated);
       }
     };
 
-    fetch(`/reviews_${lang}.json`)
+    fetch(`/api/reviews?lang=${lang}`)
       .then(res => res.json())
-      .then(data => processReviews(data))
-      .catch(err => {
-        console.error('Failed to load reviews:', err);
-        if (lang !== 'it') {
-          fetch('/reviews_it.json')
+      .then(data => {
+        if (Array.isArray(data)) {
+          processReviews(data);
+        } else {
+          // Fallback to local file if API fails during migration
+          fetch('/reviews.json')
             .then(res => res.json())
             .then(data => processReviews(data));
         }
+      })
+      .catch(err => {
+        console.error('Failed to load reviews from API:', err);
+        // Final fallback
+        fetch('/reviews.json')
+          .then(res => res.json())
+          .then(data => processReviews(data));
       });
   }, [lang, showAdmin]);
   
@@ -1398,16 +1449,16 @@ export default function App() {
   }, []);
 
   const apartmentGalleryImages = [
-    "/gallery/676096734.jpg", "/gallery/676096753.jpg", "/gallery/683911497.jpg",
-    "/gallery/683911498.jpg", "/gallery/683911499.jpg", "/gallery/683911505.jpg",
-    "/gallery/683911506.jpg", "/gallery/683911508.jpg", "/gallery/683911510.jpg",
-    "/gallery/683911512.jpg", "/gallery/683911515.jpg", "/gallery/683911517.jpg",
-    "/gallery/683911519.jpg", "/gallery/683911526.jpg", "/gallery/683911527.jpg",
-    "/gallery/683911533.jpg", "/gallery/683911536.jpg", "/gallery/683911537.jpg",
-    "/gallery/722334699.jpg", "/gallery/722334700.jpg", "/gallery/722334701.jpg",
-    "/gallery/722334702.jpg", "/gallery/722334703.jpg", "/gallery/722334704.jpg",
-    "/gallery/722334705.jpg", "/gallery/722334706.jpg", "/gallery/722334707.jpg",
-    "/gallery/722334708.jpg", "/gallery/722334710.jpg", "/gallery/722334711.jpg"
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096753.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911498.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911499.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911505.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911506.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911508.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911510.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911512.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911515.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911517.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911519.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911526.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911527.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911533.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911536.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911537.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334699.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334700.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334701.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334702.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334703.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334704.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334705.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334706.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334707.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334708.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334710.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334711.jpg"
   ];
 
   useEffect(() => {
@@ -1447,10 +1498,10 @@ export default function App() {
         {/* Local background video (hidden on hover) */}
         <div className={`absolute inset-0 z-0 transition-opacity duration-1000 ${hoveredUnit ? 'opacity-0' : 'opacity-100'}`}>
           <video 
-            autoPlay muted loop playsInline
+            autoPlay muted loop playsInline preload="auto"
             className="hero-video absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 object-cover pointer-events-none" 
           >
-            <source src="/hero-bg.mp4" type="video/mp4" />
+            <source src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/hero-bg.mp4" type="video/mp4" />
           </video>
         </div>
         
@@ -1472,7 +1523,7 @@ export default function App() {
               className="logo-card relative w-[70vw] md:w-[40vw] max-w-[500px] aspect-[4/3] cursor-pointer flex items-center justify-center"
             >
               <div className="w-full h-full rounded-xl md:rounded-[1.25rem] overflow-hidden bg-white ring-2 ring-white">
-                <img src="/holiday-fixed.png" alt="Villa Angela Holiday Apartment" className="w-[102%] h-[102%] max-w-none object-cover scale-[1.03]" />
+                <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/holiday-fixed.png" alt="Villa Angela Holiday Apartment" className="w-[102%] h-[102%] max-w-none object-cover scale-[1.03]" />
               </div>
             </div>
             
@@ -1483,7 +1534,7 @@ export default function App() {
               className="logo-card relative w-[70vw] md:w-[40vw] max-w-[500px] aspect-[4/3] cursor-pointer flex items-center justify-center"
             >
               <div className="w-full h-full rounded-xl md:rounded-[1.25rem] overflow-hidden bg-white ring-2 ring-white">
-                <img src="/luxury-fixed.jpg" alt="Villa Angela Luxury House" className="w-[102%] h-[102%] max-w-none object-cover scale-[1.03]" />
+                <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/luxury-fixed.jpg" alt="Villa Angela Luxury House" className="w-[102%] h-[102%] max-w-none object-cover scale-[1.03]" />
               </div>
               {/* Coming Soon badge on hero luxury card */}
               <div className="absolute top-3 right-3 z-30 animate-badge-pulse">
@@ -1528,7 +1579,7 @@ export default function App() {
         <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Apartment Card */}
           <div className="unit-card bg-[#B49B78]/[0.35] backdrop-blur-[12px] border border-[#A0825F]/40 text-[#3D2B1F] p-8 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_12px_40px_rgba(100,70,40,0.15)]">
-            <img src="/holiday-fixed.png" alt="Villa Angela Holiday Apartment Logo" className="h-40 mb-8 rounded-xl object-contain shadow-md" />
+            <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/holiday-fixed.png" alt="Villa Angela Holiday Apartment Logo" className="h-40 mb-8 rounded-xl object-contain shadow-md" />
             <h3 className="font-serif text-[1.8rem] md:text-[2.2rem] font-medium text-[#3D2B1F] mb-4">{content.units.apartment.name}</h3>
             <p className="text-[#5C4A3A] mb-8 flex-1 font-medium leading-[1.7] text-[0.95rem]">{content.units.apartment.desc}</p>
             <div className="flex flex-wrap justify-center gap-4 mb-8">
@@ -1558,7 +1609,7 @@ export default function App() {
                 Coming Soon
               </span>
             </div>
-            <img src="/luxury-fixed.jpg" alt="Villa Angela Luxury House Logo" className="h-40 mb-8 rounded-xl object-contain shadow-md opacity-90" />
+            <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/luxury-fixed.jpg" alt="Villa Angela Luxury House Logo" className="h-40 mb-8 rounded-xl object-contain shadow-md opacity-90" />
             <h3 className="font-serif text-[1.8rem] md:text-[2.2rem] font-medium text-[#3D2B1F] mb-4">{content.units.luxury.name}</h3>
             <p className="text-[#5C4A3A] mb-8 flex-1 font-medium leading-[1.7] text-[0.95rem]">{content.units.luxury.desc}</p>
             <div className="flex flex-wrap justify-center gap-4 mb-8">
@@ -1669,21 +1720,21 @@ export default function App() {
       
       {/* Surroundings Horizontal Gallery */}
       <section className="py-32 px-0 bg-transparent overflow-hidden fade-in">
-        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{lang === 'en' ? 'Explore the Surroundings' : 'Esplora i Dintorni'}</h2>
+        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.title}</h2>
         
         <div className="flex w-full overflow-hidden relative">
           <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-4 pr-4">
                 {[
-                  { name: "Pompei", img: "/luoghi/pompei.jpg" },
-                  { name: "Amalfi", img: "/luoghi/amalfi.jpg" },
-                  { name: "Positano", img: "/luoghi/positano.jpg" },
-                  { name: "Sorrento", img: "/luoghi/sorrento.jpg" },
-                  { name: "Maiori", img: "/luoghi/maiori.jpg" },
-                  { name: "Minori", img: "/luoghi/minori.jpg" },
-                  { name: "Salerno", img: "/luoghi/salerno.jpg" },
-                  { name: "Napoli", img: "/luoghi/napoli.jpg" }
+                  { name: "Pompei", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/pompei.jpg" },
+                  { name: "Amalfi", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/amalfi.jpg" },
+                  { name: "Positano", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/positano.jpg" },
+                  { name: "Sorrento", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/sorrento.jpg" },
+                  { name: "Maiori", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/maiori.jpg" },
+                  { name: "Minori", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/minori.jpg" },
+                  { name: "Salerno", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/salerno.jpg" },
+                  { name: "Napoli", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/napoli.jpg" }
                 ].map((place) => (
                   <div key={`${set}-${place.name}`} className="relative flex-none w-64 md:w-80 aspect-[3/4] rounded-2xl overflow-hidden group shadow-lg cursor-pointer">
                     <img 
@@ -1705,8 +1756,25 @@ export default function App() {
       {/* Reviews Section */}
       <section id="reviews" className="relative py-32 px-6 md:px-12 bg-transparent">
         <div className="max-w-6xl mx-auto text-center fade-in">
-          <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.reviews.title}</h2>
-          <div className="grid md:grid-cols-2 gap-x-8 gap-y-8 text-left">
+          <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-4">{content.reviews.title}</h2>
+          {isTranslating && (
+            <div className="flex items-center justify-center gap-2 mb-10 text-[#9A8070] italic animate-pulse">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>
+                {lang === 'en' ? 'Translation in progress...' : 
+                 lang === 'fr' ? 'Traduction en cours...' :
+                 lang === 'es' ? 'Traducción en curso...' :
+                 lang === 'de' ? 'Übersetzung läuft...' :
+                 lang === 'pl' ? 'Tłumaczenie w toku...' :
+                 lang === 'zh' ? '正在翻译...' :
+                 lang === 'ar' ? 'جاري الترجمة...' :
+                 lang === 'da' ? 'Oversættelse i gang...' :
+                 lang === 'sv' ? 'Översättning pågår...' :
+                 'Traduzione in corso...'}
+              </span>
+            </div>
+          )}
+          <div className={`grid md:grid-cols-2 gap-x-8 gap-y-8 text-left transition-opacity duration-300 ${isTranslating ? 'opacity-50' : 'opacity-100'}`}>
             {loadedReviews.map((review, i) => (
               <div 
                 key={i} 
@@ -1756,7 +1824,7 @@ export default function App() {
             {[
               {
                 name: 'Airbnb',
-                logo: '/airbnb-logo.png',
+                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/airbnb-logo.png',
                 color: '#FF5A5F',
                 url: 'https://www.airbnb.it/rooms/1409282031863396948?adults=3&check_in=2026-04-13&check_out=2026-04-20&search_mode=regular_search&source_impression_id=p3_1774436822_P3vo99Wn-EUzQs90&previous_page_section_name=1000&federated_search_id=08a1bc04-c55b-46a1-a785-871dc25a2476',
                 badge: '★ 5.0 · Guest Favourite',
@@ -1772,7 +1840,7 @@ export default function App() {
               },
               {
                 name: 'HomeToGo',
-                logo: '/hometogo-logo.png',
+                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/hometogo-logo.png',
                 color: '#009B8C',
                 url: 'https://www.hometogo.it/rental/a7c2258e5b60041a73a7fbae9befdf78',
                 badge: content.legal.bookingPlatforms.availableNow,
@@ -1780,7 +1848,7 @@ export default function App() {
               },
               {
                 name: 'VRBO',
-                logo: '/vrbo-logo.png',
+                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/vrbo-logo.png',
                 logoScale: 'scale-[2.0]',
                 color: '#3A5CAB',
                 url: 'https://www.vrbo.com/5615436ha',
@@ -1789,7 +1857,7 @@ export default function App() {
               },
               {
                 name: 'Expedia',
-                logo: '/expedia-logo.png',
+                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/expedia-logo.png',
                 color: '#FEC022',
                 url: 'https://www.expedia.it/Angri-Hotel-Villa-Angela-Holiday-Apartment.h115349584.Informazioni-Hotel',
                 badge: content.legal.bookingPlatforms.directListing,
@@ -1797,7 +1865,7 @@ export default function App() {
               },
               {
                 name: 'Agoda',
-                logo: '/agoda-logo.png',
+                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/agoda-logo.png',
                 logoScale: 'scale-[1.4]',
                 color: '#5373BB',
                 url: 'https://www.agoda.com/it-it/villa-angela-holiday-apartment/hotel/all/angri-it.html',
@@ -2029,7 +2097,7 @@ export default function App() {
               <div className="grid md:grid-cols-2 gap-12 mb-12">
                 <div>
                   <img 
-                    src={selectedUnit === 'apartment' ? "/gallery/676096734.jpg" : "/luxury-house.jpg"} 
+                    src={selectedUnit === 'apartment' ? "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg" : "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/luxury-fixed.jpg"} 
                     className="w-full h-auto rounded-3xl object-cover shadow-2xl" 
                     alt="Unit preview"
                   />
@@ -2185,7 +2253,7 @@ export default function App() {
                   </ul>
                 </div>
 
-                <p className="mt-8 text-sm text-[#3D2B1F]/50 font-bold uppercase tracking-widest">{content.legal.lastUpdated}: {new Date().toLocaleDateString(lang)}</p>
+                <p className="mt-8 text-sm text-[#3D2B1F]/50 font-bold uppercase tracking-widest">{content.legal.lastUpdated}: 30/03/2026</p>
               </div>
             </div>
           </motion.div>

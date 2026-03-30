@@ -262,7 +262,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     if (!extractUrl) return;
     setIsExtracting(true);
     try {
-      const response = await fetch('http://localhost:3001/api/extract', {
+      const response = await fetch('/api/extract', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: extractUrl })
@@ -292,7 +292,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     
     try {
       // Save to backend (JSON files)
-      const response = await fetch('http://localhost:3001/api/add', {
+      const response = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -328,10 +328,10 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const handleDeleteReview = async (id: string) => {
     if (window.confirm(content.confirmDelete)) {
       try {
-        await fetch('http://localhost:3001/api/delete', {
+        await fetch('/api/reviews', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id })
+          body: JSON.stringify({ id, action: 'delete' })
         });
         const updated = reviews.filter(r => r.id !== id);
         saveReviews(updated);
