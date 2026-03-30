@@ -1,8 +1,10 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 @theme {
   --font-serif: "Playfair Display", serif;
   --font-sans: "Open Sans", sans-serif;
+  --font-script: "Great Vibes", cursive;
   
   --color-sand: #F5EFE6;
   --color-charcoal: #2C2C2C;
@@ -178,6 +180,11 @@
 @keyframes gentleBounce {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(8px); }
+}
+.script-title {
+  font-family: var(--font-script);
+  @apply tracking-wider normal-case text-white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .logo-card:nth-child(1) { animation: fadeInUp 0.9s ease 0.2s both; }

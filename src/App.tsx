@@ -1081,6 +1081,7 @@ const useHorizontalMarquee = (speed: number = 1.0) => {
     };
 
     const handleEnd = () => {
+      if (!isInteracting) return;
       isInteracting = false;
       lastInteractionTime = Date.now();
     };
@@ -1909,7 +1910,7 @@ export default function App() {
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-bottom p-6 overflow-hidden">
-                      <h3 className="text-white text-2xl font-serif mt-auto tracking-widest uppercase">{place.name}</h3>
+                      <h3 className="text-white text-4xl mt-auto script-title">{place.name}</h3>
                     </div>
                   </div>
                 ))}
