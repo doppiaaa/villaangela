@@ -1639,8 +1639,8 @@ export default function App() {
           {content.gallery}
         </h2>
         
-        <div className="flex w-full overflow-hidden relative">
-          <div className="flex w-max animate-marquee-gallery hover:[animation-play-state:paused] pb-8">
+        <div className="flex w-full overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-x-hidden relative">
+          <div className="flex w-max md:animate-marquee-gallery hover:[animation-play-state:paused] pb-8">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-2 md:gap-4 pr-2 md:pr-4">
                 {apartmentGalleryImages.reduce((acc: string[][], img: string, i: number) => {
@@ -1649,7 +1649,7 @@ export default function App() {
                 }, []).map((chunk, idx) => {
                   const isRight = idx % 2 !== 0;
                   return (
-                    <div key={`${set}-${idx}`} className="grid grid-cols-4 grid-rows-2 gap-2 md:gap-4 w-[90vw] md:w-[70vw] lg:w-[50vw] h-[300px] md:h-[400px] lg:h-[450px] flex-none">
+                    <div key={`${set}-${idx}`} className="grid grid-cols-4 grid-rows-2 gap-2 md:gap-4 w-[85vw] md:w-[70vw] lg:w-[50vw] h-[300px] md:h-[400px] lg:h-[450px] flex-none snap-center">
                       {isRight ? (
                         <>
                           {chunk[0] && <div className="col-span-1 row-span-1"><img src={chunk[0]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[0])} alt="Gallery" /></div>}
@@ -1722,8 +1722,8 @@ export default function App() {
       <section className="py-32 px-0 bg-transparent overflow-hidden fade-in">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.title}</h2>
         
-        <div className="flex w-full overflow-hidden relative">
-          <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
+        <div className="flex w-full overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-x-hidden relative">
+          <div className="flex w-max md:animate-marquee hover:[animation-play-state:paused]">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-4 pr-4">
                 {[
@@ -1736,7 +1736,7 @@ export default function App() {
                   { name: "Salerno", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/salerno.jpg" },
                   { name: "Napoli", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/napoli.jpg" }
                 ].map((place) => (
-                  <div key={`${set}-${place.name}`} className="relative flex-none w-64 md:w-80 aspect-[3/4] rounded-2xl overflow-hidden group shadow-lg cursor-pointer">
+                  <div key={`${set}-${place.name}`} className="relative flex-none w-64 md:w-80 aspect-[3/4] rounded-2xl overflow-hidden group shadow-lg cursor-pointer snap-center">
                     <img 
                       src={place.img} 
                       alt={place.name} 
