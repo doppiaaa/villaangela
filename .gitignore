@@ -1,3 +1,7 @@
 public/hero-bg.mp4
 node_modules/
 dist/
+node_modules/
+dist/
+public/hero-bg.mp4
+.DS_Store
