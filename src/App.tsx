@@ -1095,6 +1095,31 @@ const useHorizontalMarquee = (speed: number = 1.0) => {
     const onTouchMove = (e: TouchEvent) => handleMove(e.touches[0].clientX);
     const onTouchEnd = () => handleEnd();
 
+    // Wheel Events (Touchpad scrolling)
+    const onWheel = (e: WheelEvent) => {
+      // Use deltaX or deltaY depending on how the user scrolls
+      // We prioritize deltaX but fall back to deltaY if the scroll is mostly vertical
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      
+      currentX += dx;
+      
+      const halfWidth = inner.scrollWidth / 2;
+      if (halfWidth > 0) {
+        // Bi-directional loop logic
+        if (currentX >= halfWidth) currentX -= halfWidth;
+        else if (currentX < 0) currentX += halfWidth;
+      }
+      
+      inner.style.transform = `translate3d(-${currentX}px, 0, 0)`;
+      lastInteractionTime = Date.now();
+      
+      // Only prevent default if we're actually scrolling horizontally 
+      // (to allow normal page scroll if needed, though usually marquee takes over)
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+      }
+    };
+
     container.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
@@ -1102,6 +1127,8 @@ const useHorizontalMarquee = (speed: number = 1.0) => {
     container.addEventListener('touchstart', onTouchStart, { passive: false });
     window.addEventListener('touchmove', onTouchMove, { passive: false });
     window.addEventListener('touchend', onTouchEnd);
+    
+    container.addEventListener('wheel', onWheel, { passive: false });
 
     frameId = requestAnimationFrame(step);
     
@@ -1113,6 +1140,7 @@ const useHorizontalMarquee = (speed: number = 1.0) => {
       container.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
+      container.removeEventListener('wheel', onWheel);
     };
   }, [speed]);
 
@@ -1461,7 +1489,7 @@ export default function App() {
   const content = translations[lang] || translations['en'];
   
   const { containerRef: galleryContainerRef, innerRef: galleryInnerRef } = useHorizontalMarquee(1.5);
-  const { containerRef: locationContainerRef, innerRef: locationInnerRef } = useHorizontalMarquee(1.8);
+  const { containerRef: locationContainerRef, innerRef: locationInnerRef } = useHorizontalMarquee(1.5);
 
   const trackCookieConsent = (accepted: boolean) => {
     const savedStats = localStorage.getItem('villa_angela_cookie_stats');
