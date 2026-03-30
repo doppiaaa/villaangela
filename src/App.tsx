@@ -1020,23 +1020,49 @@ const useHorizontalMarquee = (speed: number = 0.5) => {
     let frameId: number;
     let lastTime = 0;
     let isInteracting = false;
+    let lastInteractionTime = 0;
+    let currentX = el.scrollLeft;
 
     const step = (time: number) => {
       if (!lastTime) lastTime = time;
       const delta = time - lastTime;
       lastTime = time;
 
-      if (!isInteracting && el) {
-        el.scrollLeft += (speed * delta) / 16.67; // Normalize to ~60fps
-        if (el.scrollLeft >= el.scrollWidth / 2) {
-          el.scrollLeft -= el.scrollWidth / 2;
+      const now = Date.now();
+      const isInteractionActive = isInteracting || (now - lastInteractionTime < 1000);
+
+      if (!isInteractionActive && el) {
+        // Use a float to track position to avoid integer rounding issues
+        currentX += (speed * delta) / 16.67; 
+        
+        if (el.scrollWidth > 0) {
+          const halfWidth = el.scrollWidth / 2;
+          if (currentX >= halfWidth) {
+            currentX -= halfWidth;
+          }
         }
+        el.scrollLeft = currentX;
+      } else if (el) {
+        // Keep our float tracker in sync with the user's manual scroll
+        currentX = el.scrollLeft;
       }
       frameId = requestAnimationFrame(step);
     };
 
-    const onStart = () => { isInteracting = true; };
-    const onEnd = () => { isInteracting = false; };
+    const onStart = () => { 
+      isInteracting = true; 
+      lastInteractionTime = Date.now();
+    };
+    const onEnd = () => { 
+      isInteracting = false; 
+      lastInteractionTime = Date.now();
+    };
+    const onManualScroll = () => {
+      // Also update interaction time during scroll (handles inertia)
+      if (isInteracting) return; 
+      lastInteractionTime = Date.now();
+      currentX = el.scrollLeft;
+    };
 
     el.addEventListener('touchstart', onStart, { passive: true });
     el.addEventListener('touchend', onEnd, { passive: true });
@@ -1044,6 +1070,7 @@ const useHorizontalMarquee = (speed: number = 0.5) => {
     el.addEventListener('mouseup', onEnd);
     el.addEventListener('mouseleave', onEnd);
     el.addEventListener('wheel', onStart, { passive: true });
+    el.addEventListener('scroll', onManualScroll, { passive: true });
 
     frameId = requestAnimationFrame(step);
     return () => {
@@ -1054,6 +1081,7 @@ const useHorizontalMarquee = (speed: number = 0.5) => {
       el.removeEventListener('mouseup', onEnd);
       el.removeEventListener('mouseleave', onEnd);
       el.removeEventListener('wheel', onStart);
+      el.removeEventListener('scroll', onManualScroll);
     };
   }, [speed]);
 
