@@ -33,6 +33,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Analytics } from '@vercel/analytics/react';
 import Dashboard from './Dashboard';
 
 
@@ -1006,6 +1007,59 @@ const translations: Record<string, Content> = {
   }
 };
 
+
+// --- Hooks ---
+
+const useHorizontalMarquee = (speed: number = 0.5) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    let frameId: number;
+    let lastTime = 0;
+    let isInteracting = false;
+
+    const step = (time: number) => {
+      if (!lastTime) lastTime = time;
+      const delta = time - lastTime;
+      lastTime = time;
+
+      if (!isInteracting && el) {
+        el.scrollLeft += (speed * delta) / 16.67; // Normalize to ~60fps
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft -= el.scrollWidth / 2;
+        }
+      }
+      frameId = requestAnimationFrame(step);
+    };
+
+    const onStart = () => { isInteracting = true; };
+    const onEnd = () => { isInteracting = false; };
+
+    el.addEventListener('touchstart', onStart, { passive: true });
+    el.addEventListener('touchend', onEnd, { passive: true });
+    el.addEventListener('mousedown', onStart);
+    el.addEventListener('mouseup', onEnd);
+    el.addEventListener('mouseleave', onEnd);
+    el.addEventListener('wheel', onStart, { passive: true });
+
+    frameId = requestAnimationFrame(step);
+    return () => {
+      cancelAnimationFrame(frameId);
+      el.removeEventListener('touchstart', onStart);
+      el.removeEventListener('touchend', onEnd);
+      el.removeEventListener('mousedown', onStart);
+      el.removeEventListener('mouseup', onEnd);
+      el.removeEventListener('mouseleave', onEnd);
+      el.removeEventListener('wheel', onStart);
+    };
+  }, [speed]);
+
+  return ref;
+};
+
 // --- Components ---
 
 const BackgroundGallery = ({ isActive }: { isActive: boolean }) => {
@@ -1183,11 +1237,33 @@ const Concierge = ({ lang, today }: { lang: Language, today: string }) => {
     <>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-[60px] h-[60px] bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:scale-110 transition-transform duration-300 border border-white/20"
+        className="fixed bottom-6 right-6 z-50 w-[60px] h-[60px] bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_8px_24px_rgba(37,211,102,0.45)] hover:scale-105 active:scale-95 transition-all duration-300 border border-white/20 overflow-hidden"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
-        </svg>
+        <AnimatePresence mode="wait">
+          {isOpen ? (
+            <motion.div
+              key="close"
+              initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
+              animate={{ rotate: 0, opacity: 1, scale: 1 }}
+              exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+              <X size={28} strokeWidth={2.5} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="whatsapp"
+              initial={{ rotate: 90, opacity: 0, scale: 0.5 }}
+              animate={{ rotate: 0, opacity: 1, scale: 1 }}
+              exit={{ rotate: -90, opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+              </svg>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </button>
 
       <AnimatePresence>
@@ -1323,6 +1399,10 @@ export default function App() {
   const [bookingDates, setBookingDates] = useState({ checkin: '', checkout: '' });
   
   const today = new Date().toISOString().split('T')[0];
+  const content = translations[lang] || translations['en'];
+  
+  const galleryRef = useHorizontalMarquee(0.4);
+  const locationRef = useHorizontalMarquee(0.6);
 
   const trackCookieConsent = (accepted: boolean) => {
     const savedStats = localStorage.getItem('villa_angela_cookie_stats');
@@ -1365,8 +1445,6 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [enlargedImage]);
   const [loadedReviews, setLoadedReviews] = useState<Review[]>([]);
-  const content = translations[lang] || translations['en'];
-
   useEffect(() => {
     const translateContent = async (data: Review[], targetLang: Language) => {
       if (targetLang === 'it') return data;
@@ -1639,8 +1717,8 @@ export default function App() {
           {content.gallery}
         </h2>
         
-        <div className="flex w-full overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-x-hidden relative">
-          <div className="flex w-max md:animate-marquee-gallery hover:[animation-play-state:paused] pb-8">
+        <div ref={galleryRef} className="flex w-full overflow-x-auto scrollbar-hide relative pb-8">
+          <div className="flex w-max">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-2 md:gap-4 pr-2 md:pr-4">
                 {apartmentGalleryImages.reduce((acc: string[][], img: string, i: number) => {
@@ -1649,7 +1727,7 @@ export default function App() {
                 }, []).map((chunk, idx) => {
                   const isRight = idx % 2 !== 0;
                   return (
-                    <div key={`${set}-${idx}`} className="grid grid-cols-4 grid-rows-2 gap-2 md:gap-4 w-[85vw] md:w-[70vw] lg:w-[50vw] h-[300px] md:h-[400px] lg:h-[450px] flex-none snap-center">
+                    <div key={`${set}-${idx}`} className="grid grid-cols-4 grid-rows-2 gap-2 md:gap-4 w-[85vw] md:w-[70vw] lg:w-[50vw] h-[300px] md:h-[400px] lg:h-[450px] flex-none">
                       {isRight ? (
                         <>
                           {chunk[0] && <div className="col-span-1 row-span-1"><img src={chunk[0]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[0])} alt="Gallery" /></div>}
@@ -1722,8 +1800,8 @@ export default function App() {
       <section className="py-32 px-0 bg-transparent overflow-hidden fade-in">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.title}</h2>
         
-        <div className="flex w-full overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-x-hidden relative">
-          <div className="flex w-max md:animate-marquee hover:[animation-play-state:paused]">
+        <div ref={locationRef} className="flex w-full overflow-x-auto scrollbar-hide relative">
+          <div className="flex w-max">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-4 pr-4">
                 {[
@@ -1736,7 +1814,7 @@ export default function App() {
                   { name: "Salerno", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/salerno.jpg" },
                   { name: "Napoli", img: "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/napoli.jpg" }
                 ].map((place) => (
-                  <div key={`${set}-${place.name}`} className="relative flex-none w-64 md:w-80 aspect-[3/4] rounded-2xl overflow-hidden group shadow-lg cursor-pointer snap-center">
+                  <div key={`${set}-${place.name}`} className="relative flex-none w-64 md:w-80 aspect-[3/4] rounded-2xl overflow-hidden group shadow-lg cursor-pointer">
                     <img 
                       src={place.img} 
                       alt={place.name} 
@@ -2387,6 +2465,7 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+      <Analytics />
     </div>
   );
 }

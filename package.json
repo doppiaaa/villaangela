@@ -12,8 +12,10 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.18.8",
     "@supabase/supabase-js": "^2.100.1",
     "@tailwindcss/vite": "^4.1.14",
+    "@vercel/analytics": "^2.0.1",
     "@vitejs/plugin-react": "^5.0.4",
     "axios": "^1.13.6",
     "cheerio": "^1.2.0",
