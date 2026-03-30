@@ -1010,18 +1010,24 @@ const translations: Record<string, Content> = {
 
 // --- Hooks ---
 
-const useHorizontalMarquee = (speed: number = 0.5) => {
-  const ref = useRef<HTMLDivElement>(null);
+const useHorizontalMarquee = (speed: number = 1.0) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const container = containerRef.current;
+    const inner = innerRef.current;
+    if (!container || !inner) return;
 
     let frameId: number;
     let lastTime = 0;
     let isInteracting = false;
     let lastInteractionTime = 0;
-    let currentX = el.scrollLeft;
+    let currentX = 0;
+    
+    // Drag/Swipe state
+    let startX = 0;
+    let initialX = 0;
 
     const step = (time: number) => {
       if (!lastTime) lastTime = time;
@@ -1031,61 +1037,86 @@ const useHorizontalMarquee = (speed: number = 0.5) => {
       const now = Date.now();
       const isInteractionActive = isInteracting || (now - lastInteractionTime < 300);
 
-      if (!isInteractionActive && el) {
-        // Use a float to track position to avoid integer rounding issues
+      if (!isInteractionActive && inner) {
+        // GPU-accelerated movement for sub-pixel accuracy
         currentX += (speed * delta) / 16.67; 
         
-        if (el.scrollWidth > 0) {
-          const halfWidth = el.scrollWidth / 2;
-          if (currentX >= halfWidth) {
-            currentX -= halfWidth;
-          }
+        const halfWidth = inner.scrollWidth / 2;
+        if (halfWidth > 0 && currentX >= halfWidth) {
+          currentX -= halfWidth;
         }
-        el.scrollLeft = currentX;
-      } else if (el) {
-        // Keep our float tracker in sync with the user's manual scroll
-        currentX = el.scrollLeft;
+        inner.style.transform = `translate3d(-${currentX}px, 0, 0)`;
       }
       frameId = requestAnimationFrame(step);
     };
 
-    const onStart = () => { 
-      isInteracting = true; 
+    const handleStart = (clientX: number) => {
+      isInteracting = true;
+      startX = clientX;
+      initialX = currentX;
       lastInteractionTime = Date.now();
-    };
-    const onEnd = () => { 
-      isInteracting = false; 
-      lastInteractionTime = Date.now();
-    };
-    const onManualScroll = () => {
-      // Also update interaction time during scroll (handles inertia)
-      if (isInteracting) return; 
-      lastInteractionTime = Date.now();
-      currentX = el.scrollLeft;
     };
 
-    el.addEventListener('touchstart', onStart, { passive: true });
-    el.addEventListener('touchend', onEnd, { passive: true });
-    el.addEventListener('mousedown', onStart);
-    el.addEventListener('mouseup', onEnd);
-    el.addEventListener('mouseleave', onEnd);
-    el.addEventListener('wheel', onStart, { passive: true });
-    el.addEventListener('scroll', onManualScroll, { passive: true });
+    const handleMove = (clientX: number) => {
+      if (!isInteracting) return;
+      const dx = startX - clientX;
+      currentX = initialX + dx;
+      
+      // Bounds & Loop logic for dragging
+      const halfWidth = inner.scrollWidth / 2;
+      if (halfWidth > 0) {
+        if (currentX >= halfWidth) {
+          currentX -= halfWidth;
+          startX -= (halfWidth / (initialX === currentX ? 1 : 1)); // Adjust startX to keep motion relative
+          initialX -= halfWidth;
+        } else if (currentX < 0) {
+          currentX += halfWidth;
+          startX += halfWidth;
+          initialX += halfWidth;
+        }
+      }
+      
+      inner.style.transform = `translate3d(-${currentX}px, 0, 0)`;
+      lastInteractionTime = Date.now();
+    };
+
+    const handleEnd = () => {
+      isInteracting = false;
+      lastInteractionTime = Date.now();
+    };
+
+    // Desktop Events
+    const onMouseDown = (e: MouseEvent) => handleStart(e.clientX);
+    const onMouseMove = (e: MouseEvent) => handleMove(e.clientX);
+    const onMouseUp = () => handleEnd();
+    
+    // Touch Events
+    const onTouchStart = (e: TouchEvent) => handleStart(e.touches[0].clientX);
+    const onTouchMove = (e: TouchEvent) => handleMove(e.touches[0].clientX);
+    const onTouchEnd = () => handleEnd();
+
+    container.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    
+    container.addEventListener('touchstart', onTouchStart, { passive: false });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('touchend', onTouchEnd);
 
     frameId = requestAnimationFrame(step);
+    
     return () => {
       cancelAnimationFrame(frameId);
-      el.removeEventListener('touchstart', onStart);
-      el.removeEventListener('touchend', onEnd);
-      el.removeEventListener('mousedown', onStart);
-      el.removeEventListener('mouseup', onEnd);
-      el.removeEventListener('mouseleave', onEnd);
-      el.removeEventListener('wheel', onStart);
-      el.removeEventListener('scroll', onManualScroll);
+      container.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+      container.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
     };
   }, [speed]);
 
-  return ref;
+  return { containerRef, innerRef };
 };
 
 // --- Components ---
@@ -1429,8 +1460,8 @@ export default function App() {
   const today = new Date().toISOString().split('T')[0];
   const content = translations[lang] || translations['en'];
   
-  const galleryRef = useHorizontalMarquee(0.5);
-  const locationRef = useHorizontalMarquee(0.7);
+  const { containerRef: galleryContainerRef, innerRef: galleryInnerRef } = useHorizontalMarquee(1.5);
+  const { containerRef: locationContainerRef, innerRef: locationInnerRef } = useHorizontalMarquee(1.8);
 
   const trackCookieConsent = (accepted: boolean) => {
     const savedStats = localStorage.getItem('villa_angela_cookie_stats');
@@ -1745,8 +1776,8 @@ export default function App() {
           {content.gallery}
         </h2>
         
-        <div ref={galleryRef} className="flex w-full overflow-x-auto scrollbar-hide relative pb-8">
-          <div className="flex w-max">
+        <div ref={galleryContainerRef} className="w-full overflow-hidden relative pb-8 cursor-grab active:cursor-grabbing select-none">
+          <div ref={galleryInnerRef} className="flex w-max will-change-transform">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-2 md:gap-4 pr-2 md:pr-4">
                 {apartmentGalleryImages.reduce((acc: string[][], img: string, i: number) => {
@@ -1828,8 +1859,8 @@ export default function App() {
       <section className="py-32 px-0 bg-transparent overflow-hidden fade-in">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.title}</h2>
         
-        <div ref={locationRef} className="flex w-full overflow-x-auto scrollbar-hide relative">
-          <div className="flex w-max">
+        <div ref={locationContainerRef} className="w-full overflow-hidden relative cursor-grab active:cursor-grabbing select-none">
+          <div ref={locationInnerRef} className="flex w-max will-change-transform">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-4 pr-4">
                 {[
@@ -1849,8 +1880,9 @@ export default function App() {
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#3b2b1f]/90 via-transparent to-transparent"></div>
-                    <h3 className="absolute bottom-6 left-6 text-2xl font-serif text-white tracking-widest">{place.name}</h3>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-bottom p-6 overflow-hidden">
+                      <h3 className="text-white text-2xl font-serif mt-auto tracking-widest uppercase">{place.name}</h3>
+                    </div>
                   </div>
                 ))}
               </div>
