@@ -1988,7 +1988,7 @@ export default function App() {
         <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-16 text-center fade-in">{content.units.title}</h2>
         <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Apartment Card */}
-          <div className="unit-card bg-[#B49B78]/[0.35] backdrop-blur-[12px] border border-[#A0825F]/40 text-[#3D2B1F] p-8 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_12px_40px_rgba(100,70,40,0.15)]">
+          <div className="unit-card bg-white/85 backdrop-blur-[2px] border border-white/20 text-[#3D2B1F] p-8 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_8px_32px_rgba(100,70,40,0.08)]">
             <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/holiday-fixed.png" alt="Villa Angela Holiday Apartment Logo" className="h-40 mb-8 rounded-xl object-contain shadow-md" />
             <h3 className="font-serif text-[1.8rem] md:text-[2.2rem] font-medium text-[#3D2B1F] mb-4">{content.units.apartment.name}</h3>
             <p className="text-[#5C4A3A] mb-8 flex-1 font-medium leading-[1.7] text-[0.95rem]">{content.units.apartment.desc}</p>
@@ -2011,7 +2011,7 @@ export default function App() {
           </div>
 
           {/* Luxury Card */}
-          <div className="unit-card bg-[#B49B78]/[0.35] backdrop-blur-[12px] border border-[#A0825F]/40 text-[#3D2B1F] p-8 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_12px_40px_rgba(100,70,40,0.15)] relative overflow-hidden">
+          <div className="unit-card bg-white/85 backdrop-blur-[2px] border border-white/20 text-[#3D2B1F] p-8 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_8px_32px_rgba(100,70,40,0.08)] relative overflow-hidden">
             {/* Coming Soon banner */}
             <div className="absolute top-5 right-5 z-10 animate-badge-pulse">
               <span className="bg-[#a67c52] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
