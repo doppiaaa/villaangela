@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "user": "Mads",
+    "date": "Oktober 2024",
+    "rating": 5,
+    "text": "Absolut paradis! Villaen er smuk og kun få skridt fra stranden. Værten var meget hjælpsom.",
+    "source": "Airbnb",
+    "location": "Holiday Apartment"
+  },
+  {
+    "id": 2,
+    "user": "Sofie",
+    "date": "August 2024",
+    "rating": 5,
+    "text": "Et uforglemmeligt ophold takket være det moderne interiør og den fantastiske udsigt. Kan varmt anbefales!",
+    "source": "Booking.com",
+    "location": "Luxury House"
+  }
+]

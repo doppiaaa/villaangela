@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Tommasina",
+    "platform": "airbnb",
+    "metadata": "4 years on Airbnb",
+    "stars": 5,
+    "date": "June 2025",
+    "quote": "House equipped with everything, we didn't have to think about anything. Surrounded by greenery and tranquility, always breezy, we felt great. Very convenient internal parking..."
+  },
+  {
+    "name": "Anna",
+    "platform": "airbnb",
+    "metadata": "13 years on Airbnb",
+    "stars": 5,
+    "date": "January 2026",
+    "quote": "We spent some fantastic days at Villa Angela, spacious and welcoming, perfect for exploring Naples, Pompeii, and the Amalfi Coast. We will definitely return."
+  },
+  {
+    "name": "Anniek",
+    "platform": "airbnb",
+    "metadata": "5 years on Airbnb",
+    "stars": 5,
+    "date": "December 2025",
+    "quote": "We found our stay very pleasant. A beautiful, quiet place to return to."
+  },
+  {
+    "name": "Damian Eduardo",
+    "platform": "airbnb",
+    "metadata": "San Martín de los Andes, Argentina",
+    "stars": 5,
+    "date": "July 2025",
+    "quote": "A very beautiful, impeccable, highly comfortable house. I would definitely return, the check-in experience was very good. Total attention and consideration. Highly recommended."
+  },
+  {
+    "name": "Quentin",
+    "platform": "airbnb",
+    "metadata": "10 years on Airbnb",
+    "stars": 5,
+    "date": "September 2025",
+    "quote": "Incredible stay from September 9 to 15. Gorgeous house in a quiet location. Hard to leave... All the best to you. Pagano Family."
+  }
+]

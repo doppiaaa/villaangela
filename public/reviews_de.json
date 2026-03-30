@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Tommasina",
+    "platform": "airbnb",
+    "metadata": "4 Jahre bei Airbnb",
+    "stars": 5,
+    "date": "Juni 2025",
+    "quote": "Das Haus ist mit allem ausgestattet, wir mussten uns um nichts kümmern. Umgeben von viel Grün und Ruhe, immer luftig, haben wir uns sehr wohlgefühlt. Sehr bequemer interner Parkplatz..."
+  },
+  {
+    "name": "Anna",
+    "platform": "airbnb",
+    "metadata": "13 Jahre bei Airbnb",
+    "stars": 5,
+    "date": "Januar 2026",
+    "quote": "Wir haben einige fantastische Tage in der Villa Angela verbringen dürfen, geräumig und einladend, perfekt für die Erkundung von Neapel, Pompeji und der Amalfiküste. Wir werden auf jeden Fall wiederkommen."
+  },
+  {
+    "name": "Anniek",
+    "platform": "airbnb",
+    "metadata": "5 Jahre bei Airbnb",
+    "stars": 5,
+    "date": "Dezember 2025",
+    "quote": "Wir fanden unseren Aufenthalt sehr angenehm. Ein wunderschöner ruhiger Ort, um zurückzukehren."
+  },
+  {
+    "name": "Damian Eduardo",
+    "platform": "airbnb",
+    "metadata": "San Martín de los Andes, Argentinien",
+    "stars": 5,
+    "date": "Juli 2025",
+    "quote": "Ein sehr schönes, tadelloses, sehr komfortables Haus. Ich würde auf jeden Fall wiederkommen, der Check-in war sehr gut. Volle Aufmerksamkeit und Rücksicht. Sehr zu empfehlen."
+  },
+  {
+    "name": "Quentin",
+    "platform": "airbnb",
+    "metadata": "10 Jahre bei Airbnb",
+    "stars": 5,
+    "date": "September 2025",
+    "quote": "Unglaublicher Aufenthalt vom 9. bis 15. September. Wunderschönes Haus an einem ruhigen Ort. Es war schwer zu gehen... Alles Gute für euch. Familie Pagano."
+  }
+]

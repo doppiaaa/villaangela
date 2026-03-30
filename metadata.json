@@ -1,0 +1,7 @@
+{
+  "name": "Villa Angela - Mediterranean Holiday Rental",
+  "description": "Elegant holiday rental website for Villa Angela, featuring a 4-star Holiday Apartment and a 5-star Luxury House in Southern Italy. Includes an AI Virtual Concierge.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
