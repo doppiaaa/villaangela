@@ -307,6 +307,41 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     }
   };
 
+  useEffect(() => {
+    // Realtime subscription for Guests
+    const guestsChannel = supabase
+      .channel('dashboard:guests')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'guests' }, (payload: any) => {
+        if (payload.eventType === 'INSERT') {
+          setGuests(prev => [payload.new as Guest, ...prev]);
+        } else if (payload.eventType === 'DELETE') {
+          setGuests(prev => prev.filter(g => g.id !== payload.old.id));
+        } else if (payload.eventType === 'UPDATE') {
+          setGuests(prev => prev.map(g => g.id === payload.new.id ? payload.new as Guest : g));
+        }
+      })
+      .subscribe();
+
+    // Realtime subscription for Reviews
+    const reviewsChannel = supabase
+      .channel('dashboard:reviews')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, (payload: any) => {
+        if (payload.eventType === 'INSERT') {
+          setReviews(prev => [payload.new as Review, ...prev]);
+        } else if (payload.eventType === 'DELETE') {
+          setReviews(prev => prev.filter(r => r.id !== payload.old.id));
+        } else if (payload.eventType === 'UPDATE') {
+          setReviews(prev => prev.map(r => r.id === payload.new.id ? payload.new as Review : r));
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(guestsChannel);
+      supabase.removeChannel(reviewsChannel);
+    };
+  }, []);
+
   const sendEmailUpdate = async (guestList: Guest[]) => {
     setIsSyncing(true);
     const headers = ["Nome", "Cognome", "Documento", "Nazionalita", "Check-in", "Check-out", "Ospiti", "Locazione"];
@@ -414,10 +449,6 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     }
   };
 
-  const saveReviews = (updatedReviews: Review[]) => {
-    setReviews(updatedReviews);
-    localStorage.setItem('villa_angela_custom_reviews', JSON.stringify(updatedReviews));
-  };
 
   const handleExtractReview = async () => {
     if (!extractUrl) return;
@@ -789,7 +820,15 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                         <div className="font-serif text-[1.1rem] text-[#3D2B1F]">{review.name}</div>
                       </td>
                       <td className="px-6 py-5">
-                        <code className="bg-[#3b2b1f]/5 px-2 py-1 rounded text-xs font-bold text-[#3D2B1F]/70">{review.platform}</code>
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                          review.platform === 'Airbnb' ? 'bg-[#FF385C]/10 text-[#FF385C]' :
+                          review.platform === 'Booking.com' ? 'bg-[#003580]/10 text-[#003580]' :
+                          review.platform === 'Google' ? 'bg-[#4285F4]/10 text-[#4285F4]' :
+                          review.platform === 'TripAdvisor' ? 'bg-[#34E0A1]/10 text-[#00AF87]' :
+                          'bg-[#3b2b1f]/5 text-[#3D2B1F]/70'
+                        }`}>
+                          {review.platform}
+                        </span>
                       </td>
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2 text-xs font-semibold text-[#3D2B1F]">
@@ -1042,11 +1081,13 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                     >
                       <option value="Airbnb">Airbnb</option>
                       <option value="Booking.com">Booking.com</option>
+                      <option value="Google">Google</option>
+                      <option value="TripAdvisor">TripAdvisor</option>
                       <option value="HomeToGo">HomeToGo</option>
                       <option value="Expedia">Expedia</option>
                       <option value="VRBO">VRBO</option>
                       <option value="Agoda">Agoda</option>
-                      <option value="Google">Google</option>
+                      <option value="Direct">Diretta</option>
                     </select>
                   </div>
                 </div>

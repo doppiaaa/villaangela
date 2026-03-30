@@ -5,10 +5,18 @@
   --font-serif: "Playfair Display", serif;
   --font-sans: "Open Sans", sans-serif;
   --font-script: "Great Vibes", cursive;
+  --font-transcity: "Transcity", serif;
   
   --color-sand: #F5EFE6;
   --color-charcoal: #2C2C2C;
   --color-gold: #C9A84C;
+}
+
+@font-face {
+  font-family: 'Transcity';
+  src: url('./fonts/Transcity.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @layer base {

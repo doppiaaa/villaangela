@@ -1829,25 +1829,40 @@ export default function App() {
       }
     };
 
-    fetch(`/api/reviews?lang=${lang}`)
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          processReviews(data);
-        } else {
-          // Fallback to local file if API fails during migration
+    const fetchBaseReviews = () => {
+      fetch(`/api/reviews?lang=${lang}`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            processReviews(data);
+          } else {
+            fetch('/reviews.json')
+              .then(res => res.json())
+              .then(data => processReviews(data));
+          }
+        })
+        .catch(err => {
+          console.error('Failed to load reviews from API:', err);
           fetch('/reviews.json')
             .then(res => res.json())
             .then(data => processReviews(data));
-        }
+        });
+    };
+
+    fetchBaseReviews();
+
+    // Subscribe to Realtime changes for 'reviews' table
+    const reviewsChannel = supabase
+      .channel('public:reviews')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, () => {
+        // Refetch whenever a change occurs to ensure perfect sync with static reviews
+        fetchBaseReviews();
       })
-      .catch(err => {
-        console.error('Failed to load reviews from API:', err);
-        // Final fallback
-        fetch('/reviews.json')
-          .then(res => res.json())
-          .then(data => processReviews(data));
-      });
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(reviewsChannel);
+    };
   }, [lang, showAdmin]);
   
   useEffect(() => {
@@ -2155,7 +2170,7 @@ export default function App() {
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-bottom p-6 overflow-hidden">
-                      <h3 className="text-white text-4xl mt-auto script-title">{place.name}</h3>
+                      <h3 className="text-white text-4xl mt-auto font-transcity">{place.name}</h3>
                     </div>
                   </div>
                 ))}
