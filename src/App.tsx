@@ -1029,7 +1029,7 @@ const useHorizontalMarquee = (speed: number = 0.5) => {
       lastTime = time;
 
       const now = Date.now();
-      const isInteractionActive = isInteracting || (now - lastInteractionTime < 1000);
+      const isInteractionActive = isInteracting || (now - lastInteractionTime < 300);
 
       if (!isInteractionActive && el) {
         // Use a float to track position to avoid integer rounding issues
@@ -1429,8 +1429,8 @@ export default function App() {
   const today = new Date().toISOString().split('T')[0];
   const content = translations[lang] || translations['en'];
   
-  const galleryRef = useHorizontalMarquee(0.4);
-  const locationRef = useHorizontalMarquee(0.6);
+  const galleryRef = useHorizontalMarquee(0.5);
+  const locationRef = useHorizontalMarquee(0.7);
 
   const trackCookieConsent = (accepted: boolean) => {
     const savedStats = localStorage.getItem('villa_angela_cookie_stats');
