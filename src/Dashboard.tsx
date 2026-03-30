@@ -198,7 +198,12 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const checkLocalData = () => {
     const guests = localStorage.getItem('villa_angela_guests');
     const reviews = localStorage.getItem('villa_angela_custom_reviews');
-    if ((guests && JSON.parse(guests).length > 0) || (reviews && JSON.parse(reviews).length > 0)) {
+    const stats = localStorage.getItem('villa_angela_cookie_stats');
+    if (
+      (guests && JSON.parse(guests).length > 0) || 
+      (reviews && JSON.parse(reviews).length > 0) ||
+      (stats && (JSON.parse(stats).accepted > 0 || JSON.parse(stats).rejected > 0))
+    ) {
       setHasLocalData(true);
     }
   };
@@ -241,6 +246,19 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       // Cleanup
       localStorage.removeItem('villa_angela_guests');
       localStorage.removeItem('villa_angela_custom_reviews');
+      
+      const localStats = JSON.parse(localStorage.getItem('villa_angela_cookie_stats') || '{"accepted":0,"rejected":0}');
+      if (localStats.accepted > 0 || localStats.rejected > 0) {
+        // Increment global stats by local amounts
+        for (let i = 0; i < localStats.accepted; i++) {
+          await supabase.rpc('increment_cookie_stats', { stat_type: 'accepted' });
+        }
+        for (let i = 0; i < localStats.rejected; i++) {
+          await supabase.rpc('increment_cookie_stats', { stat_type: 'rejected' });
+        }
+        localStorage.removeItem('villa_angela_cookie_stats');
+      }
+
       setHasLocalData(false);
       fetchData(); // Refresh view
       alert("Migrazione completata con successo!");
@@ -296,9 +314,17 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         })));
       }
 
-      // Load stats (still using local storage for cookie preferences as per standard practice, but we could migrate later)
-      const savedStats = localStorage.getItem('villa_angela_cookie_stats');
-      if (savedStats) setStats(JSON.parse(savedStats));
+      // Load Global Cookie Stats
+      const { data: statsData, error: statsError } = await supabase
+        .from('cookie_stats')
+        .select('*')
+        .eq('id', 'global')
+        .single();
+      
+      if (statsError && statsError.code !== 'PGRST116') throw statsError;
+      if (statsData) {
+        setStats({ accepted: statsData.accepted, rejected: statsData.rejected });
+      }
       
     } catch (error) {
       console.error('Fetch data failed:', error);
@@ -336,9 +362,20 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       })
       .subscribe();
 
+    // Realtime subscription for Cookie Stats
+    const statsChannel = supabase
+      .channel('dashboard:stats')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'cookie_stats' }, (payload: any) => {
+        if (payload.new && payload.new.id === 'global') {
+          setStats({ accepted: payload.new.accepted, rejected: payload.new.rejected });
+        }
+      })
+      .subscribe();
+
     return () => {
       supabase.removeChannel(guestsChannel);
       supabase.removeChannel(reviewsChannel);
+      supabase.removeChannel(statsChannel);
     };
   }, []);
 
