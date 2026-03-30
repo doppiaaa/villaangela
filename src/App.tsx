@@ -37,6 +37,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { Analytics } from '@vercel/analytics/react';
 import Dashboard from './Dashboard';
+import { supabase } from './lib/supabase';
 
 
 // --- Types & Constants ---
@@ -1797,15 +1798,33 @@ export default function App() {
 
     const processReviews = async (data: Review[]) => {
       const translated = await translateContent(data, lang);
-      const savedReviews = localStorage.getItem('villa_angela_custom_reviews');
-      if (savedReviews) {
-        try {
-          const custom = JSON.parse(savedReviews);
-          setLoadedReviews([...custom, ...translated]);
-        } catch(e) {
+      
+      try {
+        // Fetch custom reviews from Supabase instead of localStorage
+        const { data: supabaseReviews, error } = await supabase
+          .from('reviews')
+          .select('*')
+          .eq('is_published', true)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (supabaseReviews) {
+          const formatted = supabaseReviews.map((r: any) => ({
+            id: r.id,
+            name: r.name,
+            platform: r.platform,
+            date: r.date,
+            stars: r.stars,
+            quote: r.quote,
+            metadata: r.platform // mapping platform to metadata for consistent display
+          }));
+          setLoadedReviews([...formatted, ...translated]);
+        } else {
           setLoadedReviews(translated);
         }
-      } else {
+      } catch (e) {
+        console.error('Error fetching Supabase reviews:', e);
         setLoadedReviews(translated);
       }
     };

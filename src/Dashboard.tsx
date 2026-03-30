@@ -19,26 +19,34 @@ import {
   Languages
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { supabase } from './lib/supabase';
 
-interface Guest {
-  id: string;
+interface GuestBody {
   name: string;
   surname: string;
-  documentId: string;
+  document_id: string;
   nationality: string;
-  checkIn: string;
-  checkOut: string;
-  guestsCount: number;
+  check_in: string;
+  check_out: string;
+  guests_count: number;
   unit: string;
 }
 
-interface Review {
+interface Guest extends GuestBody {
   id: string;
+}
+
+interface ReviewBody {
   name: string;
   platform: string;
   date: string;
   stars: number;
   quote: string;
+  is_published?: boolean;
+}
+
+interface Review extends ReviewBody {
+  id: string;
 }
 
 interface CookieStats {
@@ -153,17 +161,28 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAddReviewForm, setShowAddReviewForm] = useState(false);
-  const [newGuest, setNewGuest] = useState<Omit<Guest, 'id'>>({
+  
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [isMigrating, setIsMigrating] = useState(false);
+  const [hasLocalData, setHasLocalData] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [isSavingReview, setIsSavingReview] = useState(false);
+  const [extractUrl, setExtractUrl] = useState('');
+  const [autoTranslate, setAutoTranslate] = useState(true);
+
+  // Form states using snake_case to match DB schema where possible, or camelCase for UI consistency
+  const [newGuest, setNewGuest] = useState<GuestBody>({
     name: '',
     surname: '',
-    documentId: '',
+    document_id: '',
     nationality: '',
-    checkIn: '',
-    checkOut: '',
-    guestsCount: 1,
+    check_in: '',
+    check_out: '',
+    guests_count: 1,
     unit: 'Holiday Apartment'
   });
-  const [newReview, setNewReview] = useState<Omit<Review, 'id'>>({
+
+  const [newReview, setNewReview] = useState<ReviewBody>({
     name: '',
     platform: 'Airbnb',
     date: new Date().toLocaleDateString('it-IT', { month: 'long', year: 'numeric' }),
@@ -171,31 +190,128 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     quote: ''
   });
 
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [isExtracting, setIsExtracting] = useState(false);
-  const [isSavingReview, setIsSavingReview] = useState(false);
-  const [extractUrl, setExtractUrl] = useState('');
-  const [autoTranslate, setAutoTranslate] = useState(true);
-
   useEffect(() => {
-    // Load guests
-    const savedGuests = localStorage.getItem('villa_angela_guests');
-    if (savedGuests) setGuests(JSON.parse(savedGuests));
-
-    // Load stats
-    const savedStats = localStorage.getItem('villa_angela_cookie_stats');
-    if (savedStats) setStats(JSON.parse(savedStats));
-
-    // Load custom reviews
-    const savedReviews = localStorage.getItem('villa_angela_custom_reviews');
-    if (savedReviews) setReviews(JSON.parse(savedReviews));
+    fetchData();
+    checkLocalData();
   }, []);
+
+  const checkLocalData = () => {
+    const guests = localStorage.getItem('villa_angela_guests');
+    const reviews = localStorage.getItem('villa_angela_custom_reviews');
+    if ((guests && JSON.parse(guests).length > 0) || (reviews && JSON.parse(reviews).length > 0)) {
+      setHasLocalData(true);
+    }
+  };
+
+  const handleMigration = async () => {
+    if (!window.confirm("Vuoi trasferire tutti gli ospiti e le recensioni salvate nel browser nel nuovo database Cloud? I dati locali verranno poi rimossi.")) return;
+    
+    setIsMigrating(true);
+    try {
+      const localGuests = JSON.parse(localStorage.getItem('villa_angela_guests') || '[]');
+      const localReviews = JSON.parse(localStorage.getItem('villa_angela_custom_reviews') || '[]');
+
+      // Migrate Guests
+      if (localGuests.length > 0) {
+        const dbGuests = localGuests.map((g: any) => ({
+          name: g.name,
+          surname: g.surname,
+          document_id: g.documentId || g.document_id,
+          nationality: g.nationality,
+          check_in: g.checkIn || g.check_in,
+          check_out: g.checkOut || g.check_out,
+          guests_count: g.guestsCount || g.guests_count,
+          unit: g.unit
+        }));
+        await supabase.from('guests').insert(dbGuests);
+      }
+
+      // Migrate Reviews
+      if (localReviews.length > 0) {
+        const dbReviews = localReviews.map((r: any) => ({
+          name: r.name,
+          platform: r.platform,
+          date: r.date,
+          stars: r.stars,
+          quote: r.quote
+        }));
+        await supabase.from('reviews').insert(dbReviews);
+      }
+
+      // Cleanup
+      localStorage.removeItem('villa_angela_guests');
+      localStorage.removeItem('villa_angela_custom_reviews');
+      setHasLocalData(false);
+      fetchData(); // Refresh view
+      alert("Migrazione completata con successo!");
+    } catch (error) {
+      console.error('Migration failed:', error);
+      alert("Errore durante la migrazione. Controlla la console.");
+    } finally {
+      setIsMigrating(false);
+    }
+  };
+
+  const fetchData = async () => {
+    setIsSyncing(true);
+    try {
+      // Fetch guests
+      const { data: guestData, error: guestError } = await supabase
+        .from('guests')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (guestError) throw guestError;
+      
+      if (guestData) {
+        setGuests(guestData.map((g: any) => ({
+          id: g.id,
+          name: g.name,
+          surname: g.surname,
+          documentId: g.document_id,
+          nationality: g.nationality,
+          checkIn: g.check_in,
+          checkOut: g.check_out,
+          guestsCount: g.guests_count,
+          unit: g.unit
+        })));
+      }
+
+      // Fetch custom reviews
+      const { data: reviewData, error: reviewError } = await supabase
+        .from('reviews')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (reviewError) throw reviewError;
+      
+      if (reviewData) {
+        setReviews(reviewData.map((r: any) => ({
+          id: r.id,
+          name: r.name,
+          platform: r.platform,
+          date: r.date,
+          stars: r.stars,
+          quote: r.quote
+        })));
+      }
+
+      // Load stats (still using local storage for cookie preferences as per standard practice, but we could migrate later)
+      const savedStats = localStorage.getItem('villa_angela_cookie_stats');
+      if (savedStats) setStats(JSON.parse(savedStats));
+      
+    } catch (error) {
+      console.error('Fetch data failed:', error);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const sendEmailUpdate = async (guestList: Guest[]) => {
     setIsSyncing(true);
     const headers = ["Nome", "Cognome", "Documento", "Nazionalita", "Check-in", "Check-out", "Ospiti", "Locazione"];
     const rows = guestList.map(g => [
-      g.name, g.surname, g.documentId, g.nationality, g.checkIn, g.checkOut, g.guestsCount, g.unit
+      g.name, g.surname, g.document_id, g.nationality, g.check_in, g.check_out, g.guests_count, g.unit
     ]);
     const csvString = headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
     
@@ -221,35 +337,80 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     }
   };
 
-  const saveGuests = (updatedGuests: Guest[]) => {
-    setGuests(updatedGuests);
-    localStorage.setItem('villa_angela_guests', JSON.stringify(updatedGuests));
-    // Trigger automatic silent email sync
-    sendEmailUpdate(updatedGuests);
-  };
-
-  const handleAddGuest = (e: React.FormEvent) => {
+  const handleAddGuest = async (e: React.FormEvent) => {
     e.preventDefault();
-    const guestWithId: Guest = { ...newGuest, id: Date.now().toString() };
-    const updated = [guestWithId, ...guests];
-    saveGuests(updated);
-    setShowAddForm(false);
-    setNewGuest({
-      name: '',
-      surname: '',
-      documentId: '',
-      nationality: '',
-      checkIn: '',
-      checkOut: '',
-      guestsCount: 1,
-      unit: 'Holiday Apartment'
-    });
+    setIsSyncing(true);
+    
+    try {
+      const dbGuest = {
+        name: newGuest.name,
+        surname: newGuest.surname,
+        document_id: newGuest.documentId,
+        nationality: newGuest.nationality,
+        check_in: newGuest.checkIn,
+        check_out: newGuest.checkOut,
+        guests_count: newGuest.guestsCount,
+        unit: newGuest.unit
+      };
+
+      const { data, error } = await supabase
+        .from('guests')
+        .insert([dbGuest])
+        .select();
+
+      if (error) throw error;
+
+      if (data && data[0]) {
+        const added: Guest = {
+          id: data[0].id,
+          name: data[0].name,
+          surname: data[0].surname,
+          document_id: data[0].document_id,
+          nationality: data[0].nationality,
+          check_in: data[0].check_in,
+          check_out: data[0].check_out,
+          guests_count: data[0].guests_count,
+          unit: data[0].unit
+        };
+        setGuests([added, ...guests]);
+        setShowAddForm(false);
+        setNewGuest({
+          name: '',
+          surname: '',
+          documentId: '',
+          nationality: '',
+          checkIn: '',
+          checkOut: '',
+          guestsCount: 1,
+          unit: 'Holiday Apartment'
+        });
+      }
+    } catch (error) {
+      console.error('Error adding guest:', error);
+      alert('Errore durante il salvataggio su Supabase.');
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
-  const handleDeleteGuest = (id: string) => {
+  const handleDeleteGuest = async (id: string) => {
     if (window.confirm(content.confirmDelete)) {
-      const updated = guests.filter(g => g.id !== id);
-      saveGuests(updated);
+      setIsSyncing(true);
+      try {
+        const { error } = await supabase
+          .from('guests')
+          .delete()
+          .eq('id', id);
+        
+        if (error) throw error;
+        
+        setGuests(guests.filter(g => g.id !== id));
+      } catch (error) {
+        console.error('Error deleting guest:', error);
+        alert('Errore durante l\'eliminazione su Supabase.');
+      } finally {
+        setIsSyncing(false);
+      }
     }
   };
 
@@ -291,23 +452,30 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     setIsSavingReview(true);
     
     try {
-      // Save to backend (JSON files)
-      const response = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          review: newReview,
-          autoTranslate 
-        })
-      });
+      // 1. Save to Supabase (primary persistent storage)
+      const { data, error } = await supabase
+        .from('reviews')
+        .insert([newReview])
+        .select();
+
+      if (error) throw error;
+
+      // 2. Also trigger the backend API if auto-translation is needed
+      if (autoTranslate) {
+        await fetch('/api/reviews', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            review: newReview,
+            autoTranslate 
+          })
+        });
+      }
       
-      if (!response.ok) throw new Error('Failed to save to backend');
-      
-      // Also update local state for immediate feedback
-      const reviewWithId: Review = { ...newReview, id: Date.now().toString() };
-      const updated = [reviewWithId, ...reviews];
-      setReviews(updated);
-      localStorage.setItem('villa_angela_custom_reviews', JSON.stringify(updated));
+      if (data && data[0]) {
+        const added: Review = { ...data[0] };
+        setReviews([added, ...reviews]);
+      }
       
       setShowAddReviewForm(false);
       setNewReview({
@@ -318,8 +486,8 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         quote: ''
       });
     } catch (error) {
-      console.error('Save failed:', error);
-      alert('Errore durante il salvataggio della recensione.');
+      console.error('Save review failed:', error);
+      alert('Errore durante il salvataggio su Supabase.');
     } finally {
       setIsSavingReview(false);
     }
@@ -328,16 +496,25 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const handleDeleteReview = async (id: string) => {
     if (window.confirm(content.confirmDelete)) {
       try {
+        const { error } = await supabase
+          .from('reviews')
+          .delete()
+          .eq('id', id);
+        
+        if (error) throw error;
+
+        // Optionally delete from JSON files too
         await fetch('/api/reviews', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id, action: 'delete' })
         });
+
         const updated = reviews.filter(r => r.id !== id);
-        saveReviews(updated);
+        setReviews(updated);
       } catch (error) {
-        console.error('Delete failed:', error);
-        alert('Errore durante l\'eliminazione della recensione.');
+        console.error('Delete review failed:', error);
+        alert('Errore durante l\'eliminazione su Supabase.');
       }
     }
   };
@@ -345,7 +522,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const exportToCSV = () => {
     const headers = ["Nome", "Cognome", "Documento", "Nazionalita", "Check-in", "Check-out", "Ospiti", "Locazione"];
     const rows = guests.map(g => [
-      g.name, g.surname, g.documentId, g.nationality, g.checkIn, g.checkOut, g.guestsCount, g.unit
+      g.name, g.surname, g.document_id, g.nationality, g.check_in, g.check_out, g.guests_count, g.unit
     ]);
     
     let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
@@ -360,7 +537,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
 
   const filteredGuests = guests.filter(g => 
     `${g.name} ${g.surname}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    g.documentId.toLowerCase().includes(searchTerm.toLowerCase())
+    g.document_id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const today = new Date().toISOString().split('T')[0];
@@ -424,6 +601,30 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 md:p-8 max-w-7xl mx-auto w-full">
+        {/* Migration Alert */}
+        {hasLocalData && (
+          <div className="mb-8 p-6 bg-[#3b2b1f] rounded-3xl text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 border border-white/10 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="relative z-10 flex items-center gap-4">
+              <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center shrink-0">
+                <Settings size={20} className="text-[#e3d1ba]" />
+              </div>
+              <div>
+                <h4 className="font-serif text-[1.1rem] tracking-wider uppercase mb-1">Dati Locali Rilevati</h4>
+                <p className="text-[#e3d1ba]/70 text-xs">Hai degli ospiti o recensioni salvati in questo browser. Trasferiscili nel Database Cloud per non perderli mai.</p>
+              </div>
+            </div>
+            <button 
+              onClick={handleMigration}
+              disabled={isMigrating}
+              className="relative z-10 bg-[#e3d1ba] text-[#3b2b1f] px-6 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest hover:bg-white transition-all shadow-md flex items-center gap-2 whitespace-nowrap disabled:opacity-50"
+            >
+              {isMigrating ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+              Esegui Migrazione
+            </button>
+          </div>
+        )}
+
         {activeTab === 'guests' ? (
           <div className="space-y-8">
             {/* Action Bar */}
@@ -478,19 +679,19 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                         <div className="text-[11px] font-medium text-[#a67c52] uppercase tracking-wider mt-1">{guest.nationality}</div>
                       </td>
                       <td className="px-6 py-5">
-                        <code className="bg-[#3b2b1f]/5 px-2 py-1 rounded text-xs font-bold text-[#3D2B1F]/70">{guest.documentId}</code>
+                        <code className="bg-[#3b2b1f]/5 px-2 py-1 rounded text-xs font-bold text-[#3D2B1F]/70">{guest.document_id}</code>
                       </td>
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2 text-xs font-semibold text-[#3D2B1F]">
                           <Calendar size={14} className="text-[#a67c52]" />
-                          {guest.checkIn} → {guest.checkOut}
+                          {guest.check_in} → {guest.check_out}
                         </div>
                       </td>
                       <td className="px-6 py-5">
                         <div className="text-[11px] font-bold text-[#3D2B1F] uppercase tracking-wider">{guest.unit}</div>
                       </td>
                       <td className="px-6 py-5 text-center">
-                        <span className="bg-[#a67c52]/10 text-[#a67c52] px-3 py-1 rounded-full text-xs font-bold">{guest.guestsCount}</span>
+                        <span className="bg-[#a67c52]/10 text-[#a67c52] px-3 py-1 rounded-full text-xs font-bold">{guest.guests_count}</span>
                       </td>
                       <td className="px-6 py-5 text-right">
                         <button 
@@ -680,8 +881,8 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelDoc}</label>
                     <input 
                       required type="text" 
-                      value={newGuest.documentId}
-                      onChange={e => setNewGuest({...newGuest, documentId: e.target.value})}
+                      value={newGuest.document_id}
+                      onChange={e => setNewGuest({...newGuest, document_id: e.target.value})}
                       className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
                     />
                   </div>
@@ -702,14 +903,14 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                     <input 
                       required type="date" 
                       min={today}
-                      value={newGuest.checkIn}
+                      value={newGuest.check_in}
                       onChange={e => {
                         const newCheckIn = e.target.value;
                         if (newCheckIn && newCheckIn < today) return;
                         setNewGuest({
                           ...newGuest, 
-                          checkIn: newCheckIn,
-                          checkOut: (newCheckIn && newGuest.checkOut && newCheckIn >= newGuest.checkOut) ? '' : newGuest.checkOut
+                          check_in: newCheckIn,
+                          check_out: (newCheckIn && newGuest.check_out && newCheckIn >= newGuest.check_out) ? '' : newGuest.check_out
                         });
                       }}
                       className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
@@ -719,16 +920,16 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelCheckOut}</label>
                     <input 
                       required type="date" 
-                      min={newGuest.checkIn || today}
-                      value={newGuest.checkOut}
+                      min={newGuest.check_in || today}
+                      value={newGuest.check_out}
                       onChange={e => {
                         const val = e.target.value;
                         if (val && val < today) return;
-                        if (val && val === newGuest.checkIn) {
+                        if (val && val === newGuest.check_in) {
                           alert(content.dateError);
                           return;
                         }
-                        setNewGuest({...newGuest, checkOut: val});
+                        setNewGuest({...newGuest, check_out: val});
                       }}
                       className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
                     />
@@ -737,8 +938,8 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelGuests}</label>
                     <input 
                       required type="number" min="1" max="10"
-                      value={newGuest.guestsCount}
-                      onChange={e => setNewGuest({...newGuest, guestsCount: parseInt(e.target.value)})}
+                      value={newGuest.guests_count}
+                      onChange={e => setNewGuest({...newGuest, guests_count: parseInt(e.target.value)})}
                       className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
                     />
                   </div>
