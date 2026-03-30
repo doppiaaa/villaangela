@@ -1217,7 +1217,7 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
         duration: 4, 
         ease: "easeInOut" 
       }}
-      className={`flex items-center border-none bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-[14px] h-[64px] pointer-events-none fade-in relative overflow-hidden ${isSeventh ? 'p-[3.5px]' : 'px-5 py-3 gap-4'}`}
+      className={`flex items-center border-none bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] rounded-[14px] min-h-[64px] h-auto pointer-events-none fade-in relative overflow-hidden ${isSeventh ? 'p-[3.5px]' : 'px-5 py-4 gap-4'}`}
     >
       {/* Animated rotating gradient border ONLY for AC */}
       {isSeventh && (
@@ -1253,7 +1253,7 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
         </>
       )}
 
-      <div className={`flex items-center w-full h-full relative z-10 ${isSeventh ? 'bg-white rounded-[11px] px-5 py-3 gap-4' : 'gap-4'}`}>
+      <div className={`flex items-center w-full h-full relative z-10 ${isSeventh ? 'bg-white rounded-[11px] px-5 py-4 gap-4' : 'gap-4'}`}>
         <div className="flex items-center gap-3 flex-shrink-0 relative z-10">
           <motion.div 
             animate={iconAnimate}
@@ -1262,7 +1262,7 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
           >
             <Icon size={20} strokeWidth={1.5} className="text-[#5C4A3A]" />
           </motion.div>
-          <span className="text-[14px] font-sans font-normal tracking-wide text-[#3D2B1F] whitespace-nowrap">
+          <span className="text-[14px] font-sans font-normal tracking-wide text-[#3D2B1F]">
             {item}
           </span>
         </div>
@@ -2118,15 +2118,7 @@ export default function App() {
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10 fade-in">
           {content.amenities.title}
         </h2>
-        <div 
-          className="max-w-[1100px] mx-auto"
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(3, 1fr)', 
-            gap: '12px', 
-            alignItems: 'stretch' 
-          }}
-        >
+        <div className="max-w-[1100px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch px-4 md:px-0">
           {content.amenities.items.map((item, idx) => (
             <AmenityCard key={idx} item={item} index={idx} />
           ))}
