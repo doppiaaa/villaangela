@@ -1460,7 +1460,7 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
   return (
     <nav className={`fixed top-0 w-full z-50 py-4 px-4 md:px-12 flex justify-between items-center transition-all duration-300 ${isScrolled ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
       <div className="flex items-center gap-3 font-serif text-[1.1rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative">
-        <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/side-logo.png" alt="Villa Angela Logo" className="h-6 md:h-8 object-contain" />
+        <img src="/side-logo.png" alt="Villa Angela Logo" className="h-6 md:h-8 object-contain" />
         Villa Angela
       </div>
       <div className="flex items-center gap-2 lg:gap-8">
