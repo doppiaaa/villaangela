@@ -66,6 +66,7 @@ interface GuestBody {
   check_out: string;
   guests_count: number;
   unit: string;
+  parent_id?: string | null;
 }
 
 interface Guest extends GuestBody {
@@ -152,7 +153,10 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         id: "Carta d'Identità",
         passport: "Passaporto",
         license: "Patente"
-      }
+      },
+      familyModalTitle: "Registrazione Familiare",
+      familyMemberLabel: "Membro Famiglia",
+      finishRegistration: "Completa Registrazione"
     },
     en: { 
       title: "Reserved Area", 
@@ -209,7 +213,10 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         id: "ID Card",
         passport: "Passport",
         license: "Driver's License"
-      }
+      },
+      familyModalTitle: "Family Registration",
+      familyMemberLabel: "Family Member",
+      finishRegistration: "Complete Registration"
     }
   };
   const content = t[lang] || t.en;
@@ -234,6 +241,9 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const [countrySearch, setCountrySearch] = useState('');
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const [familyMembersLeft, setFamilyMembersLeft] = useState(0);
+  const [currentParentId, setCurrentParentId] = useState<string | null>(null);
+  const [expandedFamilies, setExpandedFamilies] = useState<string[]>([]);
 
   // Form states using snake_case to match DB schema where possible, or camelCase for UI consistency
   const [newGuest, setNewGuest] = useState<GuestBody>({
@@ -516,10 +526,9 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
 
   const handleSaveGuest = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Non usiamo più setIsSyncing(true) per non bloccare la UI, lo usiamo solo per feedback sul pulsante se necessario
     
     try {
-      const dbGuest = {
+      const dbGuest: any = {
         name: newGuest.name,
         surname: newGuest.surname,
         document_id: newGuest.document_id,
@@ -529,11 +538,13 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         check_in: newGuest.check_in,
         check_out: newGuest.check_out,
         guests_count: newGuest.guests_count,
-        unit: newGuest.unit
+        unit: newGuest.unit,
+        parent_id: currentParentId
       };
 
+      let savedId = editingGuest?.id;
+
       if (editingGuest) {
-        // UPDATE - Il Realtime si occuperà di aggiornare la UI
         const { error } = await supabase
           .from('guests')
           .update(dbGuest)
@@ -541,17 +552,49 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
 
         if (error) throw error;
       } else {
-        // INSERT - Il Realtime si occuperà di aggiungere l'ospite alla UI
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('guests')
-          .insert([dbGuest]);
+          .insert([dbGuest])
+          .select();
 
         if (error) throw error;
+        if (data && data[0]) savedId = data[0].id;
       }
 
-      // Chiudiamo subito il form per massima responsività
+      // Gestione famiglia
+      if (!editingGuest && !currentParentId && newGuest.guests_count > 1) {
+        // Abbiamo appena salvato il capofamiglia
+        setCurrentParentId(savedId);
+        setFamilyMembersLeft(newGuest.guests_count - 1);
+        // Reset solo dei campi anagrafici per il prossimo membro
+        setNewGuest(prev => ({
+          ...prev,
+          name: '',
+          surname: '',
+          document_id: '',
+          document_photo_url: '',
+          guests_count: 1 // I membri extra contano come 1 o ereditano? Di solito 1.
+        }));
+        return; // Non chiudiamo il form
+      }
+
+      if (familyMembersLeft > 1) {
+        setFamilyMembersLeft(prev => prev - 1);
+        setNewGuest(prev => ({
+          ...prev,
+          name: '',
+          surname: '',
+          document_id: '',
+          document_photo_url: ''
+        }));
+        return;
+      }
+
+      // Fine registrazione
       setShowAddForm(false);
       setEditingGuest(null);
+      setCurrentParentId(null);
+      setFamilyMembersLeft(0);
       setNewGuest({
         name: '',
         surname: '',
@@ -562,7 +605,8 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         check_in: '',
         check_out: '',
         guests_count: 1,
-        unit: 'Holiday Apartment'
+        unit: 'Holiday Apartment',
+        parent_id: null
       });
     } catch (error) {
       console.error('Error saving guest:', error);
@@ -726,6 +770,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   };
 
   const filteredGuests = guests
+    .filter(g => !g.parent_id) // Mostra solo capifamiglia nella lista principale
     .filter(g => 
       g.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
       g.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -743,6 +788,14 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
+
+  const toggleFamily = (parentId: string) => {
+    setExpandedFamilies(prev => 
+      prev.includes(parentId) 
+        ? prev.filter(id => id !== parentId) 
+        : [...prev, parentId]
+    );
+  };
 
   const statsToDisplay: CookieStats = {
     accepted: stats.accepted,
@@ -915,64 +968,118 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                 <tbody className="divide-y divide-[#3b2b1f]/5">
                   {filteredGuests.length > 0 ? filteredGuests.map((guest) => {
                     const status = getGuestStatus(guest.check_out);
+                    const familyMembers = guests.filter(g => g.parent_id === guest.id);
+                    const isExpanded = expandedFamilies.includes(guest.id);
+
                     return (
-                      <tr key={guest.id} className={`hover:bg-[#3b2b1f]/[0.02] transition-colors border-l-4 ${status === 'active' ? 'border-l-green-500/50' : 'border-l-red-400/50'}`}>
-                        <td className="px-6 py-5">
-                          <div className={`font-serif text-[1.1rem] transition-colors ${status === 'active' ? 'text-green-800' : 'text-[#3D2B1F]'}`}>{guest.name} {guest.surname}</div>
-                          <div className="text-[11px] font-medium text-[#a67c52] uppercase tracking-wider mt-1">{guest.nationality}</div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-[10px] font-bold text-[#a67c52] uppercase tracking-wider bg-[#a67c52]/5 px-1.5 py-0.5 rounded">
-                                {guest.document_type}
-                              </span>
-                              {guest.document_photo_url && (
-                                <a 
-                                  href={guest.document_photo_url} 
-                                  target="_blank" 
-                                  rel="noreferrer"
-                                  className="text-[#a67c52] hover:text-[#3b2b1f] transition-colors"
+                      <React.Fragment key={guest.id}>
+                        <tr className={`hover:bg-[#3b2b1f]/[0.02] transition-colors border-l-4 ${status === 'active' ? 'border-l-green-500/50' : 'border-l-red-400/50'}`}>
+                          <td className="px-6 py-5">
+                            <div className="flex items-center gap-3">
+                              {familyMembers.length > 0 && (
+                                <button 
+                                  onClick={() => toggleFamily(guest.id)}
+                                  className="p-1 hover:bg-[#3b2b1f]/5 rounded transition-colors text-[#a67c52]"
                                 >
-                                  <ImageIcon size={14} />
-                                </a>
+                                  {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                                </button>
                               )}
+                              <div>
+                                <div className={`font-serif text-[1.1rem] transition-colors ${status === 'active' ? 'text-green-800' : 'text-[#3D2B1F]'}`}>{guest.name} {guest.surname}</div>
+                                <div className="text-[11px] font-medium text-[#a67c52] uppercase tracking-wider mt-1">{guest.nationality}</div>
+                              </div>
                             </div>
-                            <code className="bg-[#3b2b1f]/5 px-2 py-1 rounded text-xs font-bold text-[#3D2B1F]/70 w-fit">{guest.document_id}</code>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className={`flex items-center gap-2 text-xs font-bold transition-colors ${status === 'active' ? 'text-green-700' : 'text-red-500/80'}`}>
-                            <Calendar size={14} className={status === 'active' ? 'text-green-600' : 'text-red-400'} />
-                            {guest.check_in} → {guest.check_out}
-                            <span className={`text-[9px] uppercase px-1.5 py-0.5 rounded-full ${status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-50 text-red-500'}`}>
-                              {status === 'active' ? 'Attiva' : 'Scaduta'}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="text-[11px] font-bold text-[#3D2B1F] uppercase tracking-wider">{guest.unit}</div>
-                        </td>
-                        <td className="px-6 py-5 text-center">
-                          <span className={`px-3 py-1 rounded-full text-xs font-bold ${status === 'active' ? 'bg-green-100 text-green-700' : 'bg-[#a67c52]/10 text-[#a67c52]'}`}>{guest.guests_count}</span>
-                        </td>
-                        <td className="px-6 py-5 text-right">
-                          <div className="flex justify-end gap-2">
-                            <button 
-                              onClick={() => handleEditClick(guest)}
-                              className="p-2 text-[#3b2b1f]/20 hover:text-[#a67c52] transition-colors"
+                          </td>
+                          <td className="px-6 py-5">
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold text-[#a67c52] uppercase tracking-wider bg-[#a67c52]/5 px-1.5 py-0.5 rounded">
+                                  {guest.document_type}
+                                </span>
+                                {guest.document_photo_url && (
+                                  <a 
+                                    href={guest.document_photo_url} 
+                                    target="_blank" 
+                                    rel="noreferrer"
+                                    className="text-[#a67c52] hover:text-[#3b2b1f] transition-colors"
+                                  >
+                                    <ImageIcon size={14} />
+                                  </a>
+                                )}
+                              </div>
+                              <code className="bg-[#3b2b1f]/5 px-2 py-1 rounded text-xs font-bold text-[#3D2B1F]/70 w-fit">{guest.document_id}</code>
+                            </div>
+                          </td>
+                          <td className="px-6 py-5">
+                            <div className={`flex items-center gap-2 text-xs font-bold transition-colors ${status === 'active' ? 'text-green-700' : 'text-red-500/80'}`}>
+                              <Calendar size={14} className={status === 'active' ? 'text-green-600' : 'text-red-400'} />
+                              {guest.check_in} → {guest.check_out}
+                              <span className={`text-[9px] uppercase px-1.5 py-0.5 rounded-full ${status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-50 text-red-500'}`}>
+                                {status === 'active' ? 'Attiva' : 'Scaduta'}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-5">
+                            <div className="text-[11px] font-bold text-[#3D2B1F] uppercase tracking-wider">{guest.unit}</div>
+                          </td>
+                          <td className="px-6 py-5 text-center">
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${status === 'active' ? 'bg-green-100 text-green-700' : 'bg-[#a67c52]/10 text-[#a67c52]'}`}>{guest.guests_count}</span>
+                          </td>
+                          <td className="px-6 py-5 text-right">
+                            <div className="flex justify-end gap-2">
+                              <button 
+                                onClick={() => handleEditClick(guest)}
+                                className="p-2 text-[#3b2b1f]/20 hover:text-[#a67c52] transition-colors"
+                              >
+                                <Pencil size={18} />
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteGuest(guest.id, guest.document_photo_url)}
+                                className="p-2 text-[#3b2b1f]/20 hover:text-red-500 transition-colors"
+                              >
+                                <Trash2 size={18} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                        {/* Family Members Row */}
+                        <AnimatePresence>
+                          {isExpanded && familyMembers.map(member => (
+                            <motion.tr 
+                              key={member.id}
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="bg-[#F5F0E8]/30 border-l-4 border-l-[#a67c52]/20"
                             >
-                              <Pencil size={18} />
-                            </button>
-                            <button 
-                              onClick={() => handleDeleteGuest(guest.id, guest.document_photo_url)}
-                              className="p-2 text-[#3b2b1f]/20 hover:text-red-500 transition-colors"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
+                              <td className="px-6 py-3 pl-14">
+                                <div className="text-[14px] font-medium text-[#3D2B1F]">{member.name} {member.surname}</div>
+                                <div className="text-[9px] font-bold text-[#a67c52]/50 uppercase tracking-widest">{content.familyMemberLabel}</div>
+                              </td>
+                              <td className="px-6 py-3">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-[9px] font-bold text-[#a67c52]/60 uppercase tracking-wider">
+                                    {member.document_type}
+                                  </span>
+                                  <code className="text-[10px] text-[#3D2B1F]/50">{member.document_id}</code>
+                                </div>
+                              </td>
+                              <td colSpan={3} className="px-6 py-3">
+                                {/* Inherited info from parent */}
+                              </td>
+                              <td className="px-6 py-3 text-right">
+                                <button 
+                                  onClick={() => handleDeleteGuest(member.id, member.document_photo_url)}
+                                  className="p-1 text-[#3b2b1f]/10 hover:text-red-400 transition-colors"
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </td>
+                            </motion.tr>
+                          ))}
+                        </AnimatePresence>
+                      </React.Fragment>
                     );
                   }) : (
                     <tr>
@@ -1127,12 +1234,14 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
             >
               <div className="p-8 border-b border-[#3b2b1f]/10 flex justify-between items-center">
                 <h3 className="font-serif text-xl tracking-widest uppercase text-[#3D2B1F]">
-                  {editingGuest ? content.editModalTitle : content.modalTitle}
+                  {familyMembersLeft > 0 ? content.familyModalTitle : (editingGuest ? content.editModalTitle : content.modalTitle)}
                 </h3>
                 <button 
                   onClick={() => {
                     setShowAddForm(false);
                     setEditingGuest(null);
+                    setCurrentParentId(null);
+                    setFamilyMembersLeft(0);
                     setNewGuest({
                       name: '', surname: '', document_id: '', document_type: "Carta d'Identità",
                       document_photo_url: '', nationality: '', check_in: '', check_out: '',
@@ -1144,6 +1253,17 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                   <X size={24} />
                 </button>
               </div>
+
+              {familyMembersLeft > 0 && (
+                <div className="px-8 py-4 bg-[#a67c52]/10 border-b border-[#3b2b1f]/5 flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#a67c52]">
+                    Registrazione familiari in corso...
+                  </span>
+                  <span className="bg-[#a67c52] text-white px-3 py-1 rounded-full text-[10px] font-bold">
+                    Mancanti: {familyMembersLeft}
+                  </span>
+                </div>
+              )}
 
               <form onSubmit={handleSaveGuest} className="p-4 md:p-8 space-y-4 md:space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -1228,134 +1348,132 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                       </div>
                     )}
                   </div>
-                </div>
+                 {!currentParentId && (
+                  <>
+                    <div className="space-y-2 relative">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelNat}</label>
+                      <div className="relative">
+                        <input 
+                          required type="text" 
+                          placeholder="Cerca nazionalità..."
+                          value={showCountryDropdown ? countrySearch : newGuest.nationality}
+                          onFocus={() => {
+                            setShowCountryDropdown(true);
+                            setCountrySearch('');
+                          }}
+                          onChange={e => setCountrySearch(e.target.value)}
+                          className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
+                        />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[#3b2b1f]/20 pointer-events-none">
+                          <Search size={18} />
+                        </div>
+                      </div>
 
-                <div className="space-y-2 relative">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelNat}</label>
-                  <div className="relative">
-                    <input 
-                      required type="text" 
-                      placeholder="Cerca nazionalità..."
-                      value={showCountryDropdown ? countrySearch : newGuest.nationality}
-                      onFocus={() => {
-                        setShowCountryDropdown(true);
-                        setCountrySearch('');
-                      }}
-                      onChange={e => setCountrySearch(e.target.value)}
-                      className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
-                    />
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[#3b2b1f]/20 pointer-events-none">
-                      <Search size={18} />
-                    </div>
-                  </div>
-
-                  <AnimatePresence>
-                    {showCountryDropdown && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-[500] left-0 right-0 top-full mt-2 bg-white border border-[#3b2b1f]/10 rounded-2xl shadow-xl max-h-60 overflow-y-auto scrollbar-hide"
-                      >
-                        {COUNTRIES.filter(c => c.toLowerCase().includes(countrySearch.toLowerCase())).length > 0 ? (
-                          COUNTRIES.filter(c => c.toLowerCase().includes(countrySearch.toLowerCase())).map(country => (
-                            <button
-                              key={country}
-                              type="button"
-                              onClick={() => {
-                                setNewGuest({...newGuest, nationality: country});
-                                setShowCountryDropdown(false);
-                                setCountrySearch('');
-                              }}
-                              className="w-full text-left px-5 py-3 text-sm hover:bg-[#F5F0E8] transition-colors border-b border-[#3b2b1f]/5 last:border-0 font-medium text-[#3D2B1F]"
-                            >
-                              {country}
-                            </button>
-                          ))
-                        ) : (
-                          <div className="px-5 py-6 text-center text-[#3D2B1F]/40 italic text-sm">
-                            Nessun paese trovato
-                          </div>
+                      <AnimatePresence>
+                        {showCountryDropdown && (
+                          <motion.div 
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="absolute z-[500] left-0 right-0 top-full mt-2 bg-white border border-[#3b2b1f]/10 rounded-2xl shadow-xl max-h-60 overflow-y-auto scrollbar-hide"
+                          >
+                            {COUNTRIES.filter(c => c.toLowerCase().includes(countrySearch.toLowerCase())).length > 0 ? (
+                              COUNTRIES.filter(c => c.toLowerCase().includes(countrySearch.toLowerCase())).map(country => (
+                                <button
+                                  key={country}
+                                  type="button"
+                                  onClick={() => {
+                                    setNewGuest({...newGuest, nationality: country});
+                                    setShowCountryDropdown(false);
+                                    setCountrySearch('');
+                                  }}
+                                  className="w-full text-left px-5 py-3 text-sm hover:bg-[#F5F0E8] transition-colors border-b border-[#3b2b1f]/5 last:border-0 font-medium text-[#3D2B1F]"
+                                >
+                                  {country}
+                                </button>
+                              ))
+                            ) : (
+                              <div className="px-5 py-6 text-center text-[#3D2B1F]/40 italic text-sm">
+                                Nessun paese trovato
+                              </div>
+                            )}
+                          </motion.div>
                         )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                  
-                  {/* Overlay per chiudere dropdown se si clicca fuori */}
-                  {showCountryDropdown && (
-                    <div 
-                      className="fixed inset-0 z-[490]" 
-                      onClick={() => setShowCountryDropdown(false)}
-                    />
-                  )}
-                </div>
+                      </AnimatePresence>
+                      
+                      {showCountryDropdown && (
+                        <div 
+                          className="fixed inset-0 z-[490]" 
+                          onClick={() => setShowCountryDropdown(false)}
+                        />
+                      )}
+                    </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelCheckIn}</label>
-                    <input 
-                      required type="date" 
-                      min={today}
-                      value={newGuest.check_in}
-                      onChange={e => {
-                        const newCheckIn = e.target.value;
-                        if (newCheckIn && newCheckIn < today) return;
-                        setNewGuest({
-                          ...newGuest, 
-                          check_in: newCheckIn,
-                          check_out: (newCheckIn && newGuest.check_out && newCheckIn >= newGuest.check_out) ? '' : newGuest.check_out
-                        });
-                      }}
-                      className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelCheckOut}</label>
-                    <input 
-                      required type="date" 
-                      min={newGuest.check_in || today}
-                      value={newGuest.check_out}
-                      onChange={e => {
-                        const val = e.target.value;
-                        if (val && val < today) return;
-                        if (val && val === newGuest.check_in) {
-                          alert(content.dateError);
-                          return;
-                        }
-                        setNewGuest({...newGuest, check_out: val});
-                      }}
-                      className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelGuests}</label>
-                    <input 
-                      required type="number" min="1" max="10"
-                      value={newGuest.guests_count}
-                      onChange={e => setNewGuest({...newGuest, guests_count: parseInt(e.target.value)})}
-                      className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
-                    />
-                  </div>
-                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelCheckIn}</label>
+                        <input 
+                          required type="date" 
+                          value={newGuest.check_in}
+                          onChange={e => {
+                            const newCheckIn = e.target.value;
+                            setNewGuest({
+                              ...newGuest, 
+                              check_in: newCheckIn
+                            });
+                          }}
+                          className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelCheckOut}</label>
+                        <input 
+                          required type="date" 
+                          value={newGuest.check_out}
+                          onChange={e => {
+                            const val = e.target.value;
+                            if (val && val === newGuest.check_in) {
+                              alert(content.dateError);
+                              return;
+                            }
+                            setNewGuest({...newGuest, check_out: val});
+                          }}
+                          className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelGuests}</label>
+                        <input 
+                          required type="number" min="1" max="10"
+                          value={newGuest.guests_count}
+                          onChange={e => setNewGuest({...newGuest, guests_count: parseInt(e.target.value)})}
+                          className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
+                        />
+                      </div>
+                    </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelLoc}</label>
-                  <select 
-                    required
-                    value={newGuest.unit}
-                    onChange={e => setNewGuest({...newGuest, unit: e.target.value})}
-                    className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors"
-                  >
-                    <option value="Holiday Apartment">Holiday Apartment</option>
-                    <option value="Luxury House">Luxury House</option>
-                  </select>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelLoc}</label>
+                      <select 
+                        required
+                        value={newGuest.unit}
+                        onChange={e => setNewGuest({...newGuest, unit: e.target.value})}
+                        className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors"
+                      >
+                        <option value="Holiday Apartment">Holiday Apartment</option>
+                        <option value="Luxury House">Luxury House</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+
                 </div>
 
                 <button 
                   type="submit"
                   className="w-full bg-[#3b2b1f] text-white py-4 rounded-xl uppercase tracking-widest text-[13px] font-bold hover:bg-[#a67c52] transition-all shadow-md mt-4"
                 >
-                  {editingGuest ? content.update : content.save}
+                  {familyMembersLeft > 0 ? (familyMembersLeft === 1 ? content.finishRegistration : `Salva e continua (${familyMembersLeft})`) : (editingGuest ? content.update : content.save)}
                 </button>
               </form>
             </motion.div>
