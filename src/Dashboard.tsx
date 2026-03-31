@@ -392,13 +392,17 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       // Load Global Cookie Stats
       const { data: statsData, error: statsError } = await supabase
         .from('cookie_stats')
-        .select('*')
+        .select('accepted, rejected')
         .eq('id', 'global')
-        .single();
+        .maybeSingle(); // Usiamo maybeSingle per evitare errori se non trova nulla
       
-      if (statsError && statsError.code !== 'PGRST116') throw statsError;
-      if (statsData) {
-        setStats({ accepted: statsData.accepted, rejected: statsData.rejected });
+      if (statsError) {
+        console.error('Errore caricamento cookie stats:', statsError);
+      } else if (statsData) {
+        setStats({ 
+          accepted: statsData.accepted || 0, 
+          rejected: statsData.rejected || 0 
+        });
       }
       
     } catch (error) {
