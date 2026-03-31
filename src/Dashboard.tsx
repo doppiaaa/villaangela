@@ -20,7 +20,9 @@ import {
   Camera,
   Image as ImageIcon,
   FileText,
-  Pencil
+  Pencil,
+  ChevronUp,
+  ChevronDown
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from './lib/supabase';
@@ -189,6 +191,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const [stats, setStats] = useState<CookieStats>({ accepted: 0, rejected: 0 });
   const [activeTab, setActiveTab] = useState<'guests' | 'stats' | 'reviews'>('guests');
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Guest | null, direction: 'asc' | 'desc' }>({ key: null, direction: 'asc' });
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAddReviewForm, setShowAddReviewForm] = useState(false);
   
@@ -417,35 +420,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     };
   }, []);
 
-  const sendEmailUpdate = async (guestList: Guest[]) => {
-    setIsSyncing(true);
-    const headers = ["Nome", "Cognome", "Documento", "Nazionalita", "Check-in", "Check-out", "Ospiti", "Locazione"];
-    const rows = guestList.map(g => [
-      g.name, g.surname, g.document_id, g.nationality, g.check_in, g.check_out, g.guests_count, g.unit
-    ]);
-    const csvString = headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
-    
-    try {
-      await fetch('https://formsubmit.co/ajax/holidayvillaangela@gmail.com', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          _subject: "Aggiornamento Automatica Banca Dati Ospiti - Villa Angela",
-          message: "Dati aggiornati degli ospiti (CSV):\n\n" + csvString,
-          _template: "table",
-          _captcha: "false"
-        })
-      });
-      console.log('Sync successful');
-    } catch (error) {
-      console.error('Sync failed:', error);
-    } finally {
-      setIsSyncing(false);
-    }
-  };
+  
   
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -716,10 +691,47 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     document.body.removeChild(link);
   };
 
-  const filteredGuests = guests.filter(g => 
-    `${g.name} ${g.surname}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    g.document_id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleSort = (key: keyof Guest) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getGuestStatus = (checkOut: string) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkOutDate = new Date(checkOut);
+    checkOutDate.setHours(0, 0, 0, 0);
+    
+    if (today <= checkOutDate) return 'active';
+    return 'expired';
+  };
+
+  const filteredGuests = guests
+    .filter(g => 
+      g.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      g.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      g.document_id.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (!sortConfig.key) return 0;
+      
+      const aVal = a[sortConfig.key];
+      const bVal = b[sortConfig.key];
+
+      if (aVal === undefined || bVal === undefined) return 0;
+
+      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+  const statsToDisplay: CookieStats = {
+    accepted: stats.accepted,
+    rejected: stats.rejected
+  };
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -844,71 +856,109 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
               <table className="w-full text-left">
                 <thead className="bg-[#3b2b1f]/5 border-b border-[#3b2b1f]/10">
                   <tr>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/60">{content.tableGuest}</th>
+                    <th 
+                      onClick={() => handleSort('name')}
+                      className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/60 cursor-pointer hover:text-[#a67c52] transition-colors"
+                    >
+                      <div className="flex items-center gap-1">
+                        {content.tableGuest}
+                        {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
+                      </div>
+                    </th>
                     <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/60">{content.tableDoc}</th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/60">{content.tableCheck}</th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/60">{content.tableLoc}</th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/60 text-center">{content.tableCount}</th>
+                    <th 
+                      onClick={() => handleSort('check_in')}
+                      className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/60 cursor-pointer hover:text-[#a67c52] transition-colors"
+                    >
+                      <div className="flex items-center gap-1">
+                        {content.tableCheck}
+                        {sortConfig.key === 'check_in' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
+                      </div>
+                    </th>
+                    <th 
+                      onClick={() => handleSort('unit')}
+                      className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/60 cursor-pointer hover:text-[#a67c52] transition-colors"
+                    >
+                      <div className="flex items-center gap-1">
+                        {content.tableLoc}
+                        {sortConfig.key === 'unit' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
+                      </div>
+                    </th>
+                    <th 
+                      onClick={() => handleSort('guests_count')}
+                      className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/60 text-center cursor-pointer hover:text-[#a67c52] transition-colors"
+                    >
+                      <div className="flex items-center justify-center gap-1">
+                        {content.tableCount}
+                        {sortConfig.key === 'guests_count' && (sortConfig.direction === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
+                      </div>
+                    </th>
                     <th className="px-6 py-4 text-right"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#3b2b1f]/5">
-                  {filteredGuests.length > 0 ? filteredGuests.map((guest) => (
-                    <tr key={guest.id} className="hover:bg-[#3b2b1f]/[0.02] transition-colors">
-                      <td className="px-6 py-5">
-                        <div className="font-serif text-[1.1rem] text-[#3D2B1F]">{guest.name} {guest.surname}</div>
-                        <div className="text-[11px] font-medium text-[#a67c52] uppercase tracking-wider mt-1">{guest.nationality}</div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-bold text-[#a67c52] uppercase tracking-wider bg-[#a67c52]/5 px-1.5 py-0.5 rounded">
-                              {guest.document_type}
-                            </span>
-                            {guest.document_photo_url && (
-                              <a 
-                                href={guest.document_photo_url} 
-                                target="_blank" 
-                                rel="noreferrer"
-                                className="text-[#a67c52] hover:text-[#3b2b1f] transition-colors"
-                              >
-                                <ImageIcon size={14} />
-                              </a>
-                            )}
+                  {filteredGuests.length > 0 ? filteredGuests.map((guest) => {
+                    const status = getGuestStatus(guest.check_out);
+                    return (
+                      <tr key={guest.id} className={`hover:bg-[#3b2b1f]/[0.02] transition-colors border-l-4 ${status === 'active' ? 'border-l-green-500/50' : 'border-l-red-400/50'}`}>
+                        <td className="px-6 py-5">
+                          <div className={`font-serif text-[1.1rem] transition-colors ${status === 'active' ? 'text-green-800' : 'text-[#3D2B1F]'}`}>{guest.name} {guest.surname}</div>
+                          <div className="text-[11px] font-medium text-[#a67c52] uppercase tracking-wider mt-1">{guest.nationality}</div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-bold text-[#a67c52] uppercase tracking-wider bg-[#a67c52]/5 px-1.5 py-0.5 rounded">
+                                {guest.document_type}
+                              </span>
+                              {guest.document_photo_url && (
+                                <a 
+                                  href={guest.document_photo_url} 
+                                  target="_blank" 
+                                  rel="noreferrer"
+                                  className="text-[#a67c52] hover:text-[#3b2b1f] transition-colors"
+                                >
+                                  <ImageIcon size={14} />
+                                </a>
+                              )}
+                            </div>
+                            <code className="bg-[#3b2b1f]/5 px-2 py-1 rounded text-xs font-bold text-[#3D2B1F]/70 w-fit">{guest.document_id}</code>
                           </div>
-                          <code className="bg-[#3b2b1f]/5 px-2 py-1 rounded text-xs font-bold text-[#3D2B1F]/70 w-fit">{guest.document_id}</code>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-2 text-xs font-semibold text-[#3D2B1F]">
-                          <Calendar size={14} className="text-[#a67c52]" />
-                          {guest.check_in} → {guest.check_out}
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="text-[11px] font-bold text-[#3D2B1F] uppercase tracking-wider">{guest.unit}</div>
-                      </td>
-                      <td className="px-6 py-5 text-center">
-                        <span className="bg-[#a67c52]/10 text-[#a67c52] px-3 py-1 rounded-full text-xs font-bold">{guest.guests_count}</span>
-                      </td>
-                      <td className="px-6 py-5 text-right">
-                        <div className="flex justify-end gap-2">
-                          <button 
-                            onClick={() => handleEditClick(guest)}
-                            className="p-2 text-[#3b2b1f]/20 hover:text-[#a67c52] transition-colors"
-                          >
-                            <Pencil size={18} />
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteGuest(guest.id, guest.document_photo_url)}
-                            className="p-2 text-[#3b2b1f]/20 hover:text-red-500 transition-colors"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  )) : (
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className={`flex items-center gap-2 text-xs font-bold transition-colors ${status === 'active' ? 'text-green-700' : 'text-red-500/80'}`}>
+                            <Calendar size={14} className={status === 'active' ? 'text-green-600' : 'text-red-400'} />
+                            {guest.check_in} → {guest.check_out}
+                            <span className={`text-[9px] uppercase px-1.5 py-0.5 rounded-full ${status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-50 text-red-500'}`}>
+                              {status === 'active' ? 'Attiva' : 'Scaduta'}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="text-[11px] font-bold text-[#3D2B1F] uppercase tracking-wider">{guest.unit}</div>
+                        </td>
+                        <td className="px-6 py-5 text-center">
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold ${status === 'active' ? 'bg-green-100 text-green-700' : 'bg-[#a67c52]/10 text-[#a67c52]'}`}>{guest.guests_count}</span>
+                        </td>
+                        <td className="px-6 py-5 text-right">
+                          <div className="flex justify-end gap-2">
+                            <button 
+                              onClick={() => handleEditClick(guest)}
+                              className="p-2 text-[#3b2b1f]/20 hover:text-[#a67c52] transition-colors"
+                            >
+                              <Pencil size={18} />
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteGuest(guest.id, guest.document_photo_url)}
+                              className="p-2 text-[#3b2b1f]/20 hover:text-red-500 transition-colors"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  }) : (
                     <tr>
                       <td colSpan={5} className="px-6 py-20 text-center">
                         <div className="flex flex-col items-center gap-4 text-[#3D2B1F]/30">
@@ -929,12 +979,12 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                 <div className="w-20 h-20 rounded-2xl bg-green-50 flex items-center justify-center mb-6 shadow-sm">
                   <CheckCircle2 size={40} className="text-green-500" />
                 </div>
-                <h3 className="font-serif text-[1.5rem] text-[#3D2B1F] mb-2">{stats.accepted}</h3>
+                <h3 className="font-serif text-[1.5rem] text-[#3D2B1F] mb-2">{statsToDisplay.accepted}</h3>
                 <p className="text-[11px] font-bold uppercase tracking-widest text-[#a67c52]">{content.accepted}</p>
                 <div className="w-full h-2 bg-green-100 rounded-full mt-8 overflow-hidden">
                   <div 
                     className="h-full bg-green-500 transition-all duration-1000" 
-                    style={{ width: `${(stats.accepted / (stats.accepted + stats.rejected || 1)) * 100}%` }}
+                    style={{ width: `${(statsToDisplay.accepted / (statsToDisplay.accepted + statsToDisplay.rejected || 1)) * 100}%` }}
                   />
                 </div>
               </div>
@@ -943,12 +993,12 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                 <div className="w-20 h-20 rounded-2xl bg-red-50 flex items-center justify-center mb-6 shadow-sm">
                   <AlertCircle size={40} className="text-red-400" />
                 </div>
-                <h3 className="font-serif text-[1.5rem] text-[#3D2B1F] mb-2">{stats.rejected}</h3>
+                <h3 className="font-serif text-[1.5rem] text-[#3D2B1F] mb-2">{statsToDisplay.rejected}</h3>
                 <p className="text-[11px] font-bold uppercase tracking-widest text-[#a67c52]">{content.rejected}</p>
                 <div className="w-full h-2 bg-red-100 rounded-full mt-8 overflow-hidden">
                   <div 
                     className="h-full bg-red-400 transition-all duration-1000" 
-                    style={{ width: `${(stats.rejected / (stats.accepted + stats.rejected || 1)) * 100}%` }}
+                    style={{ width: `${(statsToDisplay.rejected / (statsToDisplay.accepted + statsToDisplay.rejected || 1)) * 100}%` }}
                   />
                 </div>
               </div>

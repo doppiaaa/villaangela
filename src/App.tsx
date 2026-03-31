@@ -1448,12 +1448,12 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   const navLinks: Record<string, any> = {
-    it: { about: "Chi Siamo", units: "Unità", gallery: "Galleria", location: "Posizione", reviews: "Recensioni", contact: "Contatti" },
-    en: { about: "About", units: "Units", gallery: "Gallery", location: "Location", reviews: "Reviews", contact: "Contact" },
-    fr: { about: "À Propos", units: "Unités", gallery: "Galerie", location: "Emplacement", reviews: "Avis", contact: "Contact" },
-    es: { about: "Nosotros", units: "Unidades", gallery: "Galería", location: "Ubicación", reviews: "Reseñas", contact: "Contacto" },
-    de: { about: "Über Uns", units: "Einheiten", gallery: "Galerie", location: "Standort", reviews: "Bewertungen", contact: "Kontakt" },
-    pl: { about: "O Nas", units: "Jednostki", gallery: "Galeria", location: "Lokalizacja", reviews: "Opinie", contact: "Kontakt" }
+    it: { about: "Chi Siamo", units: "Unità", gallery: "Galleria", location: "Posizione", reviews: "Recensioni", booking: "Prenota", contact: "Contatti" },
+    en: { about: "About", units: "Units", gallery: "Gallery", location: "Location", reviews: "Reviews", booking: "Book", contact: "Contact" },
+    fr: { about: "À Propos", units: "Unités", gallery: "Galerie", location: "Emplacement", reviews: "Avis", booking: "Réserver", contact: "Contact" },
+    es: { about: "Nosotros", units: "Unidades", gallery: "Galería", location: "Ubicación", reviews: "Reseñas", booking: "Reservar", contact: "Contacto" },
+    de: { about: "Über Uns", units: "Einheiten", gallery: "Galerie", location: "Standort", reviews: "Bewertungen", booking: "Buchen", contact: "Kontakt" },
+    pl: { about: "O Nas", units: "Jednostki", gallery: "Galeria", location: "Lokalizacja", reviews: "Opinie", booking: "Rezerwuj", contact: "Kontakt" }
   };
   const t = navLinks[lang] || navLinks.en;
 
@@ -1470,6 +1470,7 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
           <a href="#gallery" className="hover:text-[#F5F0E8] transition-colors">{t.gallery}</a>
           <a href="#location" className="hover:text-[#F5F0E8] transition-colors">{t.location}</a>
           <a href="#reviews" className="hover:text-[#F5F0E8] transition-colors">{t.reviews}</a>
+          <a href="#booking" className="hover:text-[#F5F0E8] transition-colors">{t.booking}</a>
           <a href="#contact" className="hover:text-[#F5F0E8] transition-colors">{t.contact}</a>
         </div>
         <div className="relative" onMouseLeave={() => setIsLangOpen(false)}>
@@ -2244,7 +2245,7 @@ export default function App() {
       </section>
 
       {/* Booking Platforms Section */}
-      <section className="py-32 px-6 md:px-12 bg-transparent">
+      <section id="booking" className="py-32 px-6 md:px-12 bg-transparent">
         <div className="max-w-5xl mx-auto text-center fade-in">
           <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">
             {content.legal.bookingPlatforms.title}
