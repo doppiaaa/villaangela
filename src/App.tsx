@@ -1462,12 +1462,12 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
 
   return (
     <nav className={`fixed top-0 w-full z-50 py-3 md:py-4 px-3 md:px-12 flex flex-row justify-between items-center transition-all duration-300 ${isScrolled || isMobileMenuOpen ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
-      <div className="flex items-center gap-2 md:gap-3 font-serif text-[1rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative shrink-0">
+      <div className="flex items-center gap-2 md:gap-3 font-serif text-[1rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-[60] relative shrink-0">
         <img src="/side-logo.png" alt="Villa Angela Logo" className="h-6 md:h-8 object-contain" />
         <span className="whitespace-nowrap">Villa Angela</span>
       </div>
       
-      <div className="flex items-center justify-end gap-2 md:gap-8 z-10 relative">
+      <div className="flex items-center justify-end gap-2 md:gap-8 z-[60] relative">
         {/* Desktop Links - hidden on mobile */}
         <div className="hidden lg:flex gap-6 text-[10px] md:text-[0.85rem] uppercase tracking-[0.08em] font-[500] text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] relative whitespace-nowrap">
           <a href="#about" className="hover:text-[#F5F0E8] transition-colors">{t.about}</a>
@@ -1534,8 +1534,8 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            style={{ top: '64px' }}
-            className="fixed inset-0 bg-[#1E323C] z-40 lg:hidden flex flex-col p-8 gap-8 shadow-2xl overflow-y-auto"
+            style={{ top: 0 }}
+            className="fixed inset-0 bg-[#1E323C] z-40 lg:hidden flex flex-col pt-24 px-8 pb-8 gap-8 shadow-2xl overflow-y-auto"
           >
             <div className="flex flex-col gap-6">
               {[
