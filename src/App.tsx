@@ -32,7 +32,8 @@ import {
   Quote,
   ShieldCheck,
   Bone,
-  ShowerHead
+  ShowerHead,
+  Menu
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -1439,6 +1440,7 @@ const BackgroundGallery = ({ isActive }: { isActive: boolean }) => {
 const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void }) => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -1459,28 +1461,26 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
   const t = navLinks[lang] || navLinks.en;
 
   return (
-    <nav className={`fixed top-0 w-full z-50 py-3 md:py-4 px-3 md:px-12 flex flex-row justify-between items-center transition-all duration-300 ${isScrolled ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
-      <div className="flex items-center gap-2 md:gap-3 font-serif text-[0.85rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative shrink-0">
-        <img src="/side-logo.png" alt="Villa Angela Logo" className="h-5 md:h-8 object-contain" />
+    <nav className={`fixed top-0 w-full z-50 py-3 md:py-4 px-3 md:px-12 flex flex-row justify-between items-center transition-all duration-300 ${isScrolled || isMobileMenuOpen ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
+      <div className="flex items-center gap-2 md:gap-3 font-serif text-[1rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative shrink-0">
+        <img src="/side-logo.png" alt="Villa Angela Logo" className="h-6 md:h-8 object-contain" />
         <span className="whitespace-nowrap hidden sm:inline">Villa Angela</span>
         <span className="whitespace-nowrap sm:hidden">V.A.</span>
       </div>
       
-      <div className="flex items-center justify-end flex-1 gap-2 md:gap-8 overflow-hidden ml-4">
-        {/* Responsive Links Container */}
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-4 md:gap-6 text-[9px] md:text-[0.85rem] uppercase tracking-[0.08em] font-[500] text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative whitespace-nowrap px-2">
-            <a href="#about" className="hover:text-[#F5F0E8] transition-colors">{t.about}</a>
-            <a href="#units" className="hover:text-[#F5F0E8] transition-colors">{t.units}</a>
-            <a href="#gallery" className="hover:text-[#F5F0E8] transition-colors">{t.gallery}</a>
-            <a href="#location" className="hover:text-[#F5F0E8] transition-colors">{t.location}</a>
-            <a href="#reviews" className="hover:text-[#F5F0E8] transition-colors">{t.reviews}</a>
-            <a href="#booking" className="hover:text-[#F5F0E8] transition-colors">{t.booking}</a>
-            <a href="#contact" className="hover:text-[#F5F0E8] transition-colors">{t.contact}</a>
-          </div>
+      <div className="flex items-center justify-end gap-2 md:gap-8 z-10 relative">
+        {/* Desktop Links - hidden on mobile */}
+        <div className="hidden lg:flex gap-6 text-[10px] md:text-[0.85rem] uppercase tracking-[0.08em] font-[500] text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] relative whitespace-nowrap">
+          <a href="#about" className="hover:text-[#F5F0E8] transition-colors">{t.about}</a>
+          <a href="#units" className="hover:text-[#F5F0E8] transition-colors">{t.units}</a>
+          <a href="#gallery" className="hover:text-[#F5F0E8] transition-colors">{t.gallery}</a>
+          <a href="#location" className="hover:text-[#F5F0E8] transition-colors">{t.location}</a>
+          <a href="#reviews" className="hover:text-[#F5F0E8] transition-colors">{t.reviews}</a>
+          <a href="#booking" className="hover:text-[#F5F0E8] transition-colors">{t.booking}</a>
+          <a href="#contact" className="hover:text-[#F5F0E8] transition-colors">{t.contact}</a>
         </div>
 
-        <div className="flex items-center gap-3 relative z-10 shrink-0">
+        <div className="flex items-center gap-2 md:gap-3">
           <div className="relative" onMouseLeave={() => setIsLangOpen(false)}>
             <button 
               onClick={() => setIsLangOpen(!isLangOpen)}
@@ -1516,8 +1516,51 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
               </div>
             </div>
           </div>
+
+          {/* Mobile Menu Button - only visible on mobile */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden p-1.5 text-white hover:bg-white/10 rounded-full transition-colors drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
+          >
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            style={{ top: '64px' }}
+            className="fixed inset-0 bg-[#1E323C] z-40 lg:hidden flex flex-col p-8 gap-8 shadow-2xl overflow-y-auto"
+          >
+            <div className="flex flex-col gap-6">
+              {[
+                { id: 'about', label: t.about },
+                { id: 'units', label: t.units },
+                { id: 'gallery', label: t.gallery },
+                { id: 'location', label: t.location },
+                { id: 'reviews', label: t.reviews },
+                { id: 'booking', label: t.booking },
+                { id: 'contact', label: t.contact }
+              ].map((link) => (
+                <a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-white text-2xl font-serif tracking-widest uppercase border-b border-white/5 pb-4 hover:text-[#F5F0E8] transition-colors"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
