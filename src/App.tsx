@@ -1459,15 +1459,16 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
   const t = navLinks[lang] || navLinks.en;
 
   return (
-    <nav className={`fixed top-0 w-full z-50 py-3 md:py-4 px-4 md:px-12 flex flex-col lg:flex-row justify-between items-center transition-all duration-300 ${isScrolled ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
-      <div className="flex items-center gap-3 font-serif text-[1rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative mb-3 lg:mb-0">
+    <nav className={`fixed top-0 w-full z-50 py-3 md:py-4 px-3 md:px-12 flex flex-row justify-between items-center transition-all duration-300 ${isScrolled ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
+      <div className="flex items-center gap-2 md:gap-3 font-serif text-[0.85rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative shrink-0">
         <img src="/side-logo.png" alt="Villa Angela Logo" className="h-5 md:h-8 object-contain" />
-        <span className="whitespace-nowrap">Villa Angela</span>
+        <span className="whitespace-nowrap hidden sm:inline">Villa Angela</span>
+        <span className="whitespace-nowrap sm:hidden">V.A.</span>
       </div>
       
-      <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto gap-2 lg:gap-8 overflow-hidden">
+      <div className="flex items-center justify-end flex-1 gap-2 md:gap-8 overflow-hidden ml-4">
         {/* Responsive Links Container */}
-        <div className="flex-1 overflow-x-auto scrollbar-hide lg:overflow-visible">
+        <div className="overflow-x-auto scrollbar-hide">
           <div className="flex gap-4 md:gap-6 text-[9px] md:text-[0.85rem] uppercase tracking-[0.08em] font-[500] text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative whitespace-nowrap px-2">
             <a href="#about" className="hover:text-[#F5F0E8] transition-colors">{t.about}</a>
             <a href="#units" className="hover:text-[#F5F0E8] transition-colors">{t.units}</a>
