@@ -1117,15 +1117,17 @@ const useHorizontalMarquee = (speed: number = 1.0) => {
 
     // Wheel Events (Touchpad scrolling)
     const onWheel = (e: WheelEvent) => {
-      // Use deltaX or deltaY depending on how the user scrolls
-      // We prioritize deltaX but fall back to deltaY if the scroll is mostly vertical
-      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      
-      currentX += dx;
+      // If the scroll is mostly vertical, let the browser handle it (page scroll)
+      // and DO NOT stop the marquee animation.
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        return;
+      }
+
+      // Horizontal scroll (Trackpad or Shift+Wheel)
+      currentX += e.deltaX;
       
       const halfWidth = inner.scrollWidth / 2;
       if (halfWidth > 0) {
-        // Bi-directional loop logic
         if (currentX >= halfWidth) currentX -= halfWidth;
         else if (currentX < 0) currentX += halfWidth;
       }
@@ -1133,11 +1135,8 @@ const useHorizontalMarquee = (speed: number = 1.0) => {
       inner.style.transform = `translate3d(-${currentX}px, 0, 0)`;
       lastInteractionTime = Date.now();
       
-      // Only prevent default if we're actually scrolling horizontally 
-      // (to allow normal page scroll if needed, though usually marquee takes over)
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        e.preventDefault();
-      }
+      // Prevent default only for horizontal scroll to avoid triggering browser "back/forward" swipes
+      e.preventDefault();
     };
 
     container.addEventListener('mousedown', onMouseDown);
