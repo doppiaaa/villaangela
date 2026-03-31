@@ -32,8 +32,7 @@ import {
   Quote,
   ShieldCheck,
   Bone,
-  ShowerHead,
-  Menu
+  ShowerHead
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -1440,7 +1439,6 @@ const BackgroundGallery = ({ isActive }: { isActive: boolean }) => {
 const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void }) => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -1449,15 +1447,6 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [isMobileMenuOpen]);
 
   const navLinks: Record<string, any> = {
     it: { about: "Chi Siamo", units: "Unità", gallery: "Galleria", location: "Posizione", reviews: "Recensioni", booking: "Prenota", contact: "Contatti" },
@@ -1470,32 +1459,34 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
   const t = navLinks[lang] || navLinks.en;
 
   return (
-    <nav className={`fixed top-0 w-full z-50 py-4 px-4 md:px-12 flex justify-between items-center transition-all duration-300 ${isScrolled || isMobileMenuOpen ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
-      <div className="flex items-center gap-3 font-serif text-[1.1rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative">
-        <img src="/side-logo.png" alt="Villa Angela Logo" className="h-6 md:h-8 object-contain" />
-        Villa Angela
+    <nav className={`fixed top-0 w-full z-50 py-3 md:py-4 px-4 md:px-12 flex flex-col lg:flex-row justify-between items-center transition-all duration-300 ${isScrolled ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
+      <div className="flex items-center gap-3 font-serif text-[1rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative mb-3 lg:mb-0">
+        <img src="/side-logo.png" alt="Villa Angela Logo" className="h-5 md:h-8 object-contain" />
+        <span className="whitespace-nowrap">Villa Angela</span>
       </div>
       
-      <div className="flex items-center gap-2 lg:gap-8">
-        {/* Desktop Links */}
-        <div className="hidden lg:flex gap-6 text-[10px] md:text-[0.85rem] uppercase tracking-[0.08em] font-[500] text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative">
-          <a href="#about" className="hover:text-[#F5F0E8] transition-colors">{t.about}</a>
-          <a href="#units" className="hover:text-[#F5F0E8] transition-colors">{t.units}</a>
-          <a href="#gallery" className="hover:text-[#F5F0E8] transition-colors">{t.gallery}</a>
-          <a href="#location" className="hover:text-[#F5F0E8] transition-colors">{t.location}</a>
-          <a href="#reviews" className="hover:text-[#F5F0E8] transition-colors">{t.reviews}</a>
-          <a href="#booking" className="hover:text-[#F5F0E8] transition-colors">{t.booking}</a>
-          <a href="#contact" className="hover:text-[#F5F0E8] transition-colors">{t.contact}</a>
+      <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto gap-2 lg:gap-8 overflow-hidden">
+        {/* Responsive Links Container */}
+        <div className="flex-1 overflow-x-auto scrollbar-hide lg:overflow-visible">
+          <div className="flex gap-4 md:gap-6 text-[9px] md:text-[0.85rem] uppercase tracking-[0.08em] font-[500] text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative whitespace-nowrap px-2">
+            <a href="#about" className="hover:text-[#F5F0E8] transition-colors">{t.about}</a>
+            <a href="#units" className="hover:text-[#F5F0E8] transition-colors">{t.units}</a>
+            <a href="#gallery" className="hover:text-[#F5F0E8] transition-colors">{t.gallery}</a>
+            <a href="#location" className="hover:text-[#F5F0E8] transition-colors">{t.location}</a>
+            <a href="#reviews" className="hover:text-[#F5F0E8] transition-colors">{t.reviews}</a>
+            <a href="#booking" className="hover:text-[#F5F0E8] transition-colors">{t.booking}</a>
+            <a href="#contact" className="hover:text-[#F5F0E8] transition-colors">{t.contact}</a>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3 relative z-10">
+        <div className="flex items-center gap-3 relative z-10 shrink-0">
           <div className="relative" onMouseLeave={() => setIsLangOpen(false)}>
             <button 
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center gap-2 text-[11px] md:text-[0.85rem] uppercase tracking-[0.08em] font-[500] border border-white/30 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] px-3 py-1.5 rounded-full hover:bg-white/10 transition-all"
+              className="flex items-center gap-2 text-[10px] md:text-[0.85rem] uppercase tracking-[0.08em] font-[500] border border-white/30 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] px-2 md:px-3 py-1 md:py-1.5 rounded-full hover:bg-white/10 transition-all"
             >
-              <Globe size={14} />
-              <img src={`https://flagcdn.com/w20/${{en:'gb', zh:'cn', ar:'sa', da:'dk', sv:'se'}[lang] || lang}.png`} alt={lang.toUpperCase()} className="w-3.5 h-2.5 md:w-4 md:h-3 rounded-sm object-cover" />
+              <Globe size={12} />
+              <img src={`https://flagcdn.com/w20/${{en:'gb', zh:'cn', ar:'sa', da:'dk', sv:'se'}[lang] || lang}.png`} alt={lang.toUpperCase()} className="w-3 md:w-4 h-2 md:h-3 rounded-sm object-cover" />
               {lang}
             </button>
             <div className={`absolute right-0 top-full pt-2 w-44 transition-all duration-300 z-50 ${isLangOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
@@ -1524,61 +1515,8 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
               </div>
             </div>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-white hover:bg-white/10 rounded-full transition-colors"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
       </div>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed inset-0 top-[72px] bg-[#1E323C] z-40 lg:hidden flex flex-col p-8 gap-8 shadow-2xl overflow-y-auto"
-          >
-            <div className="flex flex-col gap-6">
-              {[
-                { id: 'about', label: t.about },
-                { id: 'units', label: t.units },
-                { id: 'gallery', label: t.gallery },
-                { id: 'location', label: t.location },
-                { id: 'reviews', label: t.reviews },
-                { id: 'booking', label: t.booking },
-                { id: 'contact', label: t.contact }
-              ].map((link) => (
-                <a
-                  key={link.id}
-                  href={`#${link.id}`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-white text-2xl font-serif tracking-widest uppercase border-b border-white/5 pb-4 hover:text-[#F5F0E8] transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-            
-            <div className="mt-auto pt-8 border-t border-white/10 flex flex-col gap-4">
-              <div className="flex items-center gap-4 text-white/60">
-                 <MapPin size={18} className="text-[#a67c52]" />
-                 <span className="text-xs uppercase tracking-[0.1em]">Via Pontoni Seconda, 26, Angri (SA)</span>
-              </div>
-              <div className="flex items-center gap-4 text-white/60">
-                 <Phone size={18} className="text-[#a67c52]" />
-                 <span className="text-xs uppercase tracking-[0.1em]">+39 350 1250165</span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </nav>
   );
 };
