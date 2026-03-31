@@ -22,8 +22,36 @@ import {
   FileText,
   Pencil,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Globe
 } from 'lucide-react';
+
+const COUNTRIES = [
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua e Barbuda", "Arabia Saudita", "Argentina", "Armenia", "Australia", "Austria", "Azerbaigian",
+  "Bahamas", "Bahrein", "Bangladesh", "Barbados", "Belgio", "Belize", "Benin", "Bhutan", "Bielorussia", "Birmania (Myanmar)", "Bolivia", "Bosnia ed Erzegovina", "Botswana", "Brasile", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+  "Cambogia", "Camerun", "Canada", "Capo Verde", "Ciad", "Cile", "Cina", "Cipro", "Città del Vaticano", "Colombia", "Comore", "Corea del Nord", "Corea del Sud", "Costa d'Avorio", "Costa Rica", "Croazia", "Cuba",
+  "Danimarca", "Dominica",
+  "Ecuador", "Egitto", "El Salvador", "Emirati Arabi Uniti", "Eritrea", "Estonia", "Etiopia",
+  "Figi", "Filippine", "Finlandia", "Francia",
+  "Gabon", "Gambia", "Georgia", "Germania", "Ghana", "Giamaica", "Giappone", "Gibuti", "Giordania", "Grecia", "Grenada", "Guatemala", "Guinea", "Guinea Equatoriale", "Guinea-Bissau", "Guyana",
+  "Haiti", "Honduras",
+  "India", "Indonesia", "Iran", "Iraq", "Irlanda", "Islanda", "Isole Marshall", "Isole Salomone", "Israele", "Italia",
+  "Kazakistan", "Kenya", "Kirghizistan", "Kiribati", "Kuwait",
+  "Laos", "Lesotho", "Lettonia", "Libano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Lussemburgo",
+  "Macedonia del Nord", "Madagascar", "Malawi", "Malaysia", "Maldive", "Mali", "Malta", "Marocco", "Mauritania", "Mauritius", "Messico", "Micronesia", "Moldavia", "Monaco", "Mongolia", "Montenegro", "Mozambico",
+  "Namibia", "Nauru", "Nepal", "Nicaragua", "Niger", "Nigeria", "Norvegia", "Nuova Zelanda",
+  "Oman",
+  "Paesi Bassi", "Pakistan", "Palau", "Palestina", "Panama", "Papua Nuova Guinea", "Paraguay", "Perù", "Polonia", "Portogallo",
+  "Qatar",
+  "Regno Unito", "Repubblica Ceca", "Repubblica Centrafricana", "Repubblica del Congo", "Repubblica Democratica del Congo", "Repubblica Dominicana", "Romania", "Ruanda", "Russia",
+  "Saint Kitts e Nevis", "Saint Lucia", "Saint Vincent e Grenadine", "Samoa", "San Marino", "São Tomé e Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Siria", "Slovacchia", "Slovenia", "Somalia", "Spagna", "Sri Lanka", "Stati Uniti", "Sudafrica", "Sudan", "Sudan del Sud", "Suriname", "Svezia", "Svizzera", "Swaziland (Eswatini)",
+  "Tagikistan", "Taiwan", "Tanzania", "Thailandia", "Timor Est", "Togo", "Tonga", "Trinidad e Tobago", "Tunisia", "Turchia", "Turkmenistan", "Tuvalu",
+  "Ucraina", "Uganda", "Ungheria", "Uruguay", "Uzbekistan",
+  "Vanuatu", "Venezuela", "Vietnam",
+  "Yemen",
+  "Zambia", "Zimbabwe"
+];
+
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from './lib/supabase';
 
@@ -204,6 +232,8 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const [autoTranslate, setAutoTranslate] = useState(true);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
+  const [countrySearch, setCountrySearch] = useState('');
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
 
   // Form states using snake_case to match DB schema where possible, or camelCase for UI consistency
   const [newGuest, setNewGuest] = useState<GuestBody>({
@@ -1218,14 +1248,64 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 relative">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelNat}</label>
-                  <input 
-                    required type="text" 
-                    value={newGuest.nationality}
-                    onChange={e => setNewGuest({...newGuest, nationality: e.target.value})}
-                    className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
-                  />
+                  <div className="relative">
+                    <input 
+                      required type="text" 
+                      placeholder="Cerca nazionalità..."
+                      value={showCountryDropdown ? countrySearch : newGuest.nationality}
+                      onFocus={() => {
+                        setShowCountryDropdown(true);
+                        setCountrySearch('');
+                      }}
+                      onChange={e => setCountrySearch(e.target.value)}
+                      className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
+                    />
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[#3b2b1f]/20 pointer-events-none">
+                      <Search size={18} />
+                    </div>
+                  </div>
+
+                  <AnimatePresence>
+                    {showCountryDropdown && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute z-[500] left-0 right-0 top-full mt-2 bg-white border border-[#3b2b1f]/10 rounded-2xl shadow-xl max-h-60 overflow-y-auto scrollbar-hide"
+                      >
+                        {COUNTRIES.filter(c => c.toLowerCase().includes(countrySearch.toLowerCase())).length > 0 ? (
+                          COUNTRIES.filter(c => c.toLowerCase().includes(countrySearch.toLowerCase())).map(country => (
+                            <button
+                              key={country}
+                              type="button"
+                              onClick={() => {
+                                setNewGuest({...newGuest, nationality: country});
+                                setShowCountryDropdown(false);
+                                setCountrySearch('');
+                              }}
+                              className="w-full text-left px-5 py-3 text-sm hover:bg-[#F5F0E8] transition-colors border-b border-[#3b2b1f]/5 last:border-0 font-medium text-[#3D2B1F]"
+                            >
+                              {country}
+                            </button>
+                          ))
+                        ) : (
+                          <div className="px-5 py-6 text-center text-[#3D2B1F]/40 italic text-sm">
+                            Nessun paese trovato
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  
+                  {/* Overlay per chiudere dropdown se si clicca fuori */}
+                  {showCountryDropdown && (
+                    <div 
+                      className="fixed inset-0 z-[490]" 
+                      onClick={() => setShowCountryDropdown(false)}
+                    />
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
