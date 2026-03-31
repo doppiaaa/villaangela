@@ -228,8 +228,12 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   });
 
   useEffect(() => {
-    fetchData();
-    checkLocalData();
+    const initDashboard = async () => {
+      setIsSyncing(true);
+      await fetchData();
+      checkLocalData();
+    };
+    initDashboard();
   }, []);
 
   const checkLocalData = () => {
@@ -310,7 +314,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   };
 
   const fetchData = async () => {
-    setIsSyncing(true);
+    // Non resettiamo isSyncing qui se è già gestito dall'useEffect iniziale o da altre chiamate
     try {
       // Fetch guests
       const { data: guestData, error: guestError } = await supabase
