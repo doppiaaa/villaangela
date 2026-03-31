@@ -16,7 +16,10 @@ import {
   MessageSquare,
   Star,
   Link as LinkIcon,
-  Languages
+  Languages,
+  Camera,
+  Image as ImageIcon,
+  FileText
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from './lib/supabase';
@@ -25,6 +28,8 @@ interface GuestBody {
   name: string;
   surname: string;
   document_id: string;
+  document_type: string;
+  document_photo_url?: string;
   nationality: string;
   check_in: string;
   check_out: string;
@@ -85,7 +90,9 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       reviewModalTitle: "Nuova Recensione", 
       labelName: "Nome", 
       labelSurname: "Cognome", 
-      labelDoc: "Documento (ID/Passport)", 
+      labelDoc: "Numero Documento", 
+      labelDocType: "Tipo Documento",
+      labelDocPhoto: "Foto Documento",
       labelNat: "Nazionalità", 
       labelCheckIn: "Check-in", 
       labelCheckOut: "Check-out", 
@@ -104,7 +111,15 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       extractBtn: "Estrai Dati",
       autoTranslate: "Traduci in tutte le lingue",
       extracting: "Estrazione in corso...",
-      saving: "Salvataggio..."
+      saving: "Salvataggio...",
+      uploading: "Caricamento foto...",
+      uploadSuccess: "Foto caricata correttamente",
+      uploadError: "Errore caricamento foto",
+      docTypes: {
+        id: "Carta d'Identità",
+        passport: "Passaporto",
+        license: "Patente"
+      }
     },
     en: { 
       title: "Reserved Area", 
@@ -130,7 +145,9 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       reviewModalTitle: "New Review", 
       labelName: "Name", 
       labelSurname: "Surname", 
-      labelDoc: "Document", 
+      labelDoc: "Document Number", 
+      labelDocType: "Document Type",
+      labelDocPhoto: "Document Photo",
       labelNat: "Nationality", 
       labelCheckIn: "Check-in", 
       labelCheckOut: "Check-out", 
@@ -149,7 +166,15 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       extractBtn: "Extract Data",
       autoTranslate: "Translate to all languages",
       extracting: "Extracting...",
-      saving: "Saving..."
+      saving: "Saving...",
+      uploading: "Uploading photo...",
+      uploadSuccess: "Photo uploaded successfully",
+      uploadError: "Photo upload failed",
+      docTypes: {
+        id: "ID Card",
+        passport: "Passport",
+        license: "Driver's License"
+      }
     }
   };
   const content = t[lang] || t.en;
@@ -169,12 +194,15 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const [isSavingReview, setIsSavingReview] = useState(false);
   const [extractUrl, setExtractUrl] = useState('');
   const [autoTranslate, setAutoTranslate] = useState(true);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
   // Form states using snake_case to match DB schema where possible, or camelCase for UI consistency
   const [newGuest, setNewGuest] = useState<GuestBody>({
     name: '',
     surname: '',
     document_id: '',
+    document_type: "Carta d'Identità",
+    document_photo_url: '',
     nationality: '',
     check_in: '',
     check_out: '',
@@ -221,7 +249,9 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         const dbGuests = localGuests.map((g: any) => ({
           name: g.name,
           surname: g.surname,
-          document_id: g.documentId || g.document_id,
+          document_id: g.document_id,
+          document_type: g.document_type || "Carta d'Identità",
+          document_photo_url: g.document_photo_url,
           nationality: g.nationality,
           check_in: g.checkIn || g.check_in,
           check_out: g.checkOut || g.check_out,
@@ -286,11 +316,13 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
           id: g.id,
           name: g.name,
           surname: g.surname,
-          documentId: g.document_id,
+          document_id: g.document_id,
+          document_type: g.document_type || "Carta d'Identità",
+          document_photo_url: g.document_photo_url,
           nationality: g.nationality,
-          checkIn: g.check_in,
-          checkOut: g.check_out,
-          guestsCount: g.guests_count,
+          check_in: g.check_in,
+          check_out: g.check_out,
+          guests_count: g.guests_count,
           unit: g.unit
         })));
       }
@@ -408,6 +440,35 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       setIsSyncing(false);
     }
   };
+  
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingPhoto(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+      const filePath = `documents/${fileName}`;
+
+      const { data, error } = await supabase.storage
+        .from('guest-documents')
+        .upload(filePath, file);
+
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('guest-documents')
+        .getPublicUrl(filePath);
+
+      setNewGuest(prev => ({ ...prev, document_photo_url: publicUrl }));
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      alert(content.uploadError);
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
 
   const handleAddGuest = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -417,11 +478,13 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       const dbGuest = {
         name: newGuest.name,
         surname: newGuest.surname,
-        document_id: newGuest.documentId,
+        document_id: newGuest.document_id,
+        document_type: newGuest.document_type,
+        document_photo_url: newGuest.document_photo_url,
         nationality: newGuest.nationality,
-        check_in: newGuest.checkIn,
-        check_out: newGuest.checkOut,
-        guests_count: newGuest.guestsCount,
+        check_in: newGuest.check_in,
+        check_out: newGuest.check_out,
+        guests_count: newGuest.guests_count,
         unit: newGuest.unit
       };
 
@@ -438,6 +501,8 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
           name: data[0].name,
           surname: data[0].surname,
           document_id: data[0].document_id,
+          document_type: data[0].document_type,
+          document_photo_url: data[0].document_photo_url,
           nationality: data[0].nationality,
           check_in: data[0].check_in,
           check_out: data[0].check_out,
@@ -449,11 +514,13 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         setNewGuest({
           name: '',
           surname: '',
-          documentId: '',
+          document_id: '',
+          document_type: "Carta d'Identità",
+          document_photo_url: '',
           nationality: '',
-          checkIn: '',
-          checkOut: '',
-          guestsCount: 1,
+          check_in: '',
+          check_out: '',
+          guests_count: 1,
           unit: 'Holiday Apartment'
         });
       }
@@ -465,10 +532,18 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     }
   };
 
-  const handleDeleteGuest = async (id: string) => {
+  const handleDeleteGuest = async (id: string, photoUrl?: string) => {
     if (window.confirm(content.confirmDelete)) {
       setIsSyncing(true);
       try {
+        // Delete photo from storage if exists
+        if (photoUrl) {
+          const path = photoUrl.split('/guest-documents/').pop();
+          if (path) {
+            await supabase.storage.from('guest-documents').remove([path]);
+          }
+        }
+
         const { error } = await supabase
           .from('guests')
           .delete()
@@ -747,7 +822,24 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                         <div className="text-[11px] font-medium text-[#a67c52] uppercase tracking-wider mt-1">{guest.nationality}</div>
                       </td>
                       <td className="px-6 py-5">
-                        <code className="bg-[#3b2b1f]/5 px-2 py-1 rounded text-xs font-bold text-[#3D2B1F]/70">{guest.document_id}</code>
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-bold text-[#a67c52] uppercase tracking-wider bg-[#a67c52]/5 px-1.5 py-0.5 rounded">
+                              {guest.document_type}
+                            </span>
+                            {guest.document_photo_url && (
+                              <a 
+                                href={guest.document_photo_url} 
+                                target="_blank" 
+                                rel="noreferrer"
+                                className="text-[#a67c52] hover:text-[#3b2b1f] transition-colors"
+                              >
+                                <ImageIcon size={14} />
+                              </a>
+                            )}
+                          </div>
+                          <code className="bg-[#3b2b1f]/5 px-2 py-1 rounded text-xs font-bold text-[#3D2B1F]/70 w-fit">{guest.document_id}</code>
+                        </div>
                       </td>
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2 text-xs font-semibold text-[#3D2B1F]">
@@ -763,7 +855,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                       </td>
                       <td className="px-6 py-5 text-right">
                         <button 
-                          onClick={() => handleDeleteGuest(guest.id)}
+                          onClick={() => handleDeleteGuest(guest.id, guest.document_photo_url)}
                           className="p-2 text-[#3b2b1f]/20 hover:text-red-500 transition-colors"
                         >
                           <Trash2 size={18} />
@@ -954,6 +1046,19 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelDocType}</label>
+                    <select 
+                      required
+                      value={newGuest.document_type}
+                      onChange={e => setNewGuest({...newGuest, document_type: e.target.value})}
+                      className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors"
+                    >
+                      <option value="Carta d'Identità">{content.docTypes.id}</option>
+                      <option value="Passaporto">{content.docTypes.passport}</option>
+                      <option value="Patente">{content.docTypes.license}</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelDoc}</label>
                     <input 
                       required type="text" 
@@ -962,15 +1067,54 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                       className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelNat}</label>
-                    <input 
-                      required type="text" 
-                      value={newGuest.nationality}
-                      onChange={e => setNewGuest({...newGuest, nationality: e.target.value})}
-                      className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
-                    />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelDocPhoto}</label>
+                  <div className="flex items-center gap-4">
+                    <label className="flex-1 flex items-center justify-center gap-3 bg-[#F5F0E8]/50 border-2 border-dashed border-[#3b2b1f]/10 rounded-xl px-4 py-6 cursor-pointer hover:border-[#a67c52]/30 transition-all group">
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleFileUpload}
+                        className="hidden" 
+                      />
+                      {isUploadingPhoto ? (
+                        <Loader2 size={24} className="text-[#a67c52] animate-spin" />
+                      ) : newGuest.document_photo_url ? (
+                        <CheckCircle2 size={24} className="text-green-500" />
+                      ) : (
+                        <Camera size={24} className="text-[#3b2b1f]/20 group-hover:text-[#a67c52]/50 transition-colors" />
+                      )}
+                      <span className="text-sm font-medium text-[#3b2b1f]/40">
+                        {isUploadingPhoto ? content.uploading : 
+                         newGuest.document_photo_url ? content.uploadSuccess : 
+                         "Clicca per caricare o scattare foto"}
+                      </span>
+                    </label>
+                    {newGuest.document_photo_url && (
+                      <div className="w-20 h-20 rounded-xl overflow-hidden border border-[#3b2b1f]/10 shrink-0 shadow-sm relative group">
+                        <img src={newGuest.document_photo_url} className="w-full h-full object-cover" alt="Preview" />
+                        <button 
+                          type="button"
+                          onClick={() => setNewGuest({...newGuest, document_photo_url: ''})}
+                          className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    )}
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelNat}</label>
+                  <input 
+                    required type="text" 
+                    value={newGuest.nationality}
+                    onChange={e => setNewGuest({...newGuest, nationality: e.target.value})}
+                    className="w-full bg-[#F5F0E8]/50 border border-[#3b2b1f]/10 rounded-xl px-4 py-3 outline-none focus:border-[#a67c52] transition-colors" 
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
