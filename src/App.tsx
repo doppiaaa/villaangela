@@ -1464,8 +1464,7 @@ const Nav = ({ lang, setLang }: { lang: Language, setLang: (l: Language) => void
     <nav className={`fixed top-0 w-full z-50 py-3 md:py-4 px-3 md:px-12 flex flex-row justify-between items-center transition-all duration-300 ${isScrolled || isMobileMenuOpen ? 'bg-[#1E323C] shadow-md' : 'bg-transparent'}`}>
       <div className="flex items-center gap-2 md:gap-3 font-serif text-[1rem] md:text-xl tracking-widest uppercase text-white font-[600] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] z-10 relative shrink-0">
         <img src="/side-logo.png" alt="Villa Angela Logo" className="h-6 md:h-8 object-contain" />
-        <span className="whitespace-nowrap hidden sm:inline">Villa Angela</span>
-        <span className="whitespace-nowrap sm:hidden">V.A.</span>
+        <span className="whitespace-nowrap">Villa Angela</span>
       </div>
       
       <div className="flex items-center justify-end gap-2 md:gap-8 z-10 relative">
