@@ -418,7 +418,11 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       .channel('dashboard:guests')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'guests' }, (payload: any) => {
         if (payload.eventType === 'INSERT') {
-          setGuests(prev => [payload.new as Guest, ...prev]);
+          setGuests(prev => {
+            // Anti-duplicato: aggiungi solo se non esiste già
+            if (prev.some(g => g.id === payload.new.id)) return prev;
+            return [payload.new as Guest, ...prev];
+          });
         } else if (payload.eventType === 'DELETE') {
           setGuests(prev => prev.filter(g => g.id !== payload.old.id));
         } else if (payload.eventType === 'UPDATE') {
@@ -432,7 +436,11 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       .channel('dashboard:reviews')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, (payload: any) => {
         if (payload.eventType === 'INSERT') {
-          setReviews(prev => [payload.new as Review, ...prev]);
+          setReviews(prev => {
+            // Anti-duplicato: aggiungi solo se non esiste già
+            if (prev.some(r => r.id === payload.new.id)) return prev;
+            return [payload.new as Review, ...prev];
+          });
         } else if (payload.eventType === 'DELETE') {
           setReviews(prev => prev.filter(r => r.id !== payload.old.id));
         } else if (payload.eventType === 'UPDATE') {
@@ -508,7 +516,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
 
   const handleSaveGuest = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSyncing(true);
+    // Non usiamo più setIsSyncing(true) per non bloccare la UI, lo usiamo solo per feedback sul pulsante se necessario
     
     try {
       const dbGuest = {
@@ -525,42 +533,23 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       };
 
       if (editingGuest) {
-        // UPDATE
+        // UPDATE - Il Realtime si occuperà di aggiornare la UI
         const { error } = await supabase
           .from('guests')
           .update(dbGuest)
           .eq('id', editingGuest.id);
 
         if (error) throw error;
-
-        setGuests(prev => prev.map(g => g.id === editingGuest.id ? { ...g, ...dbGuest } : g));
       } else {
-        // INSERT
-        const { data, error } = await supabase
+        // INSERT - Il Realtime si occuperà di aggiungere l'ospite alla UI
+        const { error } = await supabase
           .from('guests')
-          .insert([dbGuest])
-          .select();
+          .insert([dbGuest]);
 
         if (error) throw error;
-
-        if (data && data[0]) {
-          const added: Guest = {
-            id: data[0].id,
-            name: data[0].name,
-            surname: data[0].surname,
-            document_id: data[0].document_id,
-            document_type: data[0].document_type,
-            document_photo_url: data[0].document_photo_url,
-            nationality: data[0].nationality,
-            check_in: data[0].check_in,
-            check_out: data[0].check_out,
-            guests_count: data[0].guests_count,
-            unit: data[0].unit
-          };
-          setGuests([added, ...guests]);
-        }
       }
 
+      // Chiudiamo subito il form per massima responsività
       setShowAddForm(false);
       setEditingGuest(null);
       setNewGuest({
@@ -578,20 +567,17 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     } catch (error) {
       console.error('Error saving guest:', error);
       alert('Errore durante il salvataggio su Supabase.');
-    } finally {
-      setIsSyncing(false);
     }
   };
 
   const handleDeleteGuest = async (id: string, photoUrl?: string) => {
     if (window.confirm(content.confirmDelete)) {
-      setIsSyncing(true);
       try {
-        // Delete photo from storage if exists
+        // Delete photo from storage if exists - non blocchiamo la UI
         if (photoUrl) {
           const path = photoUrl.split('/guest-documents/').pop();
           if (path) {
-            await supabase.storage.from('guest-documents').remove([path]);
+            supabase.storage.from('guest-documents').remove([path]);
           }
         }
 
@@ -602,12 +588,10 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         
         if (error) throw error;
         
-        setGuests(guests.filter(g => g.id !== id));
+        // Il Realtime rimuoverà l'ospite dalla lista
       } catch (error) {
         console.error('Error deleting guest:', error);
         alert('Errore durante l\'eliminazione su Supabase.');
-      } finally {
-        setIsSyncing(false);
       }
     }
   };
@@ -647,16 +631,15 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     
     try {
       // 1. Save to Supabase (primary persistent storage)
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('reviews')
-        .insert([newReview])
-        .select();
+        .insert([newReview]);
 
       if (error) throw error;
 
-      // 2. Also trigger the backend API if auto-translation is needed
+      // 2. Also trigger the backend API if auto-translation is needed - in background
       if (autoTranslate) {
-        await fetch('/api/reviews', {
+        fetch('/api/reviews', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -666,11 +649,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         });
       }
       
-      if (data && data[0]) {
-        const added: Review = { ...data[0] };
-        setReviews([added, ...reviews]);
-      }
-      
+      // Il Realtime aggiungerà la recensione alla UI
       setShowAddReviewForm(false);
       setNewReview({
         name: '',
@@ -697,15 +676,14 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         
         if (error) throw error;
 
-        // Optionally delete from JSON files too
-        await fetch('/api/reviews', {
+        // Optionally delete from JSON files too - in background
+        fetch('/api/reviews', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id, action: 'delete' })
         });
 
-        const updated = reviews.filter(r => r.id !== id);
-        setReviews(updated);
+        // Il Realtime gestirà la rimozione dalla UI
       } catch (error) {
         console.error('Delete review failed:', error);
         alert('Errore durante l\'eliminazione su Supabase.');
