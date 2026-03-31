@@ -526,7 +526,6 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
 
   const handleSaveGuest = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
       const dbGuest: any = {
         name: newGuest.name,
@@ -538,12 +537,16 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         check_in: newGuest.check_in,
         check_out: newGuest.check_out,
         guests_count: newGuest.guests_count,
-        unit: newGuest.unit,
-        parent_id: currentParentId
+        unit: newGuest.unit
       };
 
-      let savedId = editingGuest?.id;
+      // Aggiungi parent_id solo se siamo in una registrazione familiare
+      if (currentParentId) {
+        dbGuest.parent_id = currentParentId;
+      }
 
+      let savedId = '';
+      
       if (editingGuest) {
         const { error } = await supabase
           .from('guests')
@@ -561,56 +564,53 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         if (data && data[0]) savedId = data[0].id;
       }
 
-      // Gestione famiglia
-      if (!editingGuest && !currentParentId && newGuest.guests_count > 1) {
-        // Abbiamo appena salvato il capofamiglia
+      // Se è il capofamiglia e ci sono altri membri
+      if (!currentParentId && newGuest.guests_count > 1) {
         setCurrentParentId(savedId);
         setFamilyMembersLeft(newGuest.guests_count - 1);
-        // Reset solo dei campi anagrafici per il prossimo membro
+        
+        // Reset form per il prossimo membro mantenendo i dati comuni
         setNewGuest(prev => ({
           ...prev,
           name: '',
           surname: '',
           document_id: '',
           document_photo_url: '',
-          guests_count: 1 // I membri extra contano come 1 o ereditano? Di solito 1.
-        }));
-        return; // Non chiudiamo il form
-      }
-
-      if (familyMembersLeft > 1) {
-        setFamilyMembersLeft(prev => prev - 1);
-        setNewGuest(prev => ({
-          ...prev,
-          name: '',
-          surname: '',
-          document_id: '',
-          document_photo_url: ''
+          guests_count: 1
         }));
         return;
       }
 
-      // Fine registrazione
+      // Se stiamo registrando i familiari
+      if (familyMembersLeft > 0) {
+        const nextLeft = familyMembersLeft - 1;
+        setFamilyMembersLeft(nextLeft);
+        
+        if (nextLeft > 0) {
+          setNewGuest(prev => ({
+            ...prev,
+            name: '',
+            surname: '',
+            document_id: '',
+            document_photo_url: '',
+            guests_count: 1
+          }));
+          return;
+        }
+      }
+
       setShowAddForm(false);
       setEditingGuest(null);
       setCurrentParentId(null);
       setFamilyMembersLeft(0);
       setNewGuest({
-        name: '',
-        surname: '',
-        document_id: '',
-        document_type: "Carta d'Identità",
-        document_photo_url: '',
-        nationality: '',
-        check_in: '',
-        check_out: '',
-        guests_count: 1,
-        unit: 'Holiday Apartment',
-        parent_id: null
+        name: '', surname: '', document_id: '', document_type: "Carta d'Identità",
+        document_photo_url: '', nationality: '', check_in: '', check_out: '',
+        guests_count: 1, unit: 'Holiday Apartment'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving guest:', error);
-      alert('Errore durante il salvataggio su Supabase.');
+      alert('Errore durante il salvataggio: ' + (error.message || 'Riprova più tardi'));
     }
   };
 
@@ -1336,18 +1336,26 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                       </span>
                     </label>
                     {newGuest.document_photo_url && (
-                      <div className="w-20 h-20 rounded-xl overflow-hidden border border-[#3b2b1f]/10 shrink-0 shadow-sm relative group">
-                        <img src={newGuest.document_photo_url} className="w-full h-full object-cover" alt="Preview" />
-                        <button 
-                          type="button"
-                          onClick={() => setNewGuest({...newGuest, document_photo_url: ''})}
-                          className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white"
-                        >
-                          <X size={16} />
-                        </button>
+                      <div className="w-20 h-20 rounded-[1rem] overflow-hidden border-2 border-[#a67c52]/20 shrink-0 shadow-lg relative group animate-in fade-in zoom-in duration-300">
+                        <img 
+                          src={newGuest.document_photo_url} 
+                          className="w-full h-full object-cover transition-transform group-hover:scale-110" 
+                          alt="Preview" 
+                          key={newGuest.document_photo_url} // Forza re-render se cambia l'URL
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <button 
+                            type="button"
+                            onClick={() => setNewGuest({...newGuest, document_photo_url: ''})}
+                            className="bg-white/20 backdrop-blur-md p-1.5 rounded-full text-white hover:bg-white/40 transition-colors"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
+                </div>
                  {!currentParentId && (
                   <>
                     <div className="space-y-2 relative">
@@ -1466,8 +1474,6 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                     </div>
                   </>
                 )}
-
-                </div>
 
                 <button 
                   type="submit"
