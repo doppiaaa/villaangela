@@ -19,7 +19,8 @@ import {
   Languages,
   Camera,
   Image as ImageIcon,
-  FileText
+  FileText,
+  Pencil
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from './lib/supabase';
@@ -87,6 +88,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       privacyInfoTitle: "Informazione Privacy", 
       privacyInfo: "In rispetto del GDPR, queste statistiche sono anonime e non associate a singoli utenti. I dati sono memorizzati esclusivamente in questa banca dati locale.", 
       modalTitle: "Nuova Registrazione", 
+      editModalTitle: "Modifica Registrazione",
       reviewModalTitle: "Nuova Recensione", 
       labelName: "Nome", 
       labelSurname: "Cognome", 
@@ -103,6 +105,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       labelStars: "Stelle (1-5)", 
       labelQuote: "Testo Recensione", 
       save: "Salva Ospite", 
+      update: "Aggiorna Ospite",
       saveReview: "Salva Recensione", 
       confirmDelete: "Sei sicuro di voler eliminare?", 
       dateError: "La data di check-out non può essere uguale alla data di check-in.",
@@ -142,6 +145,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       privacyInfoTitle: "Privacy Information", 
       privacyInfo: "In compliance with GDPR, these statistics are anonymous.", 
       modalTitle: "New Registration", 
+      editModalTitle: "Edit Registration",
       reviewModalTitle: "New Review", 
       labelName: "Name", 
       labelSurname: "Surname", 
@@ -158,6 +162,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
       labelStars: "Stars (1-5)", 
       labelQuote: "Review Text", 
       save: "Save Guest", 
+      update: "Update Guest",
       saveReview: "Save Review", 
       confirmDelete: "Are you sure you want to delete?", 
       dateError: "Check-out date cannot be the same as check-in date.",
@@ -195,6 +200,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
   const [extractUrl, setExtractUrl] = useState('');
   const [autoTranslate, setAutoTranslate] = useState(true);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
 
   // Form states using snake_case to match DB schema where possible, or camelCase for UI consistency
   const [newGuest, setNewGuest] = useState<GuestBody>({
@@ -470,7 +476,24 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
     }
   };
 
-  const handleAddGuest = async (e: React.FormEvent) => {
+  const handleEditClick = (guest: Guest) => {
+    setEditingGuest(guest);
+    setNewGuest({
+      name: guest.name,
+      surname: guest.surname,
+      document_id: guest.document_id,
+      document_type: guest.document_type,
+      document_photo_url: guest.document_photo_url,
+      nationality: guest.nationality,
+      check_in: guest.check_in,
+      check_out: guest.check_out,
+      guests_count: guest.guests_count,
+      unit: guest.unit
+    });
+    setShowAddForm(true);
+  };
+
+  const handleSaveGuest = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSyncing(true);
     
@@ -488,44 +511,59 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
         unit: newGuest.unit
       };
 
-      const { data, error } = await supabase
-        .from('guests')
-        .insert([dbGuest])
-        .select();
+      if (editingGuest) {
+        // UPDATE
+        const { error } = await supabase
+          .from('guests')
+          .update(dbGuest)
+          .eq('id', editingGuest.id);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      if (data && data[0]) {
-        const added: Guest = {
-          id: data[0].id,
-          name: data[0].name,
-          surname: data[0].surname,
-          document_id: data[0].document_id,
-          document_type: data[0].document_type,
-          document_photo_url: data[0].document_photo_url,
-          nationality: data[0].nationality,
-          check_in: data[0].check_in,
-          check_out: data[0].check_out,
-          guests_count: data[0].guests_count,
-          unit: data[0].unit
-        };
-        setGuests([added, ...guests]);
-        setShowAddForm(false);
-        setNewGuest({
-          name: '',
-          surname: '',
-          document_id: '',
-          document_type: "Carta d'Identità",
-          document_photo_url: '',
-          nationality: '',
-          check_in: '',
-          check_out: '',
-          guests_count: 1,
-          unit: 'Holiday Apartment'
-        });
+        setGuests(prev => prev.map(g => g.id === editingGuest.id ? { ...g, ...dbGuest } : g));
+      } else {
+        // INSERT
+        const { data, error } = await supabase
+          .from('guests')
+          .insert([dbGuest])
+          .select();
+
+        if (error) throw error;
+
+        if (data && data[0]) {
+          const added: Guest = {
+            id: data[0].id,
+            name: data[0].name,
+            surname: data[0].surname,
+            document_id: data[0].document_id,
+            document_type: data[0].document_type,
+            document_photo_url: data[0].document_photo_url,
+            nationality: data[0].nationality,
+            check_in: data[0].check_in,
+            check_out: data[0].check_out,
+            guests_count: data[0].guests_count,
+            unit: data[0].unit
+          };
+          setGuests([added, ...guests]);
+        }
       }
+
+      setShowAddForm(false);
+      setEditingGuest(null);
+      setNewGuest({
+        name: '',
+        surname: '',
+        document_id: '',
+        document_type: "Carta d'Identità",
+        document_photo_url: '',
+        nationality: '',
+        check_in: '',
+        check_out: '',
+        guests_count: 1,
+        unit: 'Holiday Apartment'
+      });
     } catch (error) {
-      console.error('Error adding guest:', error);
+      console.error('Error saving guest:', error);
       alert('Errore durante il salvataggio su Supabase.');
     } finally {
       setIsSyncing(false);
@@ -854,12 +892,20 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                         <span className="bg-[#a67c52]/10 text-[#a67c52] px-3 py-1 rounded-full text-xs font-bold">{guest.guests_count}</span>
                       </td>
                       <td className="px-6 py-5 text-right">
-                        <button 
-                          onClick={() => handleDeleteGuest(guest.id, guest.document_photo_url)}
-                          className="p-2 text-[#3b2b1f]/20 hover:text-red-500 transition-colors"
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                        <div className="flex justify-end gap-2">
+                          <button 
+                            onClick={() => handleEditClick(guest)}
+                            className="p-2 text-[#3b2b1f]/20 hover:text-[#a67c52] transition-colors"
+                          >
+                            <Pencil size={18} />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteGuest(guest.id, guest.document_photo_url)}
+                            className="p-2 text-[#3b2b1f]/20 hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   )) : (
@@ -1015,14 +1061,25 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
             >
               <div className="p-8 border-b border-[#3b2b1f]/10 flex justify-between items-center">
                 <h3 className="font-serif text-xl tracking-widest uppercase text-[#3D2B1F]">
-                  {content.modalTitle}
+                  {editingGuest ? content.editModalTitle : content.modalTitle}
                 </h3>
-                <button onClick={() => setShowAddForm(false)} className="text-[#3D2B1F]/30 hover:text-[#3D2B1F]">
+                <button 
+                  onClick={() => {
+                    setShowAddForm(false);
+                    setEditingGuest(null);
+                    setNewGuest({
+                      name: '', surname: '', document_id: '', document_type: "Carta d'Identità",
+                      document_photo_url: '', nationality: '', check_in: '', check_out: '',
+                      guests_count: 1, unit: 'Holiday Apartment'
+                    });
+                  }} 
+                  className="text-[#3D2B1F]/30 hover:text-[#3D2B1F]"
+                >
                   <X size={24} />
                 </button>
               </div>
 
-              <form onSubmit={handleAddGuest} className="p-4 md:p-8 space-y-4 md:space-y-6">
+              <form onSubmit={handleSaveGuest} className="p-4 md:p-8 space-y-4 md:space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#3D2B1F]/50">{content.labelName}</label>
@@ -1182,7 +1239,7 @@ export default function Dashboard({ onClose, lang }: DashboardProps) {
                   type="submit"
                   className="w-full bg-[#3b2b1f] text-white py-4 rounded-xl uppercase tracking-widest text-[13px] font-bold hover:bg-[#a67c52] transition-all shadow-md mt-4"
                 >
-                  {content.save}
+                  {editingGuest ? content.update : content.save}
                 </button>
               </form>
             </motion.div>
