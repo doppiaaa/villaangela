@@ -1771,7 +1771,13 @@ export default function App() {
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [showCookieBanner, setShowCookieBanner] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
-  const [showAdmin, setShowAdmin] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(() => {
+    return localStorage.getItem('villa_angela_admin_open') === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('villa_angela_admin_open', showAdmin.toString());
+  }, [showAdmin]);
   const [showLogin, setShowLogin] = useState(false);
   const [bookingDates, setBookingDates] = useState({ checkin: '', checkout: '' });
   
