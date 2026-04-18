@@ -2286,16 +2286,16 @@ export default function App() {
                 <ChevronLeft size={28} />
               </button>
 
-              {/* Scrollable Container - Full Width on Mobile */}
+              {/* Scrollable Container - Vertical List on Mobile, Carousell on Desktop */}
               <div 
                 id="reviews-container"
-                className="flex gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-12 px-6 md:px-1 transition-opacity duration-300"
+                className="flex flex-col md:flex-row gap-6 md:gap-8 overflow-y-visible md:overflow-x-auto md:snap-x md:snap-mandatory scrollbar-hide py-12 px-4 md:px-1 transition-opacity duration-300"
                 style={{ opacity: isTranslating ? 0.5 : 1 }}
               >
                 {loadedReviews.map((review, i) => (
                   <div 
                     key={i} 
-                    className="flex-none w-[100%] md:w-[calc(50%-16px)] lg:w-[calc(33.333%-21.34px)] snap-start"
+                    className="flex-none w-full md:w-[calc(50%-16px)] lg:w-[calc(33.333%-21.34px)]"
                   >
                     <div className="h-full flex flex-col gap-6 p-6 md:p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-[40px] border border-white/10 shadow-lg transition-all duration-500 hover:bg-white/50">
                       <div className="flex items-center gap-4">
@@ -2343,8 +2343,8 @@ export default function App() {
               </button>
             </div>
             
-            {/* Mobile indicator dots */}
-            <div className="flex justify-center gap-2 mt-4 md:hidden">
+            {/* Mobile indicator dots - Hidden */}
+            <div className="hidden">
               {loadedReviews.slice(0, 5).map((_, i) => (
                 <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#3b2b1f]/20"></div>
               ))}
