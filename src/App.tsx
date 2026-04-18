@@ -138,13 +138,13 @@ const translations: Record<string, Content> = {
       title: "Our Accommodations",
       apartment: {
         name: "Holiday Apartment",
-        desc: "A warm, 4-star welcoming space located in <span class='script-title'>Angri</span>, perfect for families and friends. Experience the authentic Italian lifestyle with a fully equipped kitchen, free WiFi, and a balcony with a view.",
-        features: ["4 Stars", "Free WiFi", "Fully Equipped Kitchen", "Entire home for you", "150 m² size", "Free parking on premises", "Pets allowed", "Air conditioning", "Private bathroom", "Washing machine"]
+        desc: "A stunning villa surrounded by greenery, equipped with all the amenities for an unforgettable stay. A spacious and welcoming retreat, ideal for families and groups of friends seeking relaxation and comfort.",
+        features: ["Free WiFi", "Fully Equipped Kitchen", "Entire home for you", "150 m² size", "Free parking on premises", "Pets allowed", "Air conditioning", "Private bathroom", "Washing machine"]
       },
       luxury: {
         name: "Luxury House",
-        desc: "An exclusive 5-star sanctuary for the discerning traveler. Sophisticated design, premium amenities, and unparalleled privacy.",
-        features: ["5 Stars", "Exclusive Access", "Premium Design"]
+        desc: "An exclusive sanctuary surrounded by tranquility. Elegant design, premium services, and total privacy for an upscale group experience.",
+        features: ["Exclusive Access", "Premium Design", "Surrounded by Nature"]
       },
       viewDetails: "View Details"
     },
@@ -238,13 +238,13 @@ const translations: Record<string, Content> = {
       title: "Le Nostre Sistemazioni",
       apartment: {
         name: "Casa Vacanza",
-        desc: "Uno spazio accogliente a 4 stelle situato ad <span class='script-title'>Angri</span>, perfetto per famiglie e amici. Vivete l'autentico stile di vita italiano con cucina attrezzata, WiFi gratuito e balcone con vista.",
-        features: ["4 Stelle", "WiFi Gratuito", "Cucina Attrezzata", "Intero alloggio tutto per te", "150 m² superficie", "Parcheggio gratuito sul posto", "Animali ammessi", "Aria condizionata", "Bagno privato", "Lavatrice"]
+        desc: "Una splendida villa immersa nel verde, dotata di tutti i servizi necessari per un soggiorno indimenticabile. Un rifugio spazioso e accogliente, ideale per famiglie e gruppi di amici in cerca di relax e comodità.",
+        features: ["WiFi Gratuito", "Cucina Attrezzata", "Intero alloggio tutto per te", "150 m² superficie", "Parcheggio gratuito sul posto", "Animali ammessi", "Aria condizionata", "Bagno privato", "Lavatrice"]
       },
       luxury: {
         name: "Luxury House",
-        desc: "Un santuario esclusivo a 5 stelle per il viaggiatore esigente. Design sofisticato, servizi premium e privacy senza pari.",
-        features: ["5 Stelle", "Accesso Esclusivo", "Design Ricercato"]
+        desc: "Un santuario esclusivo circondato dalla tranquillità. Design sofisticato, servizi premium e privacy totale per un'esperienza di gruppo di alto livello.",
+        features: ["Accesso Esclusivo", "Design Ricercato", "Immerso nel Verde"]
       },
       viewDetails: "Scopri di più"
     },
@@ -2056,7 +2056,7 @@ export default function App() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="relative py-32 px-6 md:px-12 flex flex-col items-center text-center bg-transparent">
+      <section id="about" className="relative py-20 px-6 md:px-12 flex flex-col items-center text-center bg-transparent">
         {/* Top bridge: matches hero gradient end color and fades into the page background */}
         <div className="absolute top-0 left-0 right-0 pointer-events-none" style={{ height: '150px', background: 'linear-gradient(to bottom, #E8DDD0 0%, rgba(232,221,208,0.6) 50%, transparent 100%)' }}></div>
         <div className="max-w-4xl fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-10 md:p-16 rounded-[2rem]">
@@ -2069,7 +2069,7 @@ export default function App() {
       </section>
 
       {/* The Two Units Section */}
-      <section id="units" className="py-32 px-6 md:px-12 bg-transparent">
+      <section id="units" className="py-20 px-6 md:px-12 bg-transparent">
         <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-16 text-center fade-in">{content.units.title}</h2>
         <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Apartment Card */}
@@ -2129,7 +2129,7 @@ export default function App() {
       </section>
 
       {/* Gallery Section */}
-      <section id="gallery" className="py-32 px-0 bg-transparent overflow-hidden fade-in">
+      <section id="gallery" className="py-20 px-0 bg-transparent overflow-hidden fade-in">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">
           {content.gallery}
         </h2>
@@ -2137,29 +2137,36 @@ export default function App() {
         <div ref={galleryContainerRef} className="w-full overflow-hidden relative pb-8 cursor-grab active:cursor-grabbing select-none">
           <div ref={galleryInnerRef} className="flex w-max will-change-transform">
             {[1, 2].map((set) => (
-              <div key={set} className="flex gap-2 md:gap-4 pr-2 md:pr-4">
-                {apartmentGalleryImages.reduce((acc: string[][], img: string, i: number) => {
-                  if (i % 5 === 0) acc.push(apartmentGalleryImages.slice(i, i + 5));
+              <div key={set} className="flex gap-4 pr-4">
+                {apartmentGalleryImages.reduce((acc: any[], img: string, i: number) => {
+                  if (i % 6 === 0) acc.push(apartmentGalleryImages.slice(i, i + 6));
                   return acc;
                 }, []).map((chunk, idx) => {
-                  const isRight = idx % 2 !== 0;
                   return (
-                    <div key={`${set}-${idx}`} className="grid grid-cols-4 grid-rows-2 gap-2 md:gap-4 w-[85vw] md:w-[70vw] lg:w-[50vw] h-[300px] md:h-[400px] lg:h-[450px] flex-none">
-                      {isRight ? (
+                    <div key={`${set}-${idx}`} className="grid grid-cols-4 grid-rows-2 gap-3 md:gap-4 w-[90vw] md:w-[75vw] lg:w-[60vw] h-[400px] md:h-[500px] lg:h-[600px] flex-none">
+                      {idx % 2 === 0 ? (
                         <>
-                          {chunk[0] && <div className="col-span-1 row-span-1"><img src={chunk[0]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[0])} alt="Gallery" /></div>}
-                          {chunk[1] && <div className="col-span-1 row-span-1"><img src={chunk[1]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[1])} alt="Gallery" /></div>}
-                          {chunk[2] && <div className="col-span-2 row-span-2"><img src={chunk[2]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[2])} alt="Gallery" /></div>}
-                          {chunk[3] && <div className="col-span-1 row-span-1"><img src={chunk[3]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[3])} alt="Gallery" /></div>}
-                          {chunk[4] && <div className="col-span-1 row-span-1"><img src={chunk[4]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[4])} alt="Gallery" /></div>}
+                          {chunk[0] && <div className="col-span-2 row-span-2"><img src={chunk[0]} className="w-full h-full object-cover rounded-3xl cursor-pointer hover:opacity-90 hover:scale-[1.01] transition-all duration-500 shadow-lg" onClick={() => setEnlargedImage(chunk[0])} alt="Gallery" /></div>}
+                          <div className="col-span-2 grid grid-cols-2 gap-3 md:gap-4">
+                            {chunk[1] && <div className="col-span-1 row-span-1"><img src={chunk[1]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[1])} alt="Gallery" /></div>}
+                            {chunk[2] && <div className="col-span-1 row-span-1"><img src={chunk[2]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[2])} alt="Gallery" /></div>}
+                          </div>
+                          <div className="col-span-2 grid grid-cols-3 gap-3 md:gap-4">
+                            {chunk[3] && <div className="col-span-2 row-span-1"><img src={chunk[3]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[3])} alt="Gallery" /></div>}
+                            {chunk[4] && <div className="col-span-1 row-span-1"><img src={chunk[4]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[4])} alt="Gallery" /></div>}
+                          </div>
                         </>
                       ) : (
                         <>
-                          {chunk[0] && <div className="col-span-2 row-span-2"><img src={chunk[0]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[0])} alt="Gallery" /></div>}
-                          {chunk[1] && <div className="col-span-1 row-span-1"><img src={chunk[1]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[1])} alt="Gallery" /></div>}
-                          {chunk[2] && <div className="col-span-1 row-span-1"><img src={chunk[2]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[2])} alt="Gallery" /></div>}
-                          {chunk[3] && <div className="col-span-1 row-span-1"><img src={chunk[3]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[3])} alt="Gallery" /></div>}
-                          {chunk[4] && <div className="col-span-1 row-span-1"><img src={chunk[4]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[4])} alt="Gallery" /></div>}
+                          <div className="col-span-1 row-span-2 grid grid-rows-2 gap-3 md:gap-4">
+                            {chunk[0] && <div className="row-span-1"><img src={chunk[0]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[0])} alt="Gallery" /></div>}
+                            {chunk[1] && <div className="row-span-1"><img src={chunk[1]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[1])} alt="Gallery" /></div>}
+                          </div>
+                          {chunk[2] && <div className="col-span-2 row-span-2"><img src={chunk[2]} className="w-full h-full object-cover rounded-3xl cursor-pointer hover:opacity-90 hover:scale-[1.01] transition-all duration-500 shadow-lg" onClick={() => setEnlargedImage(chunk[2])} alt="Gallery" /></div>}
+                          <div className="col-span-1 row-span-2 grid grid-rows-3 gap-3 md:gap-4">
+                            {chunk[3] && <div className="row-span-1"><img src={chunk[3]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[3])} alt="Gallery" /></div>}
+                            {chunk[4] && <div className="row-span-2"><img src={chunk[4]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[4])} alt="Gallery" /></div>}
+                          </div>
                         </>
                       )}
                     </div>
@@ -2171,7 +2178,7 @@ export default function App() {
         </div>
       </section>
 
-      <section className="py-32 px-6 md:px-12 bg-transparent" id="servizi-section">
+      <section className="py-20 px-6 md:px-12 bg-transparent" id="servizi-section">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10 fade-in">
           {content.amenities.title}
         </h2>
@@ -2183,7 +2190,7 @@ export default function App() {
       </section>
 
       {/* Location Section */}
-      <section id="location" className="py-32 px-6 md:px-12 bg-transparent">
+      <section id="location" className="py-20 px-6 md:px-12 bg-transparent">
         <div className="max-w-4xl mx-auto text-center fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-10 md:p-16 rounded-[2rem]">
           <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.title}</h2>
           <div className="w-16 h-px bg-[#a67c52] mx-auto mb-10"></div>
@@ -2206,7 +2213,7 @@ export default function App() {
       </section>
       
       {/* Surroundings Horizontal Gallery */}
-      <section className="py-32 px-0 bg-transparent overflow-hidden fade-in">
+      <section className="py-20 px-0 bg-transparent overflow-hidden fade-in">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.galleryTitle}</h2>
         
         <div ref={locationContainerRef} className="w-full overflow-hidden relative cursor-grab active:cursor-grabbing select-none">
@@ -2243,11 +2250,98 @@ export default function App() {
       </section>
 
       {/* Reviews Section */}
-      <section id="reviews" className="relative py-32 px-6 md:px-12 bg-transparent">
-        <div className="max-w-6xl mx-auto text-center fade-in">
-          <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-4">{content.reviews.title}</h2>
+      <section id="reviews" className="relative py-20 px-6 md:px-12 bg-transparent overflow-hidden">
+        <div className="max-w-7xl mx-auto text-center fade-in">
+          <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-12">{content.reviews.title}</h2>
+          
+          <div className="relative group">
+            {/* Frosted Glass Background covering the entire area */}
+            <div className="absolute inset-0 bg-white/30 backdrop-blur-xl rounded-[3.5rem] border border-white/20 shadow-xl z-0"></div>
+
+            <div className="relative z-10 flex items-center px-4 md:px-6">
+              {/* Navigation Left */}
+              <button 
+                onClick={() => {
+                  const container = document.getElementById('reviews-container');
+                  if (container) {
+                    const width = container.offsetWidth;
+                    container.scrollBy({ left: -width, behavior: 'smooth' });
+                  }
+                }}
+                className="flex-none p-4 rounded-full bg-white/40 backdrop-blur-2xl border border-white/40 text-[#3b2b1f] hover:bg-[#a67c52] hover:text-white transition-all shadow-lg flex items-center justify-center font-bold z-20"
+              >
+                <ChevronLeft size={28} />
+              </button>
+
+              {/* Visible Cards Area */}
+              <div className="flex-1 overflow-hidden mx-4 md:mx-6">
+                <div 
+                  id="reviews-container"
+                  className="flex gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-12 px-1 transition-opacity duration-300"
+                  style={{ opacity: isTranslating ? 0.5 : 1 }}
+                >
+                  {loadedReviews.map((review, i) => (
+                    <div 
+                      key={i} 
+                      className="flex-none w-[100%] md:w-[calc(50%-16px)] lg:w-[calc(33.333%-21.34px)] snap-start"
+                    >
+                      <div className="h-full flex flex-col gap-6 p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-[40px] border border-white/10 shadow-lg transition-all duration-500 hover:bg-white/50">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-[#3b2b1f]/80 shrink-0 overflow-hidden ring-1 ring-white/40 shadow-inner">
+                            {'platform' in review && review.platform === 'airbnb' ? (
+                              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-[#FF5A5F] fill-current"><path d="M16 1.98C7.67 1.98 1 8.31 1 16.5s6.67 14.52 15 14.52 15-6.31 15-14.52S24.33 1.98 16 1.98zm0 28.58c-7.75 0-14.08-6.14-14.08-13.84 0-7.7 6.33-14.06 14.08-14.06s14.08 6.36 14.08 14.06-6.33 13.84-14.08 13.84zm7.25-15.65h-4.47l4.31-7.24a.68.68 0 0 0-.08-.82.69.69 0 0 0-.91-.12l-6.8 4.63-1.63-2.67a6.9 6.9 0 0 0-5.83-3.26c-3.13 0-5.96 1.83-7.23 4.68-.07.16-.03.35.1.48s.33.16.5.09c1.1-0.49 2.3-0.74 3.52-0.74 2.87 0 5.48 1.55 6.7 4.02l2.36 3.84-4.22 7.08a.68.68 0 0 0 .1.82.69.69 0 0 0 .9-.1l6.73-4.66 1.63 2.67a6.9 6.9 0 0 0-5.83 3.26 6.93 6.93 0 0 0 5.86-3.29c.1-.15.06-.35-.08-.47-.14-.13-.34-.14-.49-.03a5.55 5.55 0 0 1-4.7 1.63 5.48 5.48 0 0 1-4.63-2.61l-2.43-3.95 4.34-7.29zm-10.02 5.84a1.86 1.86 0 1 1 0-3.72 1.86 1.86 0 0 1 0 3.72zm4.1-1.3l-2.02 3.4-3.1-2.1a3.25 3.25 0 1 0 2.9-4.82l2.22 3.52z"></path></svg>
+                            ) : 'platform' in review && review.platform === 'booking' ? (
+                              <span className="font-bold text-[#003580] text-2xl px-1">B.</span>
+                            ) : (
+                              <User size={28} className="text-[#3b2b1f]/40" />
+                            )}
+                          </div>
+                          <div className="text-left">
+                            <h4 className="font-bold text-[1.1rem] text-[#3D2B1F]">{review.name}</h4>
+                            <p className="text-sm text-[#9A8070] text-[0.85rem] font-medium">{review.metadata}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#3D2B1F]">
+                          <div className="flex gap-0.5 text-[#FF5A5F]">
+                            {[...Array(review.stars)].map((_, s) => <Star key={s} size={14} fill="currentColor" stroke="none" />)}
+                          </div>
+                          <span className="ml-1 opacity-40">·</span>
+                          <span className="opacity-90">{review.date}</span>
+                        </div>
+                        <p className="text-[#3D2B1F] leading-relaxed text-[15px] text-left italic font-medium">
+                          "{review.quote}"
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Navigation Right */}
+              <button 
+                onClick={() => {
+                  const container = document.getElementById('reviews-container');
+                  if (container) {
+                    const width = container.offsetWidth;
+                    container.scrollBy({ left: width, behavior: 'smooth' });
+                  }
+                }}
+                className="flex-none p-4 rounded-full bg-white/40 backdrop-blur-2xl border border-white/40 text-[#3b2b1f] hover:bg-[#a67c52] hover:text-white transition-all shadow-lg flex items-center justify-center group z-20"
+              >
+                <ChevronRight size={28} className="group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
+            
+            {/* Mobile indicator dots */}
+            <div className="flex justify-center gap-2 mt-4 md:hidden">
+              {loadedReviews.slice(0, 5).map((_, i) => (
+                <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#3b2b1f]/20"></div>
+              ))}
+            </div>
+          </div>
+
           {isTranslating && (
-            <div className="flex items-center justify-center gap-2 mb-10 text-[#9A8070] italic animate-pulse">
+            <div className="flex items-center justify-center gap-2 mt-8 text-[#9A8070] italic animate-pulse">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span>
                 {lang === 'en' ? 'Translation in progress...' : 
@@ -2263,45 +2357,11 @@ export default function App() {
               </span>
             </div>
           )}
-          <div className={`grid md:grid-cols-2 gap-x-8 gap-y-8 text-left transition-opacity duration-300 ${isTranslating ? 'opacity-50' : 'opacity-100'}`}>
-            {loadedReviews.map((review, i) => (
-              <div 
-                key={i} 
-                className="flex flex-col gap-5 p-8 rounded-[1.25rem] bg-white/15 backdrop-blur-[12px] border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300 hover:scale-[1.02] hover:backdrop-blur-[16px]"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white/80 shrink-0 overflow-hidden ring-1 ring-white/40">
-                    {'platform' in review && review.platform === 'airbnb' ? (
-                      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-[#FF5A5F] fill-current" aria-hidden="true" role="presentation" focusable="false"><path d="M16 1.98C7.67 1.98 1 8.31 1 16.5s6.67 14.52 15 14.52 15-6.31 15-14.52S24.33 1.98 16 1.98zm0 28.58c-7.75 0-14.08-6.14-14.08-13.84 0-7.7 6.33-14.06 14.08-14.06s14.08 6.36 14.08 14.06-6.33 13.84-14.08 13.84zm7.25-15.65h-4.47l4.31-7.24a.68.68 0 0 0-.08-.82.69.69 0 0 0-.91-.12l-6.8 4.63-1.63-2.67a6.9 6.9 0 0 0-5.83-3.26c-3.13 0-5.96 1.83-7.23 4.68-.07.16-.03.35.1.48s.33.16.5.09c1.1-0.49 2.3-0.74 3.52-0.74 2.87 0 5.48 1.55 6.7 4.02l2.36 3.84-4.22 7.08a.68.68 0 0 0 .1.82.69.69 0 0 0 .9-.1l6.73-4.66 1.63 2.67a6.9 6.9 0 0 0 5.83 3.26 6.93 6.93 0 0 0 5.86-3.29c.1-.15.06-.35-.08-.47-.14-.13-.34-.14-.49-.03a5.55 5.55 0 0 1-4.7 1.63 5.48 5.48 0 0 1-4.63-2.61l-2.43-3.95 4.34-7.29zm-10.02 5.84a1.86 1.86 0 1 1 0-3.72 1.86 1.86 0 0 1 0 3.72zm4.1-1.3l-2.02 3.4-3.1-2.1a3.25 3.25 0 1 0 2.9-4.82l2.22 3.52z"></path></svg>
-                    ) : 'platform' in review && review.platform === 'booking' ? (
-                      <span className="font-bold text-[#003580] text-xl px-1">B.</span>
-                    ) : (
-                      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-[#FF5A5F] fill-current" aria-hidden="true" role="presentation" focusable="false"><path d="M16 1.98C7.67 1.98 1 8.31 1 16.5s6.67 14.52 15 14.52 15-6.31 15-14.52S24.33 1.98 16 1.98zm0 28.58c-7.75 0-14.08-6.14-14.08-13.84 0-7.7 6.33-14.06 14.08-14.06s14.08 6.36 14.08 14.06-6.33 13.84-14.08 13.84zm7.25-15.65h-4.47l4.31-7.24a.68.68 0 0 0-.08-.82.69.69 0 0 0-.91-.12l-6.8 4.63-1.63-2.67a6.9 6.9 0 0 0-5.83-3.26c-3.13 0-5.96 1.83-7.23 4.68-.07.16-.03.35.1.48s.33.16.5.09c1.1-0.49 2.3-0.74 3.52-0.74 2.87 0 5.48 1.55 6.7 4.02l2.36 3.84-4.22 7.08a.68.68 0 0 0 .1.82.69.69 0 0 0 .9-.1l6.73-4.66 1.63 2.67a6.9 6.9 0 0 0 5.83 3.26 6.93 6.93 0 0 0 5.86-3.29c.1-.15.06-.35-.08-.47-.14-.13-.34-.14-.49-.03a5.55 5.55 0 0 1-4.7 1.63 5.48 5.48 0 0 1-4.63-2.61l-2.43-3.95 4.34-7.29zm-10.02 5.84a1.86 1.86 0 1 1 0-3.72 1.86 1.86 0 0 1 0 3.72zm4.1-1.3l-2.02 3.4-3.1-2.1a3.25 3.25 0 1 0 2.9-4.82l2.22 3.52z"></path></svg>
-                    )}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-[1rem] text-[#3D2B1F]">{review.name}</h4>
-                    <p className="text-sm text-[#9A8070] text-[0.8rem] font-normal">{review.metadata}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-[#3D2B1F]">
-                  <div className="flex gap-0.5 text-[#FF5A5F]">
-                    {[...Array(review.stars)].map((_, s) => <Star key={s} size={12} fill="currentColor" stroke="none" />)}
-                  </div>
-                  <span className="ml-1 opacity-40">·</span>
-                  <span className="opacity-90">{review.date}</span>
-                </div>
-                <p className="text-[#3D2B1F] leading-relaxed text-[15px]">
-                  {review.quote}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
       {/* Booking Platforms Section */}
-      <section id="booking" className="py-32 px-6 md:px-12 bg-transparent">
+      <section id="booking" className="py-20 px-6 md:px-12 bg-transparent">
         <div className="max-w-5xl mx-auto text-center fade-in">
           <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">
             {content.legal.bookingPlatforms.title}
@@ -2402,7 +2462,7 @@ export default function App() {
 
       {/* Contact Section */}
 
-      <section id="contact" className="relative py-32 px-6 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
+      <section id="contact" className="relative py-20 px-6 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
           <div className="fade-in">
             <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-12">{content.contact.title}</h2>
