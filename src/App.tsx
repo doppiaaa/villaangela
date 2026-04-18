@@ -2011,8 +2011,8 @@ export default function App() {
         {/* Bottom fade — inside the hero, within overflow-hidden */}
         <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-30" style={{ height: '280px', background: 'linear-gradient(to bottom, transparent 0%, rgba(200,184,154,0.25) 30%, rgba(216,200,178,0.55) 55%, rgba(232,221,208,0.82) 75%, #E8DDD0 100%)' }}></div>
         
-        <div className="relative z-20 flex flex-col items-center justify-center w-full h-full gap-12 md:gap-20 pt-16">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 w-full max-w-6xl px-4">
+        <div className="relative z-20 flex flex-col items-center justify-center w-full h-full gap-8 md:gap-20 pt-8 md:pt-16">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-16 w-full max-w-6xl px-4">
             <div 
               onClick={() => setSelectedUnit('apartment')}
               onMouseEnter={() => setHoveredUnit('apartment')}
@@ -2058,10 +2058,10 @@ export default function App() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="relative py-20 px-6 md:px-12 flex flex-col items-center text-center bg-transparent">
+      <section id="about" className="relative py-12 md:py-24 px-4 md:px-12 flex flex-col items-center text-center bg-transparent">
         {/* Top bridge: matches hero gradient end color and fades into the page background */}
         <div className="absolute top-0 left-0 right-0 pointer-events-none" style={{ height: '150px', background: 'linear-gradient(to bottom, #E8DDD0 0%, rgba(232,221,208,0.6) 50%, transparent 100%)' }}></div>
-        <div className="max-w-4xl fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-10 md:p-16 rounded-[2rem]">
+        <div className="max-w-4xl fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-16 rounded-[2.5rem]">
           <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-8">{content.about.title}</h2>
           <div className="w-24 h-px bg-[#a67c52] mx-auto mb-10"></div>
           <p className="text-[1.05rem] md:text-[1.15rem] leading-[2] md:leading-[2.2] text-[#3D2B1F] font-medium max-w-2xl mx-auto">
@@ -2071,11 +2071,11 @@ export default function App() {
       </section>
 
       {/* The Two Units Section */}
-      <section id="units" className="py-20 px-6 md:px-12 bg-transparent">
+      <section id="units" className="py-12 md:py-24 px-4 md:px-12 bg-transparent">
         <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-16 text-center fade-in">{content.units.title}</h2>
         <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Apartment Card */}
-          <div className="unit-card bg-white/85 backdrop-blur-[2px] border border-white/20 text-[#3D2B1F] p-8 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_8px_32px_rgba(100,70,40,0.08)]">
+          <div className="unit-card bg-white/85 backdrop-blur-[2px] border border-white/20 text-[#3D2B1F] p-6 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_8px_32px_rgba(100,70,40,0.08)]">
             <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/holiday-fixed.png" alt="Villa Angela Holiday Apartment Logo" className="h-40 mb-8 rounded-xl object-contain shadow-md" />
             <h3 className="font-serif text-[1.8rem] md:text-[2.2rem] font-medium text-[#3D2B1F] mb-4">{content.units.apartment.name}</h3>
             <p className="text-[#5C4A3A] mb-8 flex-1 font-medium leading-[1.7] text-[0.95rem]">{content.units.apartment.desc}</p>
@@ -2098,7 +2098,7 @@ export default function App() {
           </div>
 
           {/* Luxury Card */}
-          <div className="unit-card bg-white/85 backdrop-blur-[2px] border border-white/20 text-[#3D2B1F] p-8 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_8px_32px_rgba(100,70,40,0.08)] relative overflow-hidden">
+          <div className="unit-card bg-white/85 backdrop-blur-[2px] border border-white/20 text-[#3D2B1F] p-6 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_8px_32px_rgba(100,70,40,0.08)] relative overflow-hidden">
             {/* Coming Soon banner */}
             <div className="absolute top-5 right-5 z-10 animate-badge-pulse">
               <span className="bg-[#a67c52] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
@@ -2131,7 +2131,7 @@ export default function App() {
       </section>
 
       {/* Gallery Section */}
-      <section id="gallery" className="py-20 px-0 bg-transparent overflow-hidden fade-in">
+      <section id="gallery" className="py-12 md:py-24 px-0 bg-transparent overflow-hidden fade-in">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">
           {content.gallery}
         </h2>
@@ -2140,7 +2140,18 @@ export default function App() {
           <div ref={galleryInnerRef} className="flex w-max will-change-transform">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-4 pr-4">
-                {apartmentGalleryImages.reduce((acc: any[], img: string, i: number) => {
+                {[
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096753.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911498.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911499.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911505.jpg",
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911506.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911508.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911510.jpg",
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911512.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911515.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911517.jpg",
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911519.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911526.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911527.jpg",
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911533.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911536.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911537.jpg",
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334699.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334700.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334701.jpg",
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334702.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334703.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334704.jpg",
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334705.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334706.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334707.jpg",
+                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334708.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334710.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334711.jpg"
+                ].reduce((acc: any[], img: string, i: number) => {
                   if (i % 6 === 0) acc.push(apartmentGalleryImages.slice(i, i + 6));
                   return acc;
                 }, []).map((chunk, idx) => {
@@ -2192,8 +2203,8 @@ export default function App() {
       </section>
 
       {/* Location Section */}
-      <section id="location" className="py-20 px-6 md:px-12 bg-transparent">
-        <div className="max-w-4xl mx-auto text-center fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-10 md:p-16 rounded-[2rem]">
+      <section id="location" className="py-12 md:py-24 px-4 md:px-12 bg-transparent">
+        <div className="max-w-4xl mx-auto text-center fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-16 rounded-[2.5rem]">
           <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.title}</h2>
           <div className="w-16 h-px bg-[#a67c52] mx-auto mb-10"></div>
           <p className="text-lg text-[#3D2B1F] mb-8 font-medium leading-relaxed">{content.location.desc}</p>
@@ -2252,7 +2263,7 @@ export default function App() {
       </section>
 
       {/* Reviews Section */}
-      <section id="reviews" className="relative py-20 px-6 md:px-12 bg-transparent overflow-hidden">
+      <section id="reviews" className="relative py-12 md:py-24 px-4 md:px-12 bg-transparent overflow-hidden">
         <div className="max-w-7xl mx-auto text-center fade-in">
           <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-12">{content.reviews.title}</h2>
           
@@ -2287,7 +2298,7 @@ export default function App() {
                       key={i} 
                       className="flex-none w-[100%] md:w-[calc(50%-16px)] lg:w-[calc(33.333%-21.34px)] snap-start"
                     >
-                      <div className="h-full flex flex-col gap-6 p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-[40px] border border-white/10 shadow-lg transition-all duration-500 hover:bg-white/50">
+                      <div className="h-full flex flex-col gap-6 p-6 md:p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-[40px] border border-white/10 shadow-lg transition-all duration-500 hover:bg-white/50">
                         <div className="flex items-center gap-4">
                           <div className="w-14 h-14 bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-[#3b2b1f]/80 shrink-0 overflow-hidden ring-1 ring-white/40 shadow-inner">
                             {'platform' in review && review.platform === 'airbnb' ? (
@@ -2464,7 +2475,7 @@ export default function App() {
 
       {/* Contact Section */}
 
-      <section id="contact" className="relative py-20 px-6 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
+      <section id="contact" className="relative py-12 md:py-24 px-4 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
           <div className="fade-in">
             <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-12">{content.contact.title}</h2>
