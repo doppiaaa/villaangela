@@ -1838,10 +1838,11 @@ export default function App() {
       setIsTranslating(true);
       try {
         // Prepare texts for batch translation
-        const textsToTranslate = data.flatMap(r => [r.metadata, r.date, r.quote]);
+        const textsToTranslate = data.flatMap(r => [r.metadata || '', r.date || '', r.quote || '']);
         const joinedText = textsToTranslate.join(' [SEP] ');
         
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl=${targetLang}&dt=t&q=${encodeURIComponent(joinedText)}`;
+        // sl=auto permits translating reviews written in any language
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(joinedText)}`;
         const res = await fetch(url);
         const json = await res.json();
         
@@ -1860,17 +1861,17 @@ export default function App() {
         return translatedReviews;
       } catch (error) {
         console.error('Translation error:', error);
-        return data; // Fallback to Italian
+        return data; // Fallback
       } finally {
         setIsTranslating(false);
       }
     };
 
-    const processReviews = async (data: Review[]) => {
-      const translated = await translateContent(data, lang);
+    const processReviews = async (baseData: Review[]) => {
+      let allReviews = [...baseData];
       
       try {
-        // Fetch custom reviews from Supabase instead of localStorage
+        // Fetch custom reviews from Supabase
         const { data: supabaseReviews, error } = await supabase
           .from('reviews')
           .select('*')
@@ -1887,16 +1888,17 @@ export default function App() {
             date: r.date,
             stars: r.stars,
             quote: r.quote,
-            metadata: r.platform // mapping platform to metadata for consistent display
+            metadata: r.platform
           }));
-          setLoadedReviews([...formatted, ...translated]);
-        } else {
-          setLoadedReviews(translated);
+          allReviews = [...formatted, ...baseData];
         }
       } catch (e) {
         console.error('Error fetching Supabase reviews:', e);
-        setLoadedReviews(translated);
       }
+
+      // Translate EVERYTHING together
+      const translated = await translateContent(allReviews, lang);
+      setLoadedReviews(translated);
     };
 
     const fetchBaseReviews = () => {
