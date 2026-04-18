@@ -2527,7 +2527,7 @@ export default function App() {
             {/* Section 1: Personal Info */}
             <div className="space-y-6">
               <div className="border-b border-[#a67c52]/10 pb-3">
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
+                <h3 className="text-[13px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
                   {lang === 'it' ? 'Informazioni Personali' : 'Personal Information'}
                 </h3>
@@ -2547,7 +2547,7 @@ export default function App() {
             {/* Section 2: Stay Details */}
             <div className="space-y-6">
               <div className="border-b border-[#a67c52]/10 pb-3">
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
+                <h3 className="text-[13px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
                   {lang === 'it' ? 'Dettagli del Soggiorno' : 'Stay Details'}
                 </h3>
@@ -2566,7 +2566,7 @@ export default function App() {
                     {[1,2,3,4,5,6,7,8].map(n => <option key={n}>{n}</option>)}
                   </select>
                 </div>
-                <div className="col-span-1 md:col-span-2 space-y-2">
+                <div className="col-span-2 space-y-2">
                   <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]/60 px-1">{content.contact.checkIn}</label>
                   <input 
                     name="checkin" type="date" required 
@@ -2580,7 +2580,7 @@ export default function App() {
                     className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium text-sm" 
                   />
                 </div>
-                <div className="col-span-1 md:col-span-2 space-y-2">
+                <div className="col-span-2 space-y-2">
                   <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]/60 px-1">{content.contact.checkOut}</label>
                   <input 
                     name="checkout" type="date" required 
@@ -2604,7 +2604,7 @@ export default function App() {
             {/* Section 3: Message */}
             <div className="space-y-6">
               <div className="border-b border-[#a67c52]/10 pb-3">
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
+                <h3 className="text-[13px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
                   {lang === 'it' ? 'Messaggio' : 'Message'}
                 </h3>
