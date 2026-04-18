@@ -2271,8 +2271,8 @@ export default function App() {
             {/* Frosted Glass Background covering the entire area */}
             <div className="absolute inset-0 bg-white/30 backdrop-blur-xl rounded-[3.5rem] border border-white/20 shadow-xl z-0"></div>
 
-            <div className="relative z-10 flex items-center px-4 md:px-6">
-              {/* Navigation Left */}
+            <div className="relative z-10">
+              {/* Navigation Left - Hidden on Mobile */}
               <button 
                 onClick={() => {
                   const container = document.getElementById('reviews-container');
@@ -2281,56 +2281,54 @@ export default function App() {
                     container.scrollBy({ left: -width, behavior: 'smooth' });
                   }
                 }}
-                className="flex-none p-4 rounded-full bg-white/40 backdrop-blur-2xl border border-white/40 text-[#3b2b1f] hover:bg-[#a67c52] hover:text-white transition-all shadow-lg flex items-center justify-center font-bold z-20"
+                className="hidden md:flex absolute -left-6 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/40 backdrop-blur-2xl border border-white/40 text-[#3b2b1f] hover:bg-[#a67c52] hover:text-white transition-all shadow-lg items-center justify-center font-bold z-20"
               >
                 <ChevronLeft size={28} />
               </button>
 
-              {/* Visible Cards Area */}
-              <div className="flex-1 overflow-hidden mx-4 md:mx-6">
-                <div 
-                  id="reviews-container"
-                  className="flex gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-12 px-1 transition-opacity duration-300"
-                  style={{ opacity: isTranslating ? 0.5 : 1 }}
-                >
-                  {loadedReviews.map((review, i) => (
-                    <div 
-                      key={i} 
-                      className="flex-none w-[100%] md:w-[calc(50%-16px)] lg:w-[calc(33.333%-21.34px)] snap-start"
-                    >
-                      <div className="h-full flex flex-col gap-6 p-6 md:p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-[40px] border border-white/10 shadow-lg transition-all duration-500 hover:bg-white/50">
-                        <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-[#3b2b1f]/80 shrink-0 overflow-hidden ring-1 ring-white/40 shadow-inner">
-                            {'platform' in review && review.platform === 'airbnb' ? (
-                              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-[#FF5A5F] fill-current"><path d="M16 1.98C7.67 1.98 1 8.31 1 16.5s6.67 14.52 15 14.52 15-6.31 15-14.52S24.33 1.98 16 1.98zm0 28.58c-7.75 0-14.08-6.14-14.08-13.84 0-7.7 6.33-14.06 14.08-14.06s14.08 6.36 14.08 14.06-6.33 13.84-14.08 13.84zm7.25-15.65h-4.47l4.31-7.24a.68.68 0 0 0-.08-.82.69.69 0 0 0-.91-.12l-6.8 4.63-1.63-2.67a6.9 6.9 0 0 0-5.83-3.26c-3.13 0-5.96 1.83-7.23 4.68-.07.16-.03.35.1.48s.33.16.5.09c1.1-0.49 2.3-0.74 3.52-0.74 2.87 0 5.48 1.55 6.7 4.02l2.36 3.84-4.22 7.08a.68.68 0 0 0 .1.82.69.69 0 0 0 .9-.1l6.73-4.66 1.63 2.67a6.9 6.9 0 0 0-5.83 3.26 6.93 6.93 0 0 0 5.86-3.29c.1-.15.06-.35-.08-.47-.14-.13-.34-.14-.49-.03a5.55 5.55 0 0 1-4.7 1.63 5.48 5.48 0 0 1-4.63-2.61l-2.43-3.95 4.34-7.29zm-10.02 5.84a1.86 1.86 0 1 1 0-3.72 1.86 1.86 0 0 1 0 3.72zm4.1-1.3l-2.02 3.4-3.1-2.1a3.25 3.25 0 1 0 2.9-4.82l2.22 3.52z"></path></svg>
-                            ) : 'platform' in review && review.platform === 'booking' ? (
-                              <span className="font-bold text-[#003580] text-2xl px-1">B.</span>
-                            ) : (
-                              <User size={28} className="text-[#3b2b1f]/40" />
-                            )}
-                          </div>
-                          <div className="text-left">
-                            <h4 className="font-bold text-[1.1rem] text-[#3D2B1F]">{review.name}</h4>
-                            <p className="text-sm text-[#9A8070] text-[0.85rem] font-medium">{review.metadata}</p>
-                          </div>
+              {/* Scrollable Container - Full Width on Mobile */}
+              <div 
+                id="reviews-container"
+                className="flex gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-12 px-6 md:px-1 transition-opacity duration-300"
+                style={{ opacity: isTranslating ? 0.5 : 1 }}
+              >
+                {loadedReviews.map((review, i) => (
+                  <div 
+                    key={i} 
+                    className="flex-none w-[100%] md:w-[calc(50%-16px)] lg:w-[calc(33.333%-21.34px)] snap-start"
+                  >
+                    <div className="h-full flex flex-col gap-6 p-6 md:p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-[40px] border border-white/10 shadow-lg transition-all duration-500 hover:bg-white/50">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-[#3b2b1f]/80 shrink-0 overflow-hidden ring-1 ring-white/40 shadow-inner">
+                          {'platform' in review && review.platform === 'airbnb' ? (
+                            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-[#FF5A5F] fill-current"><path d="M16 1.98C7.67 1.98 1 8.31 1 16.5s6.67 14.52 15 14.52 15-6.31 15-14.52S24.33 1.98 16 1.98zm0 28.58c-7.75 0-14.08-6.14-14.08-13.84 0-7.7 6.33-14.06 14.08-14.06s14.08 6.36 14.08 14.06-6.33 13.84-14.08 13.84zm7.25-15.65h-4.47l4.31-7.24a.68.68 0 0 0-.08-.82.69.69 0 0 0-.91-.12l-6.8 4.63-1.63-2.67a6.9 6.9 0 0 0-5.83-3.26c-3.13 0-5.96 1.83-7.23 4.68-.07.16-.03.35.1.48s.33.16.5.09c1.1-0.49 2.3-0.74 3.52-0.74 2.87 0 5.48 1.55 6.7 4.02l2.36 3.84-4.22 7.08a.68.68 0 0 0 .1.82.69.69 0 0 0 .9-.1l6.73-4.66 1.63 2.67a6.9 6.9 0 0 0-5.83 3.26 6.93 6.93 0 0 0 5.86-3.29c.1-.15.06-.35-.08-.47-.14-.13-.34-.14-.49-.03a5.55 5.55 0 0 1-4.7 1.63 5.48 5.48 0 0 1-4.63-2.61l-2.43-3.95 4.34-7.29zm-10.02 5.84a1.86 1.86 0 1 1 0-3.72 1.86 1.86 0 0 1 0 3.72zm4.1-1.3l-2.02 3.4-3.1-2.1a3.25 3.25 0 1 0 2.9-4.82l2.22 3.52z"></path></svg>
+                          ) : 'platform' in review && review.platform === 'booking' ? (
+                            <span className="font-bold text-[#003580] text-2xl px-1">B.</span>
+                          ) : (
+                            <User size={28} className="text-[#3b2b1f]/40" />
+                          )}
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#3D2B1F]">
-                          <div className="flex gap-0.5 text-[#FF5A5F]">
-                            {[...Array(review.stars)].map((_, s) => <Star key={s} size={14} fill="currentColor" stroke="none" />)}
-                          </div>
-                          <span className="ml-1 opacity-40">·</span>
-                          <span className="opacity-90">{review.date}</span>
+                        <div className="text-left">
+                          <h4 className="font-bold text-[1.1rem] text-[#3D2B1F]">{review.name}</h4>
+                          <p className="text-sm text-[#9A8070] text-[0.85rem] font-medium">{review.metadata}</p>
                         </div>
-                        <p className="text-[#3D2B1F] leading-relaxed text-[15px] text-left italic font-medium">
-                          "{review.quote}"
-                        </p>
                       </div>
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#3D2B1F]">
+                        <div className="flex gap-0.5 text-[#FF5A5F]">
+                          {[...Array(review.stars)].map((_, s) => <Star key={s} size={14} fill="currentColor" stroke="none" />)}
+                        </div>
+                        <span className="ml-1 opacity-40">·</span>
+                        <span className="opacity-90">{review.date}</span>
+                      </div>
+                      <p className="text-[#3D2B1F] leading-relaxed text-[15px] text-left italic font-medium">
+                        "{review.quote}"
+                      </p>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
 
-              {/* Navigation Right */}
+              {/* Navigation Right - Hidden on Mobile */}
               <button 
                 onClick={() => {
                   const container = document.getElementById('reviews-container');
@@ -2339,7 +2337,7 @@ export default function App() {
                     container.scrollBy({ left: width, behavior: 'smooth' });
                   }
                 }}
-                className="flex-none p-4 rounded-full bg-white/40 backdrop-blur-2xl border border-white/40 text-[#3b2b1f] hover:bg-[#a67c52] hover:text-white transition-all shadow-lg flex items-center justify-center group z-20"
+                className="hidden md:flex absolute -right-6 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/40 backdrop-blur-2xl border border-white/40 text-[#3b2b1f] hover:bg-[#a67c52] hover:text-white transition-all shadow-lg items-center justify-center group z-20"
               >
                 <ChevronRight size={28} className="group-hover:translate-x-0.5 transition-transform" />
               </button>
@@ -2499,7 +2497,7 @@ export default function App() {
           </div>
           
           <form 
-            className="bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-8 md:p-12 rounded-3xl space-y-6 fade-in"
+            className="bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-12 rounded-[2.5rem] space-y-10 fade-in"
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
@@ -2514,82 +2512,103 @@ export default function App() {
               };
               const subject = encodeURIComponent(`Nuova Richiesta Soggiorno: ${data.name} - ${data.unit}`);
               const body = encodeURIComponent(
-                `Nome: ${data.name}Email: ${data.email}Check-in: ${data.checkin}Check-out: ${data.checkout}Ospiti: ${data.guests}Area: ${data.unit}Messaggio:${data.message}`
+                `Nome: ${data.name}\nEmail: ${data.email}\nCheck-in: ${data.checkin}\nCheck-out: ${data.checkout}\nOspiti: ${data.guests}\nArea: ${data.unit}\nMessaggio:\n${data.message}`
               );
               window.location.href = `mailto:holidayvillaangela@gmail.com?subject=${subject}&body=${body}`;
             }}
           >
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]">{content.contact.name}</label>
-                <input name="name" type="text" required className="w-full bg-white border border-[#6e4d31] rounded-xl px-4 py-3 focus:outline-none focus:border-[#a67c52] text-[#3D2B1F] font-medium" />
+            {/* Section 1: Personal Info */}
+            <div className="space-y-6">
+              <div className="border-b border-[#a67c52]/10 pb-3">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
+                  {lang === 'it' ? 'Informazioni Personali' : 'Personal Information'}
+                </h3>
               </div>
-              <div className="space-y-2">
-                <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]">{content.contact.email}</label>
-                <input name="email" type="email" required className="w-full bg-white border border-[#6e4d31] rounded-xl px-4 py-3 focus:outline-none focus:border-[#a67c52] text-[#3D2B1F] font-medium" />
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]">{content.contact.unit}</label>
-                <select name="unit" className="w-full bg-white border border-[#6e4d31] rounded-xl px-4 py-3 focus:outline-none focus:border-[#a67c52] text-[#3D2B1F] font-medium">
-                  <option>{content.units.apartment.name}</option>
-                  <option>{content.units.luxury.name}</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]">{content.contact.guests}</label>
-                <select name="guests" className="w-full bg-white border border-[#6e4d31] rounded-xl px-4 py-3 focus:outline-none focus:border-[#a67c52] text-[#3D2B1F] font-medium">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                  <option>6</option>
-                  <option>7</option>
-                  <option>8</option>
-                </select>
+              <div className="grid md:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]/60 px-1">{content.contact.name}</label>
+                  <input name="name" type="text" required className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-5 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]/60 px-1">{content.contact.email}</label>
+                  <input name="email" type="email" required className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-5 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium transition-all" />
+                </div>
               </div>
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]">{content.contact.checkIn}</label>
-                <input 
-                  name="checkin" type="date" required 
-                  min={today}
-                  value={bookingDates.checkin}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val && val < today) return;
-                    setBookingDates({ ...bookingDates, checkin: val, checkout: (val && bookingDates.checkout && val >= bookingDates.checkout) ? '' : bookingDates.checkout });
-                  }}
-                  className="w-full bg-white border border-[#6e4d31] rounded-xl px-4 py-3 focus:outline-none focus:border-[#a67c52] text-[#3D2B1F] font-medium" 
-                />
+
+            {/* Section 2: Stay Details */}
+            <div className="space-y-6">
+              <div className="border-b border-[#a67c52]/10 pb-3">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
+                  {lang === 'it' ? 'Dettagli del Soggiorno' : 'Stay Details'}
+                </h3>
               </div>
-              <div className="space-y-2">
-                <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]">{content.contact.checkOut}</label>
-                <input 
-                  name="checkout" type="date" required 
-                  min={bookingDates.checkin || today}
-                  value={bookingDates.checkout}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val && val < today) return;
-                    if (val && val === bookingDates.checkin) {
-                      alert(content.legal.dateErrorSame);
-                      return;
-                    }
-                    setBookingDates({ ...bookingDates, checkout: val });
-                  }}
-                  className="w-full bg-white border border-[#6e4d31] rounded-xl px-4 py-3 focus:outline-none focus:border-[#a67c52] text-[#3D2B1F] font-medium" 
-                />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="col-span-2 md:col-span-2 space-y-2">
+                  <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]/60 px-1">{content.contact.unit}</label>
+                  <select name="unit" className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium appearance-none">
+                    <option>{content.units.apartment.name}</option>
+                    <option>{content.units.luxury.name}</option>
+                  </select>
+                </div>
+                <div className="col-span-2 md:col-span-2 space-y-2">
+                  <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]/60 px-1">{content.contact.guests}</label>
+                  <select name="guests" className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium appearance-none">
+                    {[1,2,3,4,5,6,7,8].map(n => <option key={n}>{n}</option>)}
+                  </select>
+                </div>
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]/60 px-1">{content.contact.checkIn}</label>
+                  <input 
+                    name="checkin" type="date" required 
+                    min={today}
+                    value={bookingDates.checkin}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val && val < today) return;
+                      setBookingDates({ ...bookingDates, checkin: val, checkout: (val && bookingDates.checkout && val >= bookingDates.checkout) ? '' : bookingDates.checkout });
+                    }}
+                    className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium text-sm" 
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]/60 px-1">{content.contact.checkOut}</label>
+                  <input 
+                    name="checkout" type="date" required 
+                    min={bookingDates.checkin || today}
+                    value={bookingDates.checkout}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val && val < today) return;
+                      if (val && val === bookingDates.checkin) {
+                        alert(content.legal.dateErrorSame);
+                        return;
+                      }
+                      setBookingDates({ ...bookingDates, checkout: val });
+                    }}
+                    className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium text-sm" 
+                  />
+                </div>
               </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]">{content.contact.message}</label>
-              <textarea name="message" rows={4} className="w-full bg-white border border-[#6e4d31] rounded-xl px-4 py-3 focus:outline-none focus:border-[#a67c52] text-[#3D2B1F] font-medium"></textarea>
+
+            {/* Section 3: Message */}
+            <div className="space-y-6">
+              <div className="border-b border-[#a67c52]/10 pb-3">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
+                  {lang === 'it' ? 'Messaggio' : 'Message'}
+                </h3>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[11px] uppercase tracking-widest font-bold text-[#3D2B1F]/60 px-1">{content.contact.message}</label>
+                <textarea name="message" rows={4} className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-5 py-4 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium resize-none transition-all placeholder:text-[#3D2B1F]/30" placeholder={lang === 'it' ? 'Scrivi qui la tua richiesta...' : 'Write your request here...'}></textarea>
+              </div>
             </div>
-            <button type="submit" className="w-full bg-[#3b2b1f] text-white py-4 rounded-xl uppercase tracking-widest text-[13px] font-bold hover:bg-[#a67c52] transition-colors shadow-md">
+
+            <button type="submit" className="w-full bg-[#3b2b1f] text-white py-5 rounded-2xl uppercase tracking-[0.2em] text-[13px] font-bold hover:bg-[#a67c52] transition-all duration-300 shadow-xl active:scale-[0.98]">
               {content.contact.submit}
             </button>
           </form>
