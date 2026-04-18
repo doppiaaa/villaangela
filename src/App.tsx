@@ -2191,8 +2191,8 @@ export default function App() {
         </div>
       </section>
 
-      <section className="py-10 md:py-24 px-6 md:px-12 bg-transparent" id="servizi-section">
-        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10 fade-in">
+      <section className="py-6 md:py-24 px-6 md:px-12 bg-transparent" id="servizi-section">
+        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-6 md:mb-10 fade-in">
           {content.amenities.title}
         </h2>
         <div className="max-w-[1100px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch px-4 md:px-0">
@@ -2203,10 +2203,10 @@ export default function App() {
       </section>
 
       {/* Location Section */}
-      <section id="location" className="py-12 md:py-24 px-4 md:px-12 bg-transparent">
+      <section id="location" className="py-6 md:py-24 px-4 md:px-12 bg-transparent">
         <div className="max-w-4xl mx-auto text-center fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-16 rounded-[2.5rem]">
-          <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.title}</h2>
-          <div className="w-16 h-px bg-[#a67c52] mx-auto mb-10"></div>
+          <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-6 md:mb-10">{content.location.title}</h2>
+          <div className="w-16 h-px bg-[#a67c52] mx-auto mb-6 md:mb-10"></div>
           <p className="text-lg text-[#3D2B1F] mb-8 font-medium leading-relaxed">{content.location.desc}</p>
           <div className="flex justify-center text-[#a67c52] mb-10">
             <MapPin size={48} />
@@ -2226,8 +2226,8 @@ export default function App() {
       </section>
       
       {/* Surroundings Horizontal Gallery */}
-      <section className="py-20 px-0 bg-transparent overflow-hidden fade-in">
-        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">{content.location.galleryTitle}</h2>
+      <section className="py-6 md:py-20 px-0 bg-transparent overflow-hidden fade-in">
+        <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-6 md:mb-10">{content.location.galleryTitle}</h2>
         
         <div ref={locationContainerRef} className="w-full overflow-hidden relative cursor-grab active:cursor-grabbing select-none">
           <div ref={locationInnerRef} className="flex w-max will-change-transform">
@@ -2263,9 +2263,9 @@ export default function App() {
       </section>
 
       {/* Reviews Section */}
-      <section id="reviews" className="relative py-12 md:py-24 px-4 md:px-12 bg-transparent overflow-hidden">
+      <section id="reviews" className="relative py-6 md:py-24 px-4 md:px-12 bg-transparent overflow-hidden">
         <div className="max-w-7xl mx-auto text-center fade-in">
-          <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-12">{content.reviews.title}</h2>
+          <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-6 md:mb-12">{content.reviews.title}</h2>
           
           <div className="relative group">
             {/* Frosted Glass Background covering the entire area */}
@@ -2297,7 +2297,7 @@ export default function App() {
                     key={i} 
                     className="flex-none w-full md:w-[calc(50%-16px)] lg:w-[calc(33.333%-21.34px)]"
                   >
-                    <div className="h-full flex flex-col gap-6 p-6 md:p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-[40px] border border-white/10 shadow-lg transition-all duration-500 hover:bg-white/50">
+                    <div className="h-full flex flex-col gap-6 p-4 md:p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-[40px] border border-white/10 shadow-lg transition-all duration-500 hover:bg-white/50">
                       <div className="flex items-center gap-4">
                         <div className="w-14 h-14 bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-[#3b2b1f]/80 shrink-0 overflow-hidden ring-1 ring-white/40 shadow-inner">
                           {'platform' in review && review.platform === 'airbnb' ? (
@@ -2473,7 +2473,7 @@ export default function App() {
 
       {/* Contact Section */}
 
-      <section id="contact" className="relative py-10 md:py-24 px-4 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
+      <section id="contact" className="relative py-6 md:py-24 px-4 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16">
           <div className="fade-in">
             <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-12">{content.contact.title}</h2>
