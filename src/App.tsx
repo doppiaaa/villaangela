@@ -2191,7 +2191,7 @@ export default function App() {
         </div>
       </section>
 
-      <section className="py-20 px-6 md:px-12 bg-transparent" id="servizi-section">
+      <section className="py-10 md:py-24 px-6 md:px-12 bg-transparent" id="servizi-section">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10 fade-in">
           {content.amenities.title}
         </h2>
@@ -2473,7 +2473,7 @@ export default function App() {
 
       {/* Contact Section */}
 
-      <section id="contact" className="relative py-12 md:py-24 px-4 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
+      <section id="contact" className="relative py-10 md:py-24 px-4 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16">
           <div className="fade-in">
             <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-12">{content.contact.title}</h2>
@@ -2497,7 +2497,7 @@ export default function App() {
           </div>
           
           <form 
-            className="bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-12 rounded-[2.5rem] space-y-10 fade-in"
+            className="bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-12 rounded-[2.5rem] space-y-6 md:space-y-10 fade-in"
             onSubmit={(e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
