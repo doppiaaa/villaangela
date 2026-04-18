@@ -2474,10 +2474,10 @@ export default function App() {
       {/* Contact Section */}
 
       <section id="contact" className="relative py-12 md:py-24 px-4 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16">
           <div className="fade-in">
             <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-12">{content.contact.title}</h2>
-            <p className="text-[#3D2B1F] font-medium mb-16 leading-relaxed text-[1.05rem] md:text-[1.1rem]">
+            <p className="text-[#3D2B1F] font-medium mb-10 md:mb-16 leading-relaxed text-[1.05rem] md:text-[1.1rem]">
               {content.contact.desc}
             </p>
             <div className="space-y-8">
@@ -2510,9 +2510,16 @@ export default function App() {
                 checkout: fd.get('checkout'),
                 message: fd.get('message')
               };
-              const subject = encodeURIComponent(`Nuova Richiesta Soggiorno: ${data.name} - ${data.unit}`);
+              const subject = encodeURIComponent(`Prenotazione Villa Angela: ${data.name}`);
               const body = encodeURIComponent(
-                `Nome: ${data.name}\nEmail: ${data.email}\nCheck-in: ${data.checkin}\nCheck-out: ${data.checkout}\nOspiti: ${data.guests}\nArea: ${data.unit}\nMessaggio:\n${data.message}`
+                `📅 Check-in: ${data.checkin}\n` +
+                `📅 Check-out: ${data.checkout}\n` +
+                `👥 Numero ospiti: ${data.guests}\n` +
+                `🏠 Struttura: ${data.unit}\n\n` +
+                `Dati di contatto:\n` +
+                `Nome: ${data.name}\n` +
+                `Email: ${data.email}\n` +
+                `Note:\n${data.message}`
               );
               window.location.href = `mailto:holidayvillaangela@gmail.com?subject=${subject}&body=${body}`;
             }}
