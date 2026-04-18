@@ -2527,7 +2527,7 @@ export default function App() {
             {/* Section 1: Personal Info */}
             <div className="space-y-6">
               <div className="border-b border-[#a67c52]/10 pb-3">
-                <h3 className="text-[13px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
+                <h3 className="text-[16px] font-extrabold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
                   {lang === 'it' ? 'Informazioni Personali' : 'Personal Information'}
                 </h3>
@@ -2547,7 +2547,7 @@ export default function App() {
             {/* Section 2: Stay Details */}
             <div className="space-y-6">
               <div className="border-b border-[#a67c52]/10 pb-3">
-                <h3 className="text-[13px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
+                <h3 className="text-[16px] font-extrabold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
                   {lang === 'it' ? 'Dettagli del Soggiorno' : 'Stay Details'}
                 </h3>
@@ -2577,7 +2577,7 @@ export default function App() {
                       if (val && val < today) return;
                       setBookingDates({ ...bookingDates, checkin: val, checkout: (val && bookingDates.checkout && val >= bookingDates.checkout) ? '' : bookingDates.checkout });
                     }}
-                    className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium text-sm" 
+                    className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-3 md:px-4 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium text-sm" 
                   />
                 </div>
                 <div className="col-span-2 space-y-2">
@@ -2595,7 +2595,7 @@ export default function App() {
                       }
                       setBookingDates({ ...bookingDates, checkout: val });
                     }}
-                    className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-4 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium text-sm" 
+                    className="w-full bg-white/60 border border-[#6e4d31]/30 rounded-2xl px-3 md:px-4 py-3.5 focus:outline-none focus:border-[#a67c52] focus:bg-white text-[#3D2B1F] font-medium text-sm" 
                   />
                 </div>
               </div>
@@ -2604,7 +2604,7 @@ export default function App() {
             {/* Section 3: Message */}
             <div className="space-y-6">
               <div className="border-b border-[#a67c52]/10 pb-3">
-                <h3 className="text-[13px] font-bold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
+                <h3 className="text-[16px] font-extrabold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
                   {lang === 'it' ? 'Messaggio' : 'Message'}
                 </h3>
