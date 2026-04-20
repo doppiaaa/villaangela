@@ -147,7 +147,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "Luxury House",
         desc: "An exclusive sanctuary surrounded by tranquility. Elegant design, premium services, and total privacy for an upscale group experience.",
-        features: ["Exclusive Access", "Premium Design", "Surrounded by Nature"]
+        features: ["Non-smoking accommodation", "Apartment: 80 m2", "Dryer", "Vacuum cleaner", "Air-conditioned", "Consumption costs incl.", "Dishwasher", "Washing machine", "Garden furniture", "Moka", "On-site/free parking: 2 Parking spaces", "Smart TV", "All inclusive", "WiFi"]
       },
       viewDetails: "View Details"
     },
@@ -254,7 +254,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "Luxury House",
         desc: "Un santuario esclusivo circondato dalla tranquillità. Design sofisticato, servizi premium e privacy totale per un'esperienza di gruppo di alto livello.",
-        features: ["Accesso Esclusivo", "Design Ricercato", "Immerso nel Verde"]
+        features: ["Alloggio per non fumatori", "Appartamento: 80 m2", "Asciugatrice", "Aspirapolvere", "Climatizzata", "Costi a consumo incl.", "Lavastoviglie", "Lavatrice", "Mobili da giardino", "Moka", "Parcheggio in loco/gratuito: 2 Parcheggi", "Smart TV", "Tutto incluso", "WiFi"]
       },
       viewDetails: "Scopri di più"
     },
@@ -361,7 +361,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "Maison de Luxe",
         desc: "Un sanctuaire exclusif 5 étoiles pour le voyageur exigeant. Design sophistiqué, équipements haut de gamme et intimité inégalée.",
-        features: ["5 Étoiles", "Accès Exclusif", "Design Premium"]
+        features: ["Hébergement non-fumeur", "Appartement : 80 m2", "Sèche-linge", "Aspirateur", "Climatisé", "Frais de consommation inclus", "Lave-vaisselle", "Lave-linge", "Mobilier de jardin", "Moka", "Parking sur place/gratuit : 2 Parkings", "Smart TV", "Tout inclus", "WiFi"]
       },
       viewDetails: "Voir Détails"
     },
@@ -447,7 +447,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "Casa de Lujo",
         desc: "Un santuario exclusivo de 5 estrellas para el viajero exigente. Diseño sofisticado, comodidades premium y privacidad inigualable.",
-        features: ["5 Estrellas", "Acceso Exclusivo", "Diseño Premium"]
+        features: ["Alojamiento para no fumadores", "Apartamento: 80 m2", "Secadora", "Aspiradora", "Aire acondicionado", "Gastos de consumo incl.", "Lavavajillas", "Lavadora", "Muebles de jardín", "Moka", "Aparcamiento gratuito in situ: 2 Plazas", "Smart TV", "Todo incluido", "WiFi"]
       },
       viewDetails: "Ver Detalles"
     },
@@ -533,7 +533,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "Luxushaus",
         desc: "Ein exklusives 5-Sterne-Heiligtum für den anspruchsvollen Reisenden. Anspruchsvolles Design, erstklassige Annehmlichkeiten und unvergleichliche Privatsphäre.",
-        features: ["5 Sterne", "Exklusiver Zugang", "Premium-Design"]
+        features: ["Nichtraucherunterkunft", "Wohnung: 80 m2", "Wäschetrockner", "Staubsauger", "Klimatisiert", "Nebenkosten inkl.", "Geschirrspüler", "Waschmaschine", "Gartenmöbel", "Moka", "Parkplatz vor Ort/kostenlos: 2 Parkplätze", "Smart TV", "Alles inklusive", "WiFi"]
       },
       viewDetails: "Details Anzeigen"
     },
@@ -619,7 +619,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "Luksusowy Dom",
         desc: "Ekskluzywne, 5-gwiazdkowe sanktuarium dla wymagających podróżników. Wyrafinowany design, udogodnienia premium i niezrównana prywatność.",
-        features: ["5 Gwiazdek", "Ekskluzywny Dostęp", "Design Premium"]
+        features: ["Zakwaterowanie dla niepalących", "Apartament: 80 m2", "Suszarka", "Odkurzacz", "Klimatyzacja", "Koszty zużycia w cenie", "Zmywarka", "Pralka", "Meble ogrodowe", "Moka", "Parking bezpłatny: 2 Miejsca", "Smart TV", "Wszystko w cenie", "WiFi"]
       },
       viewDetails: "Zobacz Szczegóły"
     },
@@ -705,7 +705,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "奢华之家",
         desc: "优雅的套房，专为追求绝对舒适和风格的客人设计。",
-        features: ["按摩浴缸", "景观露台", "智能电视", "迷你吧"]
+        features: ["禁烟住宿", "公寓：80 平方米", "烘干机", "吸尘器", "空调", "包含能耗费用", "洗碗机", "洗衣机", "户外家具", "咖啡机", "免费停车：2 个车位", "智能电视", "全包服务", "WiFi"]
       },
       viewDetails: "查看详情"
     },
@@ -793,7 +793,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "منزل فاخر",
         desc: "جناح أنيق مصمم للضيوف الذين يبحثون عن الراحة المطلقة والأناقة.",
-        features: ["جاكوزي", "تراس بانورامي", "تلفزيون ذكي", "ميني بار"]
+        features: ["أماكن إقامة لغير المدخنين", "شقة: 80 م2", "مجفف ملابس", "مكنسة كهربائية", "تكييف هواء", "تكاليف الاستهلاك مشمولة", "غسالة أطباق", "غسالة ملابس", "أثاث حدائق", "موكا", "موقف سيارات مجاني: موقفان", "تلفزيون ذكي", "كل شيء مشمول", "WiFi"]
       },
       viewDetails: "عرض التفاصيل"
     },
@@ -881,7 +881,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "Luksushus",
         desc: "Elegant suite designet til gæster, der søger absolut komfort og stil.",
-        features: ["Jacuzzi", "Panoramaterrasse", "Smart TV", "Minibar"]
+        features: ["Røgfri feriebolig", "Lejlighed: 80 m2", "Tørretumbler", "Støvsuger", "Aircondition", "Forbrugsomkostninger inkl.", "Opvaskemaskine", "Vaskemaskine", "Havemøbler", "Moka", "Gratis parkering: 2 Pladser", "Smart TV", "Alt inkluderet", "WiFi"]
       },
       viewDetails: "Se Detaljer"
     },
@@ -969,7 +969,7 @@ const translations: Record<string, Content> = {
       luxury: {
         name: "Lyxhus",
         desc: "Elegant svit designad för gäster som söker absolut komfort och stil.",
-        features: ["Jacuzzi", "Panoramaterrass", "Smart TV", "Minibar"]
+        features: ["Rökfritt boende", "Lägenhet: 80 m2", "Torktumlare", "Dammsugare", "Luftkonditionering", "Förbrukningskostnader inkl.", "Diskmaskine", "Tvättmaskine", "Utemöbler", "Moka", "Gratis parkering: 2 Platser", "Smart TV", "Allt inkluderat", "WiFi"]
       },
       viewDetails: "Visa Detaljer"
     },
