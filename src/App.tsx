@@ -2764,8 +2764,8 @@ export default function App() {
               <div className="grid md:grid-cols-2 gap-12 mb-12">
                 <div>
                   <img 
-                    src={selectedUnit === 'apartment' ? "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg" : "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/luxury-fixed.jpg"} 
-                    className="w-full h-auto rounded-3xl object-cover shadow-2xl" 
+                    src={selectedUnit === 'apartment' ? "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/holiday-fixed.png" : "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/luxury-fixed.jpg"} 
+                    className="w-full h-auto rounded-3xl object-contain shadow-2xl bg-white" 
                     alt="Unit preview"
                   />
                 </div>
