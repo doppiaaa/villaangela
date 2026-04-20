@@ -35,8 +35,6 @@ import {
   ShowerHead,
   Menu,
   Monitor,
-  ShieldCheck,
-  Sun,
   Palmtree,
   Zap
 } from 'lucide-react';
@@ -1465,10 +1463,6 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
         </div>
       )}
 
-      </div>
-    </motion.div>
-  );
-};
       </div>
     </motion.div>
   );
