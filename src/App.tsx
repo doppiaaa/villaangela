@@ -33,7 +33,12 @@ import {
   ShieldCheck,
   Bone,
   ShowerHead,
-  Menu
+  Menu,
+  Monitor,
+  ShieldCheck,
+  Sun,
+  Palmtree,
+  Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -159,7 +164,14 @@ const translations: Record<string, Content> = {
         "Kitchen",
         "Air conditioning",
         "Private bathroom",
-        "Washing machine"
+        "Washing machine",
+        "Dishwasher",
+        "Coffee Machine",
+        "Outdoor Furniture",
+        "Smart TV",
+        "All Inclusive",
+        "Vacuum Cleaner",
+        "Dryer"
       ]
     },
     location: {
@@ -211,7 +223,7 @@ const translations: Record<string, Content> = {
       reject: "Reject",
       privacyAndCookies: "Privacy & Cookies",
       bannerText: "We use cookies to enhance your experience and keep anonymous statistics. We do not use invasive tracking. You can choose to accept or continue without non-essential cookies.",
-      comingSoon: "Coming soon!",
+      comingSoon: "New!",
       bookingPlatforms: {
         title: "Book Where You Prefer",
         subtitle: "Find Villa Angela Holiday Apartment on all major international booking platforms.",
@@ -259,7 +271,14 @@ const translations: Record<string, Content> = {
         "Cucina",
         "Aria condizionata",
         "Bagno privato",
-        "Lavatrice"
+        "Lavatrice",
+        "Lavastoviglie",
+        "Moka",
+        "Mobili da Giardino",
+        "Smart TV",
+        "Tutto Incluso",
+        "Aspirapolvere",
+        "Asciugatrice"
       ]
     },
     location: {
@@ -311,7 +330,7 @@ const translations: Record<string, Content> = {
       reject: "Rifiuta",
       privacyAndCookies: "Privacy e Cookie",
       bannerText: "Utilizziamo i cookie per migliorare la tua esperienza e mantenere statistiche anonime. Non utilizziamo tracciamenti invasivi. Puoi scegliere di accettare o continuare senza i cookie non essenziali.",
-      comingSoon: "Prossimamente!",
+      comingSoon: "New!",
       bookingPlatforms: {
         title: "Prenota Dove Preferisci",
         subtitle: "Trovi Villa Angela sui principali portali internazionali di prenotazione.",
@@ -350,7 +369,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Services",
-      items: ["Logement entier", "150 m² de surface", "Parking gratuit", "Animaux acceptés", "WiFi gratuit", "Cuisine", "Climatisation", "Salle de bain privée", "Lave-linge"]
+      items: ["Logement entier", "150 m² de surface", "Parking gratuit", "Animaux acceptés", "WiFi gratuit", "Cuisine", "Climatisation", "Salle de bain privée", "Lave-linge", "Lave-vaisselle", "Machine à café", "Mobilier de jardin", "Smart TV", "Tout compris", "Aspirateur", "Sèche-linge"]
     },
     location: { title: "Comment nous trouver", galleryTitle: "Explorez les environs", desc: "Stratégiquement située, Villa Angela offre un accès facile aux destinations les plus emblématiques de la région." },
     gallery: "Galerie",
@@ -397,7 +416,7 @@ const translations: Record<string, Content> = {
       reject: "Refuser",
       privacyAndCookies: "Confidentialité et Cookies",
       bannerText: "Nous utilisons des cookies pour améliorer votre expérience et maintenir des statistiques anonymes. Nous n'utilisons pas de suivi invasif. Vous pouvez choisir d'accepter ou de continuer sans cookies non essentiels.",
-      comingSoon: "Bientôt disponible !",
+      comingSoon: "New!",
       bookingPlatforms: {
         title: "Réservez où vous préférez",
         subtitle: "Retrouvez Villa Angela sur les principaux portaux de réservation internationaux.",
@@ -436,7 +455,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Servicios",
-      items: ["Alojamiento entero", "150 m² superficie", "Aparcamiento gratuito", "Se admiten mascotas", "WiFi gratuito", "Cocina", "Aire acondicionado", "Baño privado", "Lavadora"]
+      items: ["Alojamiento entero", "150 m² superficie", "Aparcamiento gratuito", "Se admiten mascotas", "WiFi gratuito", "Cocina", "Aire acondicionado", "Baño privado", "Lavadora", "Lavavajillas", "Cafetera", "Muebles de jardín", "Smart TV", "Todo incluido", "Aspiradora", "Secadora"]
     },
     location: { title: "Cómo encontrarnos", galleryTitle: "Explora los alrededores", desc: "Estratégicamente ubicada, Villa Angela tiene fácil acceso a los destinos más emblemáticos de la región." },
     gallery: "Galería",
@@ -483,7 +502,7 @@ const translations: Record<string, Content> = {
       reject: "Rechazar",
       privacyAndCookies: "Privacidad y Cookies",
       bannerText: "Utilizamos cookies para mejorar su experiencia y mantener estadísticas anónimas. No utilizamos seguimiento invasivo. Puede elegir aceptar o continuar sin cookies no esenciales.",
-      comingSoon: "¡Próximamente!",
+      comingSoon: "New!",
       bookingPlatforms: {
         title: "Reserve Donde Prefiera",
         subtitle: "Encuentre Villa Angela en los principales portales internacionales de reserva.",
@@ -522,7 +541,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Ausstattung",
-      items: ["Ganze Unterkunft", "150 m² Wohnfläche", "Kostenloser Parkplatz", "Haustiere erlaubt", "Kostenloses WLAN", "Küche", "Klimaanlage", "Eigenes Badezimmer", "Waschmaschine"]
+      items: ["Ganze Unterkunft", "150 m² Wohnfläche", "Kostenloser Parkplatz", "Haustiere erlaubt", "Kostenloses WLAN", "Küche", "Klimaanlage", "Eigenes Badezimmer", "Waschmaschine", "Spülmaschine", "Kaffeemaschine", "Gartenmöbel", "Smart TV", "Alles inklusive", "Staubsauger", "Trockner"]
     },
     location: { title: "Wie Sie uns finden", galleryTitle: "Die Umgebung erkunden", desc: "Strategisch günstig gelegen, bietet die Villa Angela einfachen Zugang zu den symbolträchtigsten Zielen der Region." },
     gallery: "Galerie",
@@ -569,7 +588,7 @@ const translations: Record<string, Content> = {
       reject: "Ablehnen",
       privacyAndCookies: "Datenschutz & Cookies",
       bannerText: "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern und anonyme Statistiken zu führen. Wir nutzen kein invasives Tracking. Sie können wählen, ob Sie Cookies akzeptieren oder ohne nicht-essenzielle Cookies fortfahren möchten.",
-      comingSoon: "Demnächst verfügbar!",
+      comingSoon: "New!",
       bookingPlatforms: {
         title: "Buchen Sie, wo Sie möchten",
         subtitle: "Finden Sie Villa Angela auf allen großen internationalen Buchungsportalen.",
@@ -608,7 +627,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Udogodnienia",
-      items: ["Całe mieszkanie", "150 m² powierzchni", "Darmowy parking", "Zwierzęta akceptowane", "Darmowe WiFi", "Kuchnia", "Klimatyzacja", "Prywatna łazienka", "Pralka"]
+      items: ["Całe mieszkanie", "150 m² powierzchni", "Darmowy parking", "Zwierzęta akceptowane", "Darmowe WiFi", "Kuchnia", "Klimatyzacja", "Prywatna łazienka", "Pralka", "Zmywarka", "Kawiarka", "Meble ogrodowe", "Smart TV", "Wszystko w cenie", "Odkurzacz", "Suszarka"]
     },
     location: { title: "Jak nas znaleźć", galleryTitle: "Odkryj okolicę", desc: "Strategicznie położona Villa Angela zapewnia łatwy dostęp do najbardziej kultowych miejsc w regionie." },
     gallery: "Galeria",
@@ -655,7 +674,7 @@ const translations: Record<string, Content> = {
       reject: "Odrzuć",
       privacyAndCookies: "Prywatność i Pliki Cookie",
       bannerText: "Używamy plików cookie, aby poprawić Twoje wrażenia i prowadzić anonimowe statystyki. Nie używamy inwazyjnego śledzenia. Możesz zaakceptować lub kontynuować bez plików cookie.",
-      comingSoon: "Już wkrótce!",
+      comingSoon: "New!",
       bookingPlatforms: {
         title: "Rezerwuj Tam, Gdzie Wolisz",
         subtitle: "Znajdź Villa Angela na wszystkich głównych międzynarodowych portalach rezerwacyjnych.",
@@ -694,7 +713,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "设施",
-      items: ["免费 Wi-Fi", "私人停车场", "空调", "海滨", "露台", "礼宾服务"]
+      items: ["免费 Wi-Fi", "私人停车场", "空调", "海滨", "露台", "礼宾服务", "洗碗机", "咖啡机", "户外家具", "智能电视", "全包服务", "吸尘器", "烘干机"]
     },
     location: { 
       title: "如何找到我们", 
@@ -743,7 +762,7 @@ const translations: Record<string, Content> = {
       reject: "拒绝",
       privacyAndCookies: "隐私与 Cookie",
       bannerText: "我们使用 Cookie 以改善您的体验并进行匿名统计。我们不进行侵入式跟踪。您可以选择接受或在不启用非必要 Cookie 的情况下继续浏览。",
-      comingSoon: "即将推出！",
+      comingSoon: "New!",
       bookingPlatforms: {
         title: "选择您偏好的预订平台",
         subtitle: "在主要的国际预订平台上查找安杰拉别墅度假公寓。",
@@ -782,7 +801,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "المرافق",
-      items: ["واي فاي مجاني", "موقف سيارات خاص", "تكييف", "على الشاطئ", "تراس", "خدمة الكونسيرج"]
+      items: ["واي فاي مجاني", "موقف سيارات خاص", "تكييف", "على الشاطئ", "تراس", "خدمة الكونسيرج", "غسالة أطباق", "آلة صنع القهوة", "أثاث خارجي", "تلفزيون ذكي", "شامل كلياً", "مكنسة كهربائية", "مجفف ملابس"]
     },
     location: { 
       title: "كيف تجدنا", 
@@ -831,7 +850,7 @@ const translations: Record<string, Content> = {
       reject: "رفض",
       privacyAndCookies: "الخصوصية وملفات تعريف الارتباط",
       bannerText: "نحن نستخدم ملفات تعريف الارتباط لتحسين تجربتك والحفاظ على إحصائيات مجهولة. نحن لا نستخدم تتبعًا تطفليًا. يمكنك اختيار القبول أو الاستمرار بدون ملفات تعريف ارتباط غير ضرورية.",
-      comingSoon: "قريباً!",
+      comingSoon: "New!",
       bookingPlatforms: {
         title: "احجز أينما تفضل",
         subtitle: "ابحث عن Villa Angela على جميع منصات الحجز الدولية الكبرى.",
@@ -870,7 +889,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Faciliteter",
-      items: ["Gratis Wi-Fi", "Privat parkering", "Aircondition", "Ved stranden", "Terrasse", "Concierge service"]
+      items: ["Gratis Wi-Fi", "Privat parkering", "Aircondition", "Ved stranden", "Terrasse", "Concierge service", "Opvaskemaskine", "Kaffemaskine", "Havemøbler", "Smart TV", "Alt inkluderet", "Støvsuger", "Tørretumbler"]
     },
     location: { 
       title: "Sådan finder du os", 
@@ -919,7 +938,7 @@ const translations: Record<string, Content> = {
       reject: "Afvis",
       privacyAndCookies: "Privatliv & Cookies",
       bannerText: "Vi bruger cookies til at forbedre din oplevelse og føre anonym statistik. Vi bruger ikke invasiv sporing. Du kan vælge at acceptere eller fortsætte uden ikke-essentielle cookies.",
-      comingSoon: "Kommer snart!",
+      comingSoon: "Nyhed!",
       bookingPlatforms: {
         title: "Book Hvor Du Foretrækker",
         subtitle: "Find Villa Angela på alle de største internationale bookingportaler.",
@@ -958,7 +977,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Faciliteter",
-      items: ["Gratis Wi-Fi", "Privat parkering", "Luftkonditionering", "Vid stranden", "Terrass", "Concierge-service"]
+      items: ["Gratis Wi-Fi", "Privat parkering", "Luftkonditionering", "Vid stranden", "Terrass", "Concierge-service", "Diskmaskin", "Kaffemaskin", "Utemöbler", "Smart TV", "Allt inkluderat", "Dammsugare", "Torktumlare"]
     },
     location: { 
       title: "Hitta till oss", 
@@ -1007,7 +1026,7 @@ const translations: Record<string, Content> = {
       reject: "Avvisa",
       privacyAndCookies: "Integritet & Cookies",
       bannerText: "Vi använder cookies för att förbättra din upplevelse och föra anonym statistik. Vi använder inte invasiv spårning. Du kan välja att acceptera eller fortsätta utan icke-nödvändiga cookies.",
-      comingSoon: "Kommer snart!",
+      comingSoon: "New!",
       bookingPlatforms: {
         title: "Boka Där Du Föredrar",
         subtitle: "Hitta Villa Angela på alla stora internationella bokningsportaler.",
@@ -1175,7 +1194,7 @@ interface AmenityProps {
 }
 
 const AmenityCard = ({ item, index }: AmenityProps) => {
-  const icons = [Home, Maximize, Car, Dog, Wifi, Utensils, Snowflake, Bath, Shirt];
+  const icons = [Home, Maximize, Car, Dog, Wifi, Utensils, Snowflake, Bath, Shirt, Waves, Coffee, Palmtree, Monitor, ShieldCheck, Zap, Sun];
   const Icon = icons[index] || Home;
 
   // Animations for specific boxes
@@ -1184,6 +1203,14 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
   const isThird = index === 2;
   const isFourth = index === 3;
   const isSeventh = index === 6;
+  const isLaundry = index === 8;
+  const isDishwasher = index === 9;
+  const isMoka = index === 10;
+  const isGarden = index === 11;
+  const isTv = index === 12;
+  const isAllIncluded = index === 13;
+  const isVacuum = index === 14;
+  const isDryer = index === 15;
 
   const boxAnimate = isFirst ? { 
     boxShadow: [
@@ -1191,23 +1218,36 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
       "0 4px 20px rgba(0,0,0,0.12), 0 0 40px rgba(59, 43, 31, 0.6)", 
       "0 2px 8px rgba(0,0,0,0.06), 0 0 0px rgba(59, 43, 31, 0)"
     ] 
-  } : {};
+  } : (isTv ? {
+    boxShadow: [
+      "0 2px 8px rgba(0,0,0,0.06)",
+      "0 2px 20px rgba(59, 130, 246, 0.3)",
+      "0 2px 8px rgba(0,0,0,0.06)"
+    ]
+  } : {});
 
   const iconAnimate = isSecond ? {
     scale: [1, 1.35, 1]
-  } : (index === 8 ? {
+  } : (isLaundry || isDryer ? {
     rotate: 360
-  } : {});
+  } : (isAllIncluded ? {
+    scale: [1, 1.2, 1],
+    color: ["#5C4A3A", "#a67c52", "#5C4A3A"]
+  } : {}));
 
   const iconTransition = isSecond ? { 
     repeat: Infinity, 
     duration: 2.5, 
     ease: "easeInOut" 
-  } : (index === 8 ? {
+  } : ((isLaundry || isDryer) ? {
     repeat: Infinity, 
-    duration: 4, 
+    duration: isDryer ? 3 : 4, 
     ease: "linear"
-  } : {});
+  } : (isAllIncluded ? {
+    repeat: Infinity,
+    duration: 2,
+    ease: "easeInOut"
+  } : {}));
 
   return (
     <motion.div 
@@ -1260,7 +1300,7 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
             transition={iconTransition}
             className="flex items-center justify-center flex-shrink-0"
           >
-            <Icon size={20} strokeWidth={1.5} className="text-[#5C4A3A]" />
+            <Icon size={20} strokeWidth={1.5} className={(isTv && index === 12) ? "text-blue-500" : "text-[#5C4A3A]"} />
           </motion.div>
           <span className="text-[14px] font-sans font-normal tracking-wide text-[#3D2B1F]">
             {item}
@@ -1322,19 +1362,19 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
         </div>
       )}
 
-      {/* Steaming plate animation after the text only for Cucina */}
-      {index === 5 && (
+      {/* Steaming plate animation after the text only for Cucina e Moka */}
+      {(index === 5 || isMoka) && (
         <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[50px] ml-2">
           <svg width="40" height="24" viewBox="0 0 40 24" className="opacity-[0.8]">
-            {/* Plate */}
-            <path d="M 5 18 C 5 21, 35 21, 35 18 L 32 16 L 8 16 Z" fill="#5C4A3A" />
+            {/* Plate or Base */}
+            <path d={isMoka ? "M 10 20 L 30 20 L 28 17 L 12 17 Z" : "M 5 18 C 5 21, 35 21, 35 18 L 32 16 L 8 16 Z"} fill="#5C4A3A" />
             {/* Steam paths */}
             {[10, 20, 30].map((x, i) => (
               <motion.path
                 key={i}
                 d={`M ${x} 14 Q ${x+2} 10, ${x} 6`}
                 fill="none"
-                stroke="#5C4A3A"
+                stroke={isMoka ? "#a67c52" : "#5C4A3A"}
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 animate={{ 
@@ -1354,34 +1394,81 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
         </div>
       )}
 
-      {/* Shower head animation after the text only for Bagno */}
-      {index === 7 && (
+      {/* Shower head animation after the text only for Bagno e Lavastoviglie */}
+      {(index === 7 || isDishwasher) && (
         <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[50px] ml-2">
           <div className="relative">
-            <ShowerHead size={24} strokeWidth={1.5} className="text-[#5C4A3A] opacity-80" />
+            {isDishwasher ? <Waves size={24} strokeWidth={1.5} className="text-blue-400 opacity-80" /> : <ShowerHead size={24} strokeWidth={1.5} className="text-[#5C4A3A] opacity-80" />}
             {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, scale: 0.5, y: 0 }}
                 animate={{ 
                   opacity: [0, 1, 0], 
-                  y: [8, 18],
+                  y: isDishwasher ? [0, -10] : [8, 18],
                   x: [0, (i - 1) * 4]
                 }}
                 transition={{ 
                   repeat: Infinity, 
                   duration: 1, 
                   delay: i * 0.3,
-                  ease: "easeIn" 
+                  ease: isDishwasher ? "easeOut" : "easeIn" 
                 }}
-                className="absolute top-2 left-1/2 -ml-1 text-[#5C4A3A]"
+                className={`absolute ${isDishwasher ? 'bottom-2' : 'top-2'} left-1/2 -ml-1 text-${isDishwasher ? 'blue-300' : '[#5C4A3A]'}`}
               >
-                <Droplet size={9} fill="currentColor" stroke="none" />
+                <Droplet size={isDishwasher ? 7 : 9} fill="currentColor" stroke="none" />
               </motion.div>
             ))}
           </div>
         </div>
       )}
+
+      {/* Vacuum effect ONLY for Aspirapolvere */}
+      {isVacuum && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[60px] ml-2">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              animate={{ 
+                x: [40, 0],
+                opacity: [0, 1, 0],
+                scale: [1, 0.5]
+              }}
+              transition={{ 
+                repeat: Infinity, 
+                duration: 1, 
+                delay: i * 0.3,
+                ease: "easeIn" 
+              }}
+              className="absolute right-0 w-2 h-2 bg-[#a67c52]/30 rounded-full"
+              style={{ top: 10 + (i-1)*6 }}
+            />
+          ))}
+          <motion.div
+            animate={{ x: [-2, 2, -2] }}
+            transition={{ repeat: Infinity, duration: 0.1 }}
+          >
+            <Zap size={20} className="text-[#5C4A3A] opacity-60" />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Garden swaying effect ONLY for Mobili da Giardino */}
+      {isGarden && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[40px] ml-2">
+          <motion.div
+            animate={{ rotate: [-5, 5, -5] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+          >
+            <Palmtree size={24} className="text-green-600 opacity-50" />
+          </motion.div>
+        </div>
+      )}
+
+      </div>
+    </motion.div>
+  );
+};
       </div>
     </motion.div>
   );
@@ -1804,18 +1891,18 @@ export default function App() {
 
   const handleNextImage = (e?: any) => {
     e?.stopPropagation();
-    if (!enlargedImage) return;
-    const currentIndex = apartmentGalleryImages.indexOf(enlargedImage);
-    const nextIndex = (currentIndex + 1) % apartmentGalleryImages.length;
-    setEnlargedImage(apartmentGalleryImages[nextIndex]);
+    const gallery = selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages;
+    const currentIndex = gallery.indexOf(enlargedImage);
+    const nextIndex = (currentIndex + 1) % gallery.length;
+    setEnlargedImage(gallery[nextIndex]);
   };
 
   const handlePrevImage = (e?: any) => {
     e?.stopPropagation();
-    if (!enlargedImage) return;
-    const currentIndex = apartmentGalleryImages.indexOf(enlargedImage);
-    const prevIndex = (currentIndex - 1 + apartmentGalleryImages.length) % apartmentGalleryImages.length;
-    setEnlargedImage(apartmentGalleryImages[prevIndex]);
+    const gallery = selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages;
+    const currentIndex = gallery.indexOf(enlargedImage);
+    const prevIndex = (currentIndex - 1 + gallery.length) % gallery.length;
+    setEnlargedImage(gallery[prevIndex]);
   };
 
   useEffect(() => {
@@ -1958,6 +2045,29 @@ export default function App() {
     "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334708.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334710.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334711.jpg"
   ];
 
+  const luxuryGalleryImages = [
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_01.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_02.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_01.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_02.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_03.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_04.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_01.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_02.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_03.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_04.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_05.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_06.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_07.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_kitchen_01.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_01.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_02.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_03.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_04.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_01.jpg",
+    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_02.jpg"
+  ];
+
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1985,10 +2095,10 @@ export default function App() {
           <BackgroundGallery isActive={hoveredUnit === 'apartment'} />
         </div>
 
-        {/* Coming Soon Background (shown on hover for luxury) */}
+        {/* New! Background (shown on hover for luxury) */}
         <div className={`absolute inset-0 z-0 transition-opacity duration-1000 bg-[#3b2b1f]/95 flex items-center justify-center overflow-hidden ${hoveredUnit === 'luxury' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
           <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-            <span className="text-[12vw] font-serif uppercase tracking-widest text-[#a67c52] whitespace-nowrap select-none animate-pulse">COMING SOON</span>
+            <span className="text-[12vw] font-serif uppercase tracking-widest text-[#a67c52] whitespace-nowrap select-none animate-pulse">NEW!</span>
           </div>
         </div>
         
@@ -2025,7 +2135,7 @@ export default function App() {
             </div>
             
             <div 
-              onClick={triggerComingSoon}
+              onClick={() => setSelectedUnit('luxury')}
               onMouseEnter={() => setHoveredUnit('luxury')}
               onMouseLeave={() => setHoveredUnit(null)}
               className="logo-card relative w-[70vw] md:w-[40vw] max-w-[500px] aspect-[4/3] cursor-pointer flex items-center justify-center"
@@ -2033,11 +2143,11 @@ export default function App() {
               <div className="w-full h-full rounded-xl md:rounded-[1.25rem] overflow-hidden bg-white ring-2 ring-white">
                 <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/luxury-fixed.jpg" alt="Villa Angela Luxury House" className="w-[102%] h-[102%] max-w-none object-cover scale-[1.03]" />
               </div>
-              {/* Coming Soon badge on hero luxury card */}
+              {/* New! badge on hero luxury card */}
               <div className="absolute top-3 right-3 z-30 animate-badge-pulse">
                 <span className="bg-[#a67c52] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-white inline-block"></span>
-                  Coming Soon
+                  New!
                 </span>
               </div>
             </div>
@@ -2099,13 +2209,6 @@ export default function App() {
 
           {/* Luxury Card */}
           <div className="unit-card bg-white/85 backdrop-blur-[2px] border border-white/20 text-[#3D2B1F] p-6 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_8px_32px_rgba(100,70,40,0.08)] relative overflow-hidden">
-            {/* Coming Soon banner */}
-            <div className="absolute top-5 right-5 z-10 animate-badge-pulse">
-              <span className="bg-[#a67c52] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-white inline-block"></span>
-                Coming Soon
-              </span>
-            </div>
             <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/luxury-fixed.jpg" alt="Villa Angela Luxury House Logo" className="h-40 mb-8 rounded-xl object-contain shadow-md opacity-90" />
             <h3 className="font-serif text-[1.8rem] md:text-[2.2rem] font-medium text-[#3D2B1F] mb-4">{content.units.luxury.name}</h3>
             <p className="text-[#5C4A3A] mb-8 flex-1 font-medium leading-[1.7] text-[0.95rem]">{content.units.luxury.desc}</p>
@@ -2122,9 +2225,8 @@ export default function App() {
               <Coffee size={24} />
               <Sun size={24} />
             </div>
-            <button onClick={triggerComingSoon} className="opacity-90 bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full uppercase tracking-widest text-xs font-bold flex items-center gap-2 hover:bg-white/30 transition-colors">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52] animate-pulse inline-block"></span>
-              Coming Soon
+            <button onClick={() => setSelectedUnit('luxury')} className="bg-[#a67c52] text-white px-8 py-3 rounded-full uppercase tracking-widest text-xs font-bold hover:bg-white hover:text-[#3D2B1F] transition-colors shadow-md">
+              {content.units.viewDetails}
             </button>
           </div>
         </div>
@@ -2704,19 +2806,17 @@ export default function App() {
                 </div>
               </div>
               
-              {selectedUnit === 'apartment' && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {apartmentGalleryImages.map((src, idx) => (
-                    <img 
-                      key={src} 
-                      src={src} 
-                      className="w-full h-64 object-cover rounded-2xl cursor-pointer hover:opacity-90 transition-opacity" 
-                      alt={`Gallery ${idx + 1}`} 
-                      onClick={() => setEnlargedImage(src)}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {(selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages).map((src, idx) => (
+                  <img 
+                    key={src} 
+                    src={src} 
+                    className="w-full h-64 object-cover rounded-2xl cursor-pointer hover:opacity-90 transition-opacity" 
+                    alt={`Gallery ${idx + 1}`} 
+                    onClick={() => setEnlargedImage(src)}
+                  />
+                ))}
+              </div>
               
             </div>
           </motion.div>
@@ -2775,7 +2875,7 @@ export default function App() {
               
               {/* Counter indicator */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/40 backdrop-blur-md rounded-full text-white/70 text-[10px] uppercase tracking-widest font-bold border border-white/10">
-                {apartmentGalleryImages.indexOf(enlargedImage) + 1} / {apartmentGalleryImages.length}
+                {(selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages).indexOf(enlargedImage) + 1} / {(selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages).length}
               </div>
             </motion.div>
           </motion.div>
@@ -2847,7 +2947,7 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Elegant Toast Notification for Coming Soon */}
+      {/* Elegant Toast Notification for News */}
       <AnimatePresence>
         {showComingSoon && (
           <motion.div
