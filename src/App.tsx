@@ -468,7 +468,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Servicios",
-      items: ["Alojamiento entero", "150 m² superficie", "Aparcamiento gratuito", "Se admiten mascotas", "WiFi gratuito", "Cocina", "Aire acondicionado", "Baño privado", "Lavadora", "Lavavajillas", "Cafetera", "Muebles de jardín", "Smart TV", "Todo incluido", "Aspiradora", "Secadora"]
+      items: ["Alojamiento entero", "150 m² superficie", "Aparcamiento gratuito", "Se admiten mascotas", "WiFi gratuito", "Cocina", "Aire acondicionado", "Baño privato", "Lavadora", "Lavavajillas", "Cafetera", "Muebles de jardín", "Smart TV", "Todo incluso", "Aspiradora", "Secadora", "Inducción", "Campana extractora", "Frigorífico", "Congelador", "Microondas"]
     },
     location: { title: "Cómo encontrarnos", galleryTitle: "Explora los alrededores", desc: "Estratégicamente ubicada, Villa Angela tiene fácil acceso a los destinos más emblemáticos de la región." },
     gallery: "Galería",
