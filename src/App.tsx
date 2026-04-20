@@ -2054,6 +2054,8 @@ export default function App() {
     "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_02.jpg"
   ];
 
+  const allGalleryImages = [...apartmentGalleryImages, ...luxuryGalleryImages];
+
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -2228,19 +2230,8 @@ export default function App() {
           <div ref={galleryInnerRef} className="flex w-max will-change-transform">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-4 pr-4">
-                {[
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096753.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911498.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911499.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911505.jpg",
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911506.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911508.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911510.jpg",
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911512.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911515.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911517.jpg",
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911519.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911526.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911527.jpg",
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911533.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911536.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911537.jpg",
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334699.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334700.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334701.jpg",
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334702.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334703.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334704.jpg",
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334705.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334706.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334707.jpg",
-                  "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334708.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334710.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334711.jpg"
-                ].reduce((acc: any[], img: string, i: number) => {
-                  if (i % 6 === 0) acc.push(apartmentGalleryImages.slice(i, i + 6));
+                {allGalleryImages.reduce((acc: any[], _: string, i: number) => {
+                  if (i % 6 === 0) acc.push(allGalleryImages.slice(i, i + 6));
                   return acc;
                 }, []).map((chunk, idx) => {
                   return (
