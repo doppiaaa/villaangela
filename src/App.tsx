@@ -1490,11 +1490,11 @@ const BackgroundGallery = ({ isActive, images }: { isActive: boolean, images: st
           .animate-pan { animation: slowPan 30s infinite alternate ease-in-out; }
         `}
       </style>
-      <div className="w-full h-full relative bg-[#3b2b1f]">
+      <div className={`w-full h-full absolute inset-0 bg-[#3b2b1f] transition-opacity duration-1000 ${isActive ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         {images.map((src, idx) => (
           <div 
             key={src}
-            className={`absolute inset-0 w-full h-full transition-opacity duration-[1500ms] ${idx === currentIndex && isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-[1500ms] ${idx === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
           >
             <img 
               src={src}
