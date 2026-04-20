@@ -2078,16 +2078,16 @@ export default function App() {
       {/* Hero Section */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
         
-        {/* Gallery Background (shown on hover for apartment) */}
-        <div className={`absolute inset-0 z-0 transition-opacity duration-1000 ${hoveredUnit === 'apartment' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-          <BackgroundGallery isActive={hoveredUnit === 'apartment'} />
-        </div>
-
-        {/* New! Background (shown on hover for luxury) */}
-        <div className={`absolute inset-0 z-0 transition-opacity duration-1000 bg-[#3b2b1f]/95 flex items-center justify-center overflow-hidden ${hoveredUnit === 'luxury' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-          <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-            <span className="text-[12vw] font-serif uppercase tracking-widest text-[#a67c52] whitespace-nowrap select-none animate-pulse">NEW!</span>
-          </div>
+        {/* Gallery Background (shown on hover for units) */}
+        <div className="absolute inset-0 z-0">
+          <BackgroundGallery 
+            isActive={hoveredUnit === 'apartment'} 
+            images={apartmentGalleryImages}
+          />
+          <BackgroundGallery 
+            isActive={hoveredUnit === 'luxury'} 
+            images={luxuryGalleryImages}
+          />
         </div>
         
         {/* Local background video (hidden on hover) */}
