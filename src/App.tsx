@@ -36,7 +36,12 @@ import {
   Menu,
   Monitor,
   Palmtree,
-  Zap
+  Zap,
+  Fan,
+  Snowflake,
+  Microwave,
+  Refrigerator,
+  Circle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -169,7 +174,12 @@ const translations: Record<string, Content> = {
         "Smart TV",
         "All Inclusive",
         "Vacuum Cleaner",
-        "Dryer"
+        "Dryer",
+        "Induction hob",
+        "Extractor hood",
+        "Refrigerator",
+        "Freezer",
+        "Microwave"
       ]
     },
     location: {
@@ -276,7 +286,12 @@ const translations: Record<string, Content> = {
         "Smart TV",
         "Tutto Incluso",
         "Aspirapolvere",
-        "Asciugatrice"
+        "Asciugatrice",
+        "Induzione",
+        "Cappa aspirante",
+        "Frigorifero",
+        "Congelatore",
+        "Microonde"
       ]
     },
     location: {
@@ -367,7 +382,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Services",
-      items: ["Logement entier", "150 m² de surface", "Parking gratuit", "Animaux acceptés", "WiFi gratuit", "Cuisine", "Climatisation", "Salle de bain privée", "Lave-linge", "Lave-vaisselle", "Machine à café", "Mobilier de jardin", "Smart TV", "Tout compris", "Aspirateur", "Sèche-linge"]
+      items: ["Logement entier", "150 m² de surface", "Parking gratuit", "Animaux acceptés", "WiFi gratuit", "Cuisine", "Climatisation", "Salle de bain privée", "Lave-linge", "Lave-vaisselle", "Machine à café", "Mobilier de jardin", "Smart TV", "Tout compris", "Aspirateur", "Sèche-linge", "Induction", "Hotte aspirante", "Réfrigérateur", "Congélateur", "Micro-ondes"]
     },
     location: { title: "Comment nous trouver", galleryTitle: "Explorez les environs", desc: "Stratégiquement située, Villa Angela offre un accès facile aux destinations les plus emblématiques de la région." },
     gallery: "Galerie",
@@ -539,7 +554,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Ausstattung",
-      items: ["Ganze Unterkunft", "150 m² Wohnfläche", "Kostenloser Parkplatz", "Haustiere erlaubt", "Kostenloses WLAN", "Küche", "Klimaanlage", "Eigenes Badezimmer", "Waschmaschine", "Spülmaschine", "Kaffeemaschine", "Gartenmöbel", "Smart TV", "Alles inklusive", "Staubsauger", "Trockner"]
+      items: ["Ganze Unterkunft", "150 m² Wohnfläche", "Kostenloser Parkplatz", "Haustiere erlaubt", "Kostenloses WLAN", "Küche", "Klimaanlage", "Eigenes Badezimmer", "Waschmaschine", "Spülmaschine", "Kaffeemaschine", "Gartenmöbel", "Smart TV", "Alles inklusive", "Staubsauger", "Trockner", "Induktion", "Dunstabzugshaube", "Kühlschrank", "Gefrierschrank", "Mikrowelle"]
     },
     location: { title: "Wie Sie uns finden", galleryTitle: "Die Umgebung erkunden", desc: "Strategisch günstig gelegen, bietet die Villa Angela einfachen Zugang zu den symbolträchtigsten Zielen der Region." },
     gallery: "Galerie",
@@ -625,7 +640,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "Udogodnienia",
-      items: ["Całe mieszkanie", "150 m² powierzchni", "Darmowy parking", "Zwierzęta akceptowane", "Darmowe WiFi", "Kuchnia", "Klimatyzacja", "Prywatna łazienka", "Pralka", "Zmywarka", "Kawiarka", "Meble ogrodowe", "Smart TV", "Wszystko w cenie", "Odkurzacz", "Suszarka"]
+      items: ["Całe mieszkanie", "150 m² powierzchni", "Darmowy parking", "Zwierzęta akceptowane", "Darmowe WiFi", "Kuchnia", "Klimatyzacja", "Prywatna łazienka", "Pralka", "Zmywarka", "Kawiarka", "Meble ogrodowe", "Smart TV", "Wszystko w cenie", "Odkurzacz", "Suszarka", "Indukcja", "Okap", "Lodówka", "Zamrażarka", "Mikrofala"]
     },
     location: { title: "Jak nas znaleźć", galleryTitle: "Odkryj okolicę", desc: "Strategicznie położona Villa Angela zapewnia łatwy dostęp do najbardziej kultowych miejsc w regionie." },
     gallery: "Galeria",
@@ -711,7 +726,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "设施",
-      items: ["免费 Wi-Fi", "私人停车场", "空调", "海滨", "露台", "礼宾服务", "洗碗机", "咖啡机", "户外家具", "智能电视", "全包服务", "吸尘器", "烘干机"]
+      items: ["免费 Wi-Fi", "私人停车场", "空调", "海滨", "露台", "礼宾服务", "洗碗机", "咖啡机", "户外家具", "智能电视", "全包服务", "吸尘器", "烘干机", "电磁炉", "抽油烟机", "冰箱", "冷冻柜", "微波炉"]
     },
     location: { 
       title: "如何找到我们", 
@@ -799,7 +814,7 @@ const translations: Record<string, Content> = {
     },
     amenities: {
       title: "المرافق",
-      items: ["واي فاي مجاني", "موقف سيارات خاص", "تكييف", "على الشاطئ", "تراس", "خدمة الكونسيرج", "غسالة أطباق", "آلة صنع القهوة", "أثاث خارجي", "تلفزيون ذكي", "شامل كلياً", "مكنسة كهربائية", "مجفف ملابس"]
+      items: ["واي فاي مجاني", "موقف سيارات خاص", "تكييف", "على الشاطئ", "تراس", "خدمة الكونسيرج", "غسالة أطباق", "آلة صنع القهوة", "أثاث خارجي", "تلفزيون ذكي", "شامل كلياً", "مكنسة كهربائية", "مجفف ملابس", "تحريض", "غطاء شفاط", "ثلاجة", "فريزر", "مايكرويف"]
     },
     location: { 
       title: "كيف تجدنا", 
@@ -1192,7 +1207,7 @@ interface AmenityProps {
 }
 
 const AmenityCard = ({ item, index }: AmenityProps) => {
-  const icons = [Home, Maximize, Car, Dog, Wifi, Utensils, Snowflake, Bath, Shirt, Waves, Coffee, Palmtree, Monitor, ShieldCheck, Zap, Sun];
+  const icons = [Home, Maximize, Car, Dog, Wifi, Utensils, Snowflake, Bath, Shirt, Waves, Coffee, Palmtree, Monitor, ShieldCheck, Zap, Sun, Circle, Fan, Refrigerator, Snowflake, Microwave];
   const Icon = icons[index] || Home;
 
   // Animations for specific boxes
@@ -1209,6 +1224,11 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
   const isAllIncluded = index === 13;
   const isVacuum = index === 14;
   const isDryer = index === 15;
+  const isInduction = index === 16;
+  const isHood = index === 17;
+  const isFridge = index === 18;
+  const isFreezer = index === 19;
+  const isMicrowave = index === 20;
 
   const boxAnimate = isFirst ? { 
     boxShadow: [
@@ -1459,6 +1479,71 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
             transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
           >
             <Palmtree size={24} className="text-green-600 opacity-50" />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Induction effect */}
+      {isInduction && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[40px] ml-2">
+          {[0, 1].map((i) => (
+            <motion.div
+              key={i}
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: [0.8, 1.5], opacity: [0.8, 0] }}
+              transition={{ repeat: Infinity, duration: 2, delay: i * 1 }}
+              className="absolute left-0 w-8 h-8 rounded-full border border-red-400/30"
+            />
+          ))}
+          <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+            <Zap size={18} className="text-red-400 opacity-60" />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Hood effect */}
+      {isHood && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[40px] ml-2">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              animate={{ y: [10, -20], opacity: [0, 1, 0], x: [0, (i-1)*5] }}
+              transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.4 }}
+              className="absolute bottom-0 text-[#5C4A3A]/20"
+            >
+              <Wind size={12} />
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      {/* Cold effect for Fridge/Freezer */}
+      {(isFridge || isFreezer) && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[40px] ml-2">
+          <motion.div
+            animate={{ opacity: [0.2, 0.8, 0.2], scale: [0.9, 1.1, 0.9] }}
+            transition={{ repeat: Infinity, duration: 3 }}
+          >
+            <Snowflake size={20} className="text-blue-300 opacity-50" />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Micro waves effect */}
+      {isMicrowave && (
+        <div className="flex-1 overflow-hidden relative h-full flex items-center min-w-[40px] ml-2">
+          <motion.div
+            animate={{ rotate: [0, 360] }}
+            transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+          >
+            <Circle size={16} className="text-[#a67c52]/30 border-t-2 border-[#a67c52]" />
+          </motion.div>
+          <motion.div
+            className="absolute left-6"
+            animate={{ scaleX: [1, 1.5, 1], opacity: [0.3, 0.7, 0.3] }}
+            transition={{ repeat: Infinity, duration: 0.5 }}
+          >
+            <Waves size={14} className="text-[#a67c52]/40" />
           </motion.div>
         </div>
       )}
