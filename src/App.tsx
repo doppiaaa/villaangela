@@ -1468,16 +1468,8 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
   );
 };
 
-const BackgroundGallery = ({ isActive }: { isActive: boolean }) => {
+const BackgroundGallery = ({ isActive, images }: { isActive: boolean, images: string[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const images = [
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911499.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911510.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911526.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334701.jpg"
-  ];
 
   useEffect(() => {
     if (!isActive) return;
