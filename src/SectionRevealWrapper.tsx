@@ -39,7 +39,7 @@ const SectionRevealWrapper = ({ children, id, className = '', style = {}, isFirs
         ...style,
         position: 'relative'
       }}
-      className={`min-h-screen w-full flex flex-col justify-center py-12 md:py-24 outline-none ${className}`}
+      className={`min-h-[60vh] w-full flex flex-col justify-center py-8 md:py-16 outline-none ${className}`}
     >
       <motion.div
         style={{ 
