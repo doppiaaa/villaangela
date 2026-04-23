@@ -24,7 +24,6 @@
     scroll-behavior: smooth;
     background: linear-gradient(135deg, #C8B89A 0%, #E8DDD0 40%, #F5F0E8 70%, #D4C5B0 100%);
     background-color: #D4C5B0;
-    overscroll-behavior: none;
   }
   
   body {
@@ -33,7 +32,18 @@
     min-height: 100vh;
     min-height: 100dvh;
     position: relative;
-    overscroll-behavior: none;
+  }
+
+  /* Bottom overscroll: Gradient End Color */
+  body::after {
+    content: "";
+    position: absolute;
+    bottom: -100vh;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background-color: #D4C5B0;
+    z-index: -1;
   }
 
   #root {
