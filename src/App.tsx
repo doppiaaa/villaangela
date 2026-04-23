@@ -40,7 +40,8 @@ import {
   Fan,
   Microwave,
   Refrigerator,
-  Circle
+  Circle,
+  Expand
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -2082,6 +2083,8 @@ export default function App() {
   const [translationCache] = useState<Record<string, Review[]>>({});
   const [selectedUnit, setSelectedUnit] = useState<'apartment' | 'luxury' | null>(null);
   const [hoveredUnit, setHoveredUnit] = useState<'apartment' | 'luxury' | null>(null);
+  const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showCookieBanner, setShowCookieBanner] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [apartmentImages, setApartmentImages] = useState<string[]>([]);
   const [luxuryImages, setLuxuryImages] = useState<string[]>([]);
