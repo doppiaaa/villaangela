@@ -2119,8 +2119,13 @@ export default function App() {
     setTimeout(() => setShowComingSoon(false), 3500);
   };
   useEffect(() => {
-    const fetchGalleries = async () => {
+    async function fetchGalleries() {
       try {
+        const baseUrl = 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public';
+        
+        // List Luxury House Images
+        // Note: We use the existing storage pattern. For automatic listing, we'd need the project's anon key.
+        // For now, we combine the hardcoded high-quality ones with a pattern-based fetch or manual additions
         const initialLuxury = [
           "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_01.jpg",
           "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_02.jpg",
@@ -2145,10 +2150,6 @@ export default function App() {
         ];
 
         const initialApartment = [
-          `${baseUrl}/videos/7d3ff214-b629-4b8f-bfff-75128638c746.avif`,
-          `${baseUrl}/videos/7f51b4d8-add9-4b82-9027-cbd58bdd1161.avif`,
-          `${baseUrl}/videos/ae17cccb-e264-444c-b168-a8efe051e243.avif`,
-          `${baseUrl}/videos/b3b86883-fa6b-445a-9fcd-0f9d42516a52.avif`,
           "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg", 
           "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096753.jpg", 
           "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
@@ -2191,14 +2192,15 @@ export default function App() {
             .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
             .map(f => `${baseUrl}/luxury%20house/${f.name}`);
           
+          // Combine with initial but avoid duplicates
           const combinedLuxury = Array.from(new Set([...initialLuxury, ...fetchedLuxury]));
           setLuxuryImages(combinedLuxury);
         } else {
           setLuxuryImages(initialLuxury);
-          if (luxErr) console.warn('Luxury fetch error:', luxErr);
+          if (luxErr) console.warn('Luxury fetch error (Key might be wrong):', luxErr);
         }
 
-        // Dynamically fetch Apartment images
+        // Dynamically fetch Apartment images (stored in 'videos' bucket)
         const { data: aptFiles, error: aptErr } = await supabase.storage
           .from('videos')
           .list('', { limit: 100, sortBy: { column: 'name', order: 'desc' } });
@@ -2212,7 +2214,7 @@ export default function App() {
           setApartmentImages(combinedApartment);
         } else {
           setApartmentImages(initialApartment);
-          if (aptErr) console.warn('Apartment fetch error:', aptErr);
+          if (aptErr) console.warn('Apartment fetch error (Key might be wrong):', aptErr);
         }
       } catch (err) {
         console.error('Gallery fetch failed:', err);
