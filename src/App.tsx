@@ -2121,6 +2121,7 @@ export default function App() {
   useEffect(() => {
     const fetchGalleries = async () => {
       try {
+        const baseUrl = 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public';
         const initialLuxury = [
           "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_01.jpg",
           "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_02.jpg",
