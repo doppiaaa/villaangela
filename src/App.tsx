@@ -1590,13 +1590,15 @@ const AmenityCard = ({ item, index }: AmenityProps) => {
   );
 };
 
-const BackgroundGallery = ({ isActive, images }: { isActive: boolean, images: string[] }) => {
+const BackgroundGallery = ({ isActive, images, onImageError }: { isActive: boolean, images: string[], onImageError?: (url: string) => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (!isActive) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      if (images.length > 0) {
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+      }
     }, 4000); // Crossfade every 4s
     return () => clearInterval(interval);
   }, [isActive, images.length]);
@@ -1623,6 +1625,7 @@ const BackgroundGallery = ({ isActive, images }: { isActive: boolean, images: st
               className="w-full h-full object-cover animate-pan"
               alt="Background Slide"
               loading="lazy"
+              onError={() => onImageError?.(src)}
             />
           </div>
         ))}
@@ -2104,6 +2107,17 @@ export default function App() {
   const { containerRef: galleryContainerRef, innerRef: galleryInnerRef } = useHorizontalMarquee(1.5);
   const { containerRef: locationContainerRef, innerRef: locationInnerRef } = useHorizontalMarquee(1.5);
 
+  const handleImageError = (url: string) => {
+    // Remove the broken image URL from both gallery states to avoid showing 404s
+    setApartmentImages(prev => prev.filter(img => img !== url));
+    setLuxuryImages(prev => prev.filter(img => img !== url));
+    
+    // If the enlarged image is the one that failed, close it
+    if (enlargedImage === url) {
+      setEnlargedImage(null);
+    }
+  };
+
   const trackCookieConsent = async (accepted: boolean) => {
     try {
       await supabase.rpc('increment_cookie_stats', { 
@@ -2122,27 +2136,29 @@ export default function App() {
     const fetchGalleries = async () => {
       try {
         const baseUrl = 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public';
+        
+        // Immagini "base" da usare come fallback (specialmente per colpa della chiave API errata)
         const initialLuxury = [
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_02.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_02.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_03.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_04.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_02.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_03.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_04.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_05.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_06.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_07.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_kitchen_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_02.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_03.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_04.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_02.jpg"
+          `${baseUrl}/luxury%20house/iks018_main_01.jpg`,
+          `${baseUrl}/luxury%20house/iks018_main_02.jpg`,
+          `${baseUrl}/luxury%20house/iks018_outdoor_01.jpg`,
+          `${baseUrl}/luxury%20house/iks018_outdoor_02.jpg`,
+          `${baseUrl}/luxury%20house/iks018_outdoor_03.jpg`,
+          `${baseUrl}/luxury%20house/iks018_outdoor_04.jpg`,
+          `${baseUrl}/luxury%20house/iks018_living_01.jpg`,
+          `${baseUrl}/luxury%20house/iks018_living_02.jpg`,
+          `${baseUrl}/luxury%20house/iks018_living_03.jpg`,
+          `${baseUrl}/luxury%20house/iks018_living_04.jpg`,
+          `${baseUrl}/luxury%20house/iks018_living_05.jpg`,
+          `${baseUrl}/luxury%20house/iks018_living_06.jpg`,
+          `${baseUrl}/luxury%20house/iks018_living_07.jpg`,
+          `${baseUrl}/luxury%20house/iks018_kitchen_01.jpg`,
+          `${baseUrl}/luxury%20house/iks018_bed_01.jpg`,
+          `${baseUrl}/luxury%20house/iks018_bed_02.jpg`,
+          `${baseUrl}/luxury%20house/iks018_bed_03.jpg`,
+          `${baseUrl}/luxury%20house/iks018_bed_04.jpg`,
+          `${baseUrl}/luxury%20house/iks018_bath_01.jpg`,
+          `${baseUrl}/luxury%20house/iks018_bath_02.jpg`
         ];
 
         const initialApartment = [
@@ -2150,73 +2166,78 @@ export default function App() {
           `${baseUrl}/videos/7f51b4d8-add9-4b82-9027-cbd58bdd1161.avif`,
           `${baseUrl}/videos/ae17cccb-e264-444c-b168-a8efe051e243.avif`,
           `${baseUrl}/videos/b3b86883-fa6b-445a-9fcd-0f9d42516a52.avif`,
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096753.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911498.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911499.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911505.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911506.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911508.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911510.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911512.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911515.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911517.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911519.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911526.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911527.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911533.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911536.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911537.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334699.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334700.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334701.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334702.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334703.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334704.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334705.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334706.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334707.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334708.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334710.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334711.jpg"
+          `${baseUrl}/videos/676096734.jpg`, 
+          `${baseUrl}/videos/676096753.jpg`, 
+          `${baseUrl}/videos/683911497.jpg`,
+          `${baseUrl}/videos/683911498.jpg`, 
+          `${baseUrl}/videos/683911499.jpg`, 
+          `${baseUrl}/videos/683911505.jpg`,
+          `${baseUrl}/videos/683911506.jpg`, 
+          `${baseUrl}/videos/683911508.jpg`, 
+          `${baseUrl}/videos/683911510.jpg`,
+          `${baseUrl}/videos/683911512.jpg`, 
+          `${baseUrl}/videos/683911515.jpg`, 
+          `${baseUrl}/videos/683911517.jpg`,
+          `${baseUrl}/videos/683911519.jpg`, 
+          `${baseUrl}/videos/683911526.jpg`, 
+          `${baseUrl}/videos/683911527.jpg`,
+          `${baseUrl}/videos/683911533.jpg`, 
+          `${baseUrl}/videos/683911536.jpg`, 
+          `${baseUrl}/videos/683911537.jpg`,
+          `${baseUrl}/videos/722334699.jpg`, 
+          `${baseUrl}/videos/722334700.jpg`, 
+          `${baseUrl}/videos/722334701.jpg`,
+          `${baseUrl}/videos/722334702.jpg`, 
+          `${baseUrl}/videos/722334703.jpg`, 
+          `${baseUrl}/videos/722334704.jpg`,
+          `${baseUrl}/videos/722334705.jpg`, 
+          `${baseUrl}/videos/722334706.jpg`, 
+          `${baseUrl}/videos/722334707.jpg`,
+          `${baseUrl}/videos/722334708.jpg`, 
+          `${baseUrl}/videos/722334710.jpg`, 
+          `${baseUrl}/videos/722334711.jpg`
         ];
 
-        // Dynamically fetch Luxury House images
-        const { data: luxFiles, error: luxErr } = await supabase.storage
-          .from('luxury house')
-          .list('', { limit: 100, sortBy: { column: 'name', order: 'desc' } });
-        
-        if (!luxErr && luxFiles) {
-          const fetchedLuxury = luxFiles
-            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
-            .map(f => `${baseUrl}/luxury%20house/${f.name}`);
-          
-          const combinedLuxury = Array.from(new Set([...initialLuxury, ...fetchedLuxury]));
-          setLuxuryImages(combinedLuxury);
-        } else {
-          setLuxuryImages(initialLuxury);
-          if (luxErr) console.warn('Luxury fetch error:', luxErr);
-        }
+        const excludedFiles = [
+          'airbnb-logo.png', 'hometogo-logo.png', 'vrbo-logo.png', 'expedia-logo.png', 
+          'agoda-logo.png', 'novasol.png', 'holiday-fixed.png', 'luxury-fixed.jpg', 
+          'side-logo.png', 'pompei.jpg', 'amalfi.jpg', 'positano.jpg', 
+          'sorrento.jpg', 'maiori.jpg', 'minori.jpg', 'salerno.jpg', 
+          'Vietri sul mare.jpg', 'napoli.jpg'
+        ];
 
-        // Dynamically fetch Apartment images
-        const { data: aptFiles, error: aptErr } = await supabase.storage
-          .from('videos')
-          .list('', { limit: 100, sortBy: { column: 'name', order: 'desc' } });
+        // Tentativo di fetch dinamico (fallirà se la chiave è errata, ma proviamo)
+        const [luxRes, aptRes] = await Promise.all([
+          supabase.storage.from('luxury house').list('', { limit: 100 }).catch(() => ({ data: null })),
+          supabase.storage.from('videos').list('', { limit: 100 }).catch(() => ({ data: null }))
+        ]);
 
-        if (!aptErr && aptFiles) {
-          const fetchedApartment = aptFiles
-            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
-            .map(f => `${baseUrl}/videos/${f.name}`);
-          
-          const combinedApartment = Array.from(new Set([...initialApartment, ...fetchedApartment]));
-          setApartmentImages(combinedApartment);
-        } else {
-          setApartmentImages(initialApartment);
-          if (aptErr) console.warn('Apartment fetch error:', aptErr);
-        }
+        const fetchedApt: string[] = [];
+        const fetchedLux: string[] = [];
+
+        const process = (files: any[] | null, bucket: string, target: string[]) => {
+          if (!files) return;
+          files.forEach(f => {
+            if (f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i) && !excludedFiles.includes(f.name)) {
+              const url = `${baseUrl}/${bucket}/${encodeURIComponent(f.name)}`;
+              if (bucket === 'videos' && (f.name.startsWith('iks018_') || f.name.toLowerCase().includes('luxury'))) {
+                fetchedLux.push(url);
+              } else {
+                target.push(url);
+              }
+            }
+          });
+        };
+
+        process(luxRes.data, 'luxury house', fetchedLux);
+        process(aptRes.data, 'videos', fetchedApt);
+
+        // Combiniamo iniziali e fetched, eliminando i doppiameti
+        setApartmentImages(Array.from(new Set([...initialApartment, ...fetchedApt])));
+        setLuxuryImages(Array.from(new Set([...initialLuxury, ...fetchedLux])));
+
       } catch (err) {
-        console.error('Gallery fetch failed:', err);
+        console.error('Gallery fetch error:', err);
       }
     }
     fetchGalleries();
@@ -2427,10 +2448,12 @@ export default function App() {
           <BackgroundGallery 
             isActive={hoveredUnit === 'apartment'} 
             images={apartmentImages}
+            onImageError={handleImageError}
           />
           <BackgroundGallery 
             isActive={hoveredUnit === 'luxury'} 
             images={luxuryImages}
+            onImageError={handleImageError}
           />
         </div>
         
@@ -2673,27 +2696,27 @@ export default function App() {
                     <div key={`${set}-${idx}`} className="grid grid-cols-4 grid-rows-2 gap-3 md:gap-4 w-[90vw] md:w-[75vw] lg:w-[60vw] h-[400px] md:h-[500px] lg:h-[600px] flex-none">
                       {idx % 2 === 0 ? (
                         <>
-                          {chunk[0] && <div className="col-span-2 row-span-2"><img src={chunk[0]} className="w-full h-full object-cover rounded-3xl cursor-pointer hover:opacity-90 hover:scale-[1.01] transition-all duration-500 shadow-lg" onClick={() => setEnlargedImage(chunk[0])} alt="Gallery" /></div>}
-                          <div className="col-span-2 grid grid-cols-2 gap-3 md:gap-4">
-                            {chunk[1] && <div className="col-span-1 row-span-1"><img src={chunk[1]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[1])} alt="Gallery" /></div>}
-                            {chunk[2] && <div className="col-span-1 row-span-1"><img src={chunk[2]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[2])} alt="Gallery" /></div>}
-                          </div>
-                          <div className="col-span-2 grid grid-cols-3 gap-3 md:gap-4">
-                            {chunk[3] && <div className="col-span-2 row-span-1"><img src={chunk[3]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[3])} alt="Gallery" /></div>}
-                            {chunk[4] && <div className="col-span-1 row-span-1"><img src={chunk[4]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[4])} alt="Gallery" /></div>}
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="col-span-1 row-span-2 grid grid-rows-2 gap-3 md:gap-4">
-                            {chunk[0] && <div className="row-span-1"><img src={chunk[0]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[0])} alt="Gallery" /></div>}
-                            {chunk[1] && <div className="row-span-1"><img src={chunk[1]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[1])} alt="Gallery" /></div>}
-                          </div>
-                          {chunk[2] && <div className="col-span-2 row-span-2"><img src={chunk[2]} className="w-full h-full object-cover rounded-3xl cursor-pointer hover:opacity-90 hover:scale-[1.01] transition-all duration-500 shadow-lg" onClick={() => setEnlargedImage(chunk[2])} alt="Gallery" /></div>}
-                          <div className="col-span-1 row-span-2 grid grid-rows-3 gap-3 md:gap-4">
-                            {chunk[3] && <div className="row-span-1"><img src={chunk[3]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[3])} alt="Gallery" /></div>}
-                            {chunk[4] && <div className="row-span-2"><img src={chunk[4]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[4])} alt="Gallery" /></div>}
-                          </div>
+                          {chunk[0] && <div className="col-span-2 row-span-2"><img src={chunk[0]} className="w-full h-full object-cover rounded-3xl cursor-pointer hover:opacity-90 hover:scale-[1.01] transition-all duration-500 shadow-lg" onClick={() => setEnlargedImage(chunk[0])} onError={() => handleImageError(chunk[0])} alt="Gallery" /></div>}
+                            <div className="col-span-2 grid grid-cols-2 gap-3 md:gap-4">
+                              {chunk[1] && <div className="col-span-1 row-span-1"><img src={chunk[1]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[1])} onError={() => handleImageError(chunk[1])} alt="Gallery" /></div>}
+                              {chunk[2] && <div className="col-span-1 row-span-1"><img src={chunk[2]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[2])} onError={() => handleImageError(chunk[2])} alt="Gallery" /></div>}
+                            </div>
+                            <div className="col-span-2 grid grid-cols-3 gap-3 md:gap-4">
+                              {chunk[3] && <div className="col-span-2 row-span-1"><img src={chunk[3]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[3])} onError={() => handleImageError(chunk[3])} alt="Gallery" /></div>}
+                              {chunk[4] && <div className="col-span-1 row-span-1"><img src={chunk[4]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[4])} onError={() => handleImageError(chunk[4])} alt="Gallery" /></div>}
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="col-span-1 row-span-2 grid grid-rows-2 gap-3 md:gap-4">
+                              {chunk[0] && <div className="row-span-1"><img src={chunk[0]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[0])} onError={() => handleImageError(chunk[0])} alt="Gallery" /></div>}
+                              {chunk[1] && <div className="row-span-1"><img src={chunk[1]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[1])} onError={() => handleImageError(chunk[1])} alt="Gallery" /></div>}
+                            </div>
+                            {chunk[2] && <div className="col-span-2 row-span-2"><img src={chunk[2]} className="w-full h-full object-cover rounded-3xl cursor-pointer hover:opacity-90 hover:scale-[1.01] transition-all duration-500 shadow-lg" onClick={() => setEnlargedImage(chunk[2])} onError={() => handleImageError(chunk[2])} alt="Gallery" /></div>}
+                            <div className="col-span-1 row-span-2 grid grid-rows-3 gap-3 md:gap-4">
+                              {chunk[3] && <div className="row-span-1"><img src={chunk[3]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[3])} onError={() => handleImageError(chunk[3])} alt="Gallery" /></div>}
+                              {chunk[4] && <div className="row-span-2"><img src={chunk[4]} className="w-full h-full object-cover rounded-2xl cursor-pointer hover:opacity-90 hover:scale-[1.02] transition-all shadow-md" onClick={() => setEnlargedImage(chunk[4])} onError={() => handleImageError(chunk[4])} alt="Gallery" /></div>}
+                            </div>
                         </>
                       )}
                     </div>
@@ -3177,6 +3200,7 @@ export default function App() {
                           className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-700" 
                           alt={`Gallery ${idx + 1}`} 
                           onClick={() => setEnlargedImage(src)}
+                          onError={() => handleImageError(src)}
                         />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex items-center justify-center">
                           <Expand className="text-white w-8 h-8 scale-0 group-hover:scale-100 transition-transform" />
@@ -3258,6 +3282,7 @@ export default function App() {
                 src={enlargedImage} 
                 alt="Enlarged gallery view" 
                 className="max-w-full max-h-full object-contain shadow-[0_20px_60px_rgba(0,0,0,0.5)] rounded-lg select-none" 
+                onError={() => handleImageError(enlargedImage || '')}
               />
               
               {/* Counter indicator */}
