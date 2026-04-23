@@ -44,6 +44,18 @@
     background-color: #1E323C;
     z-index: -1;
   }
+
+  /* Bottom overscroll: Gradient End Color */
+  body::after {
+    content: "";
+    position: absolute;
+    bottom: -100vh;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background-color: #D4C5B0;
+    z-index: -1;
+  }
   
   #root {
     background-color: transparent;
