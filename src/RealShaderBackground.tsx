@@ -37,8 +37,8 @@ const RealShaderBackground = memo(({
       <div 
         className="absolute inset-0"
         style={{ 
-          opacity, 
-          mixBlendMode: 'soft-light',
+          opacity: 0.2, 
+          mixBlendMode: 'normal',
           overflow: 'hidden',
           borderRadius: 'inherit'
         }}

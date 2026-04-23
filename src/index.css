@@ -145,10 +145,9 @@
 .hero-overlay {
   background: linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.45) 0%,
-    rgba(0, 0, 0, 0.15) 40%,
-    rgba(0, 0, 0, 0.15) 60%,
-    rgba(0, 0, 0, 0.55) 100%
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.08) 50%,
+    rgba(0, 0, 0, 0.45) 100%
   );
 }
 
@@ -199,7 +198,7 @@
 .logo-card:nth-child(2) { animation: fadeInUp 0.9s ease 0.4s both; }
 
 .hero-video {
-  filter: brightness(0.85) saturate(1.1);
+  filter: brightness(0.95) saturate(1.1);
 }
 
 .servizi-grid {
