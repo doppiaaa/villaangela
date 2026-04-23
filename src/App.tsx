@@ -2402,7 +2402,7 @@ export default function App() {
 
   return (
     <div 
-      className="text-[#5C4A3A] selection:bg-[#a67c52] selection:text-white overflow-x-hidden"
+      className="text-[#5C4A3A] selection:bg-[#a67c52] selection:text-white overflow-clip"
       style={{ 
         background: 'linear-gradient(135deg, #C8B89A 0%, #E8DDD0 40%, #F5F0E8 70%, #D4C5B0 100%)',
         backgroundAttachment: 'fixed'

@@ -22,14 +22,10 @@ const SectionRevealWrapper = ({ children, id, className = '', style = {}, isFirs
     offset: ["start end", "end start"]
   });
 
-  // Entry: Scale from 0.9 to 1, opacity from 0.4 to 1
-  // Exit: Scale stays at 1 (or slightly scales down), opacity stays at 1
-  const scale = useTransform(scrollYProgress, [0, 0.4, 0.9, 1], [0.95, 1, 1, 0.95]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.9, 1], [0.4, 1, 1, 0.4]);
-  const blur = useTransform(scrollYProgress, [0, 0.2, 0.9, 1], ["8px", "0px", "0px", "8px"]);
-  
-  // Parallax effect for content inside
-  const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  // Robust reveal: Scale from 0.95 to 1, opacity from 0 to 1
+  const scale = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [0.95, 1, 1, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [0.3, 1, 1, 1]);
+  const y = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [100, 0, 0, 0]);
 
   return (
     <div 
@@ -39,16 +35,13 @@ const SectionRevealWrapper = ({ children, id, className = '', style = {}, isFirs
         ...style,
         position: 'relative'
       }}
-      className={`min-h-[60vh] w-full flex flex-col justify-center py-8 md:py-16 outline-none ${className}`}
+      className={`w-full flex flex-col justify-center py-16 md:py-32 outline-none ${className}`}
     >
       <motion.div
         style={{ 
           scale, 
           opacity, 
-          filter: `blur(${blur})`,
           y: isFirst ? 0 : y,
-          position: 'sticky',
-          top: '2rem', // Slight offset from top
         }}
         className="w-full h-full flex flex-col items-center"
       >
