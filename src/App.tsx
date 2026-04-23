@@ -2119,68 +2119,11 @@ export default function App() {
     setTimeout(() => setShowComingSoon(false), 3500);
   };
   useEffect(() => {
-    async function fetchGalleries() {
+    const fetchGalleries = async () => {
       try {
         const baseUrl = 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public';
-        
-        // List Luxury House Images
-        // Note: We use the existing storage pattern. For automatic listing, we'd need the project's anon key.
-        // For now, we combine the hardcoded high-quality ones with a pattern-based fetch or manual additions
-        const initialLuxury = [
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_02.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_02.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_03.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_04.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_02.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_03.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_04.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_05.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_06.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_07.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_kitchen_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_02.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_03.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_04.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_01.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_02.jpg"
-        ];
+        // No hardcoded fallbacks anymore
 
-        const initialApartment = [
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096753.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911498.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911499.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911505.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911506.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911508.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911510.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911512.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911515.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911517.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911519.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911526.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911527.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911533.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911536.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911537.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334699.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334700.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334701.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334702.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334703.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334704.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334705.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334706.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334707.jpg",
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334708.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334710.jpg", 
-          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334711.jpg"
-        ];
 
         // Dynamically fetch Luxury House images
         const { data: luxFiles, error: luxErr } = await supabase.storage
@@ -2192,12 +2135,9 @@ export default function App() {
             .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
             .map(f => `${baseUrl}/luxury%20house/${f.name}`);
           
-          // Combine with initial but avoid duplicates
-          const combinedLuxury = Array.from(new Set([...initialLuxury, ...fetchedLuxury]));
-          setLuxuryImages(combinedLuxury);
+          setLuxuryImages(fetchedLuxury);
         } else {
-          setLuxuryImages(initialLuxury);
-          if (luxErr) console.warn('Luxury fetch error (Key might be wrong):', luxErr);
+          if (luxErr) console.warn('Luxury fetch error:', luxErr);
         }
 
         // Dynamically fetch Apartment images (stored in 'videos' bucket)
@@ -2210,11 +2150,9 @@ export default function App() {
             .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
             .map(f => `${baseUrl}/videos/${f.name}`);
           
-          const combinedApartment = Array.from(new Set([...initialApartment, ...fetchedApartment]));
-          setApartmentImages(combinedApartment);
+          setApartmentImages(fetchedApartment);
         } else {
-          setApartmentImages(initialApartment);
-          if (aptErr) console.warn('Apartment fetch error (Key might be wrong):', aptErr);
+          if (aptErr) console.warn('Apartment fetch error:', aptErr);
         }
       } catch (err) {
         console.error('Gallery fetch failed:', err);
