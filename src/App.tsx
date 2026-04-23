@@ -2189,7 +2189,7 @@ export default function App() {
         
         if (!luxErr && luxFiles) {
           const fetchedLuxury = luxFiles
-            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp)$/i))
+            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
             .map(f => `${baseUrl}/luxury%20house/${f.name}`);
           
           // Combine with initial but avoid duplicates
@@ -2207,7 +2207,7 @@ export default function App() {
 
         if (!aptErr && aptFiles) {
           const fetchedApartment = aptFiles
-            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp)$/i))
+            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
             .map(f => `${baseUrl}/videos/${f.name}`);
           
           const combinedApartment = Array.from(new Set([...initialApartment, ...fetchedApartment]));
