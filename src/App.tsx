@@ -2543,6 +2543,8 @@ export default function App() {
         </div>
       </SectionRevealWrapper>
 
+      <WaveDecoration variant="separator" className="my-12 md:my-20" />
+
       {/* The Two Units Section */}
       <SectionRevealWrapper id="units">
         <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-16 text-center fade-in">{content.units.title}</h2>
@@ -2675,7 +2677,7 @@ export default function App() {
           </div>
         </div>
         {/* E) Units — elegant wave separator */}
-        <WaveDecoration variant="separator" className="mt-8" />
+        <WaveDecoration variant="separator" className="my-12 md:my-20" />
       </SectionRevealWrapper>
 
       {/* Gallery Section */}
@@ -2728,6 +2730,8 @@ export default function App() {
         </div>
       </SectionRevealWrapper>
 
+      <WaveDecoration variant="separator" className="my-12 md:my-20" />
+
       <SectionRevealWrapper id="servizi-section">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-6 md:mb-10 fade-in">
           {content.amenities.title}
@@ -2738,6 +2742,8 @@ export default function App() {
           ))}
         </div>
       </SectionRevealWrapper>
+
+      <WaveDecoration variant="separator" className="my-12 md:my-20" />
 
       <SectionRevealWrapper id="location">
         <div className="max-w-4xl mx-auto text-center fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-16 rounded-[2.5rem] w-full">
@@ -2760,6 +2766,8 @@ export default function App() {
           </div>
         </div>
       </SectionRevealWrapper>
+
+      <WaveDecoration variant="separator" className="my-12 md:my-20" />
 
       {/* Surroundings Horizontal Gallery — Kept inline but animated */}
       <section className="relative py-6 md:py-20 px-0 bg-transparent overflow-hidden fade-in">
@@ -2797,6 +2805,8 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      <WaveDecoration variant="separator" className="my-12 md:my-20" />
 
       {/* Reviews Section */}
       <SectionRevealWrapper id="reviews">
@@ -2907,6 +2917,8 @@ export default function App() {
         </div>
       </SectionRevealWrapper>
 
+      <WaveDecoration variant="separator" className="my-12 md:my-20" />
+
       {/* Booking Platforms Section */}
       <SectionRevealWrapper id="booking">
         <div className="max-w-6xl mx-auto text-center fade-in w-full px-4">
@@ -2949,6 +2961,8 @@ export default function App() {
           </div>
         </div>
       </SectionRevealWrapper>
+
+      <WaveDecoration variant="separator" className="my-12 md:my-20" />
 
       {/* Contact Section */}
 

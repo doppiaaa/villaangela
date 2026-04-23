@@ -21,98 +21,103 @@ const WaveDecoration = memo(({ variant, className = '' }: WaveDecorationProps) =
         style={{
           position: 'relative',
           width: '100%',
-          height: '60px',
+          height: '100px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           pointerEvents: 'none',
           overflow: 'hidden',
+          margin: '40px 0',
         }}
       >
         <svg
-          viewBox="0 0 400 60"
+          viewBox="0 0 500 100"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          style={{ width: '100%', maxWidth: '500px', height: '60px' }}
+          style={{ width: '100%', maxWidth: '800px', height: '100px' }}
         >
           {/* Central ornament dot */}
           <motion.circle
-            cx="200"
-            cy="30"
-            r="3"
+            cx="250"
+            cy="50"
+            r="5"
             fill="#C9A84C"
-            animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+            animate={{ 
+              scale: [1, 1.4, 1], 
+              opacity: [0.4, 0.8, 0.4],
+              boxShadow: ["0 0 0px #C9A84C", "0 0 10px #C9A84C", "0 0 0px #C9A84C"]
+            }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           />
 
           {/* Left wave line */}
           <motion.path
-            d="M 30 30 Q 70 18, 110 30 Q 150 42, 190 30"
+            d="M 50 50 Q 110 32, 170 50 Q 230 68, 240 50"
             stroke="#C9A84C"
-            strokeWidth="1"
+            strokeWidth="1.5"
             strokeLinecap="round"
             fill="none"
             animate={{
               d: [
-                'M 30 30 Q 70 18, 110 30 Q 150 42, 190 30',
-                'M 30 30 Q 70 22, 110 30 Q 150 38, 190 30',
-                'M 30 30 Q 70 18, 110 30 Q 150 42, 190 30',
+                'M 50 50 Q 110 32, 170 50 Q 230 68, 240 50',
+                'M 50 50 Q 110 38, 170 50 Q 230 62, 240 50',
+                'M 50 50 Q 110 32, 170 50 Q 230 68, 240 50',
               ],
-              opacity: [0.15, 0.3, 0.15],
+              opacity: [0.2, 0.5, 0.2],
             }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           />
 
           {/* Right wave line (mirrored) */}
           <motion.path
-            d="M 210 30 Q 250 18, 290 30 Q 330 42, 370 30"
+            d="M 260 50 Q 270 32, 330 50 Q 390 68, 450 50"
             stroke="#C9A84C"
-            strokeWidth="1"
+            strokeWidth="1.5"
             strokeLinecap="round"
             fill="none"
             animate={{
               d: [
-                'M 210 30 Q 250 18, 290 30 Q 330 42, 370 30',
-                'M 210 30 Q 250 22, 290 30 Q 330 38, 370 30',
-                'M 210 30 Q 250 18, 290 30 Q 330 42, 370 30',
+                'M 260 50 Q 270 32, 330 50 Q 390 68, 450 50',
+                'M 260 50 Q 270 38, 330 50 Q 390 62, 450 50',
+                'M 260 50 Q 270 32, 330 50 Q 390 68, 450 50',
               ],
-              opacity: [0.15, 0.3, 0.15],
+              opacity: [0.2, 0.5, 0.2],
             }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
           />
 
           {/* Subtle second line — left */}
           <motion.path
-            d="M 50 30 Q 90 24, 130 30 Q 170 36, 195 30"
+            d="M 80 50 Q 130 40, 180 50 Q 230 60, 245 50"
             stroke="#a67c52"
-            strokeWidth="0.5"
+            strokeWidth="0.8"
             strokeLinecap="round"
             fill="none"
             animate={{
               d: [
-                'M 50 30 Q 90 24, 130 30 Q 170 36, 195 30',
-                'M 50 30 Q 90 27, 130 30 Q 170 33, 195 30',
-                'M 50 30 Q 90 24, 130 30 Q 170 36, 195 30',
+                'M 80 50 Q 130 40, 180 50 Q 230 60, 245 50',
+                'M 80 50 Q 130 46, 180 50 Q 230 54, 245 50',
+                'M 80 50 Q 130 40, 180 50 Q 230 60, 245 50',
               ],
-              opacity: [0.1, 0.2, 0.1],
+              opacity: [0.15, 0.3, 0.15],
             }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
           />
 
           {/* Subtle second line — right */}
           <motion.path
-            d="M 205 30 Q 230 24, 270 30 Q 310 36, 350 30"
+            d="M 255 50 Q 270 40, 320 50 Q 370 60, 420 50"
             stroke="#a67c52"
-            strokeWidth="0.5"
+            strokeWidth="0.8"
             strokeLinecap="round"
             fill="none"
             animate={{
               d: [
-                'M 205 30 Q 230 24, 270 30 Q 310 36, 350 30',
-                'M 205 30 Q 230 27, 270 30 Q 310 33, 350 30',
-                'M 205 30 Q 230 24, 270 30 Q 310 36, 350 30',
+                'M 255 50 Q 270 40, 320 50 Q 370 60, 420 50',
+                'M 255 50 Q 270 46, 320 50 Q 370 54, 420 50',
+                'M 255 50 Q 270 40, 320 50 Q 370 60, 420 50',
               ],
-              opacity: [0.1, 0.2, 0.1],
+              opacity: [0.15, 0.3, 0.15],
             }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
           />
