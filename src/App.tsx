@@ -2427,11 +2427,11 @@ export default function App() {
         <div className="absolute inset-0 z-0">
           <BackgroundGallery 
             isActive={hoveredUnit === 'apartment'} 
-            images={apartmentGalleryImages}
+            images={apartmentImages}
           />
           <BackgroundGallery 
             isActive={hoveredUnit === 'luxury'} 
-            images={luxuryGalleryImages}
+            images={luxuryImages}
           />
         </div>
         
