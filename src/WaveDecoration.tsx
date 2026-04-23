@@ -27,7 +27,7 @@ const WaveDecoration = memo(({ variant, className = '' }: WaveDecorationProps) =
           justifyContent: 'center',
           pointerEvents: 'none',
           overflow: 'hidden',
-          margin: '40px 0',
+          margin: '40px auto',
         }}
       >
         <svg

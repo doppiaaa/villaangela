@@ -2676,9 +2676,9 @@ export default function App() {
             </button>
           </div>
         </div>
-        {/* E) Units — elegant wave separator */}
-        <WaveDecoration variant="separator" className="my-12 md:my-20" />
       </SectionRevealWrapper>
+
+      <WaveDecoration variant="separator" className="my-12 md:my-20" />
 
       {/* Gallery Section */}
       <SectionRevealWrapper id="gallery">
