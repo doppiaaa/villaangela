@@ -3086,7 +3086,7 @@ export default function App() {
       </div>
 
       {/* Footer Section */}
-      <footer className="relative text-[#e3d1ba] pt-16 px-6 md:px-12 text-center" style={{ background: 'linear-gradient(to bottom, #C4A882 0%, #9B7A52 35%, #7A5C38 65%, #5C3D1E 100%)', paddingBottom: 'calc(2rem + env(safe-area-inset-bottom))' }}>
+      <footer className="relative text-[#e3d1ba] pt-16 px-6 md:px-12 text-center" style={{ background: 'linear-gradient(to bottom, #C4A882 0%, #9B7A52 35%, #7A5C38 65%, #5C3D1E 100%)', paddingBottom: '2rem', overscrollBehavior: 'none' }}>
         {/* F) Footer — ambient wave texture */}
         <WaveDecoration variant="footer" />
         <h2 className="font-serif text-2xl mb-5 tracking-widest uppercase text-[#e3d1ba]">VILLA ANGELA</h2>
