@@ -2189,7 +2189,7 @@ export default function App() {
         
         if (!luxErr && luxFiles) {
           const fetchedLuxury = luxFiles
-            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
+            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp)$/i))
             .map(f => `${baseUrl}/luxury%20house/${f.name}`);
           
           // Combine with initial but avoid duplicates
@@ -2207,7 +2207,7 @@ export default function App() {
 
         if (!aptErr && aptFiles) {
           const fetchedApartment = aptFiles
-            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
+            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp)$/i))
             .map(f => `${baseUrl}/videos/${f.name}`);
           
           const combinedApartment = Array.from(new Set([...initialApartment, ...fetchedApartment]));
@@ -2402,10 +2402,11 @@ export default function App() {
 
   return (
     <div 
-      className="text-[#5C4A3A] selection:bg-[#a67c52] selection:text-white overflow-clip"
+      className="text-[#5C4A3A] selection:bg-[#a67c52] selection:text-white overflow-x-hidden"
       style={{ 
         background: 'linear-gradient(135deg, #C8B89A 0%, #E8DDD0 40%, #F5F0E8 70%, #D4C5B0 100%)',
-        backgroundAttachment: 'fixed'
+        backgroundAttachment: 'fixed',
+        overscrollBehavior: 'none'
       }}
     >
       {/* REAL 3D WEBGL BACKGROUND — Synchronized with scroll */}
