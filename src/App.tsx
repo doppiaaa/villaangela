@@ -2082,9 +2082,9 @@ export default function App() {
   const [translationCache] = useState<Record<string, Review[]>>({});
   const [selectedUnit, setSelectedUnit] = useState<'apartment' | 'luxury' | null>(null);
   const [hoveredUnit, setHoveredUnit] = useState<'apartment' | 'luxury' | null>(null);
-  const [showPrivacy, setShowPrivacy] = useState(false);
-  const [showCookieBanner, setShowCookieBanner] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [apartmentImages, setApartmentImages] = useState<string[]>([]);
+  const [luxuryImages, setLuxuryImages] = useState<string[]>([]);
   const [showAdmin, setShowAdmin] = useState(() => {
     return localStorage.getItem('villa_angela_admin_open') === 'true';
   });
@@ -2115,20 +2115,125 @@ export default function App() {
     setShowComingSoon(true);
     setTimeout(() => setShowComingSoon(false), 3500);
   };
+  useEffect(() => {
+    async function fetchGalleries() {
+      try {
+        const baseUrl = 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public';
+        
+        // List Luxury House Images
+        // Note: We use the existing storage pattern. For automatic listing, we'd need the project's anon key.
+        // For now, we combine the hardcoded high-quality ones with a pattern-based fetch or manual additions
+        const initialLuxury = [
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_01.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_02.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_01.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_02.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_03.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_04.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_01.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_02.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_03.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_04.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_05.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_06.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_07.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_kitchen_01.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_01.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_02.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_03.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_04.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_01.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_02.jpg"
+        ];
+
+        const initialApartment = [
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096753.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911498.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911499.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911505.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911506.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911508.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911510.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911512.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911515.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911517.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911519.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911526.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911527.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911533.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911536.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911537.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334699.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334700.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334701.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334702.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334703.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334704.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334705.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334706.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334707.jpg",
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334708.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334710.jpg", 
+          "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334711.jpg"
+        ];
+
+        // Dynamically fetch Luxury House images
+        const { data: luxFiles, error: luxErr } = await supabase.storage
+          .from('luxury house')
+          .list('', { limit: 100, sortBy: { column: 'name', order: 'desc' } });
+        
+        if (!luxErr && luxFiles) {
+          const fetchedLuxury = luxFiles
+            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp)$/i))
+            .map(f => `${baseUrl}/luxury%20house/${f.name}`);
+          
+          // Combine with initial but avoid duplicates
+          const combinedLuxury = Array.from(new Set([...initialLuxury, ...fetchedLuxury]));
+          setLuxuryImages(combinedLuxury);
+        } else {
+          setLuxuryImages(initialLuxury);
+          if (luxErr) console.warn('Luxury fetch error (Key might be wrong):', luxErr);
+        }
+
+        // Dynamically fetch Apartment images (stored in 'videos' bucket)
+        const { data: aptFiles, error: aptErr } = await supabase.storage
+          .from('videos')
+          .list('', { limit: 100, sortBy: { column: 'name', order: 'desc' } });
+
+        if (!aptErr && aptFiles) {
+          const fetchedApartment = aptFiles
+            .filter(f => f.name.match(/\.(jpg|jpeg|png|webp)$/i))
+            .map(f => `${baseUrl}/videos/${f.name}`);
+          
+          const combinedApartment = Array.from(new Set([...initialApartment, ...fetchedApartment]));
+          setApartmentImages(combinedApartment);
+        } else {
+          setApartmentImages(initialApartment);
+          if (aptErr) console.warn('Apartment fetch error (Key might be wrong):', aptErr);
+        }
+      } catch (err) {
+        console.error('Gallery fetch failed:', err);
+      }
+    }
+    fetchGalleries();
+  }, []);
+
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
 
   const handleNextImage = (e?: any) => {
     e?.stopPropagation();
-    const gallery = selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages;
-    const currentIndex = gallery.indexOf(enlargedImage);
+    const gallery = selectedUnit === 'apartment' ? apartmentImages : luxuryImages;
+    const currentIndex = gallery.indexOf(enlargedImage || '');
     const nextIndex = (currentIndex + 1) % gallery.length;
     setEnlargedImage(gallery[nextIndex]);
   };
 
   const handlePrevImage = (e?: any) => {
     e?.stopPropagation();
-    const gallery = selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages;
-    const currentIndex = gallery.indexOf(enlargedImage);
+    const gallery = selectedUnit === 'apartment' ? apartmentImages : luxuryImages;
+    const currentIndex = gallery.indexOf(enlargedImage || '');
     const prevIndex = (currentIndex - 1 + gallery.length) % gallery.length;
     setEnlargedImage(gallery[prevIndex]);
   };
@@ -2260,43 +2365,7 @@ export default function App() {
     }
   }, []);
 
-  const apartmentGalleryImages = [
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096734.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/676096753.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911497.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911498.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911499.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911505.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911506.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911508.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911510.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911512.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911515.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911517.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911519.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911526.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911527.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911533.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911536.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/683911537.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334699.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334700.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334701.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334702.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334703.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334704.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334705.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334706.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334707.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334708.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334710.jpg", "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/722334711.jpg"
-  ];
-
-  const luxuryGalleryImages = [
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_01.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_main_02.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_01.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_02.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_03.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_outdoor_04.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_01.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_02.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_03.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_04.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_05.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_06.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_living_07.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_kitchen_01.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_01.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_02.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_03.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bed_04.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_01.jpg",
-    "https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/luxury%20house/iks018_bath_02.jpg"
-  ];
-
-  const allGalleryImages = [...apartmentGalleryImages, ...luxuryGalleryImages];
+  // Gallery data is now handled dynamically in App component via state
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -2594,8 +2663,8 @@ export default function App() {
           <div ref={galleryInnerRef} className="flex w-max will-change-transform">
             {[1, 2].map((set) => (
               <div key={set} className="flex gap-4 pr-4">
-                {allGalleryImages.reduce((acc: any[], _: string, i: number) => {
-                  if (i % 6 === 0) acc.push(allGalleryImages.slice(i, i + 6));
+                {[...apartmentImages, ...luxuryImages].reduce((acc: any[], _: string, i: number) => {
+                  if (i % 6 === 0) acc.push([...apartmentImages, ...luxuryImages].slice(i, i + 6));
                   return acc;
                 }, []).map((chunk, idx) => {
                   return (
@@ -3096,15 +3165,25 @@ export default function App() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-20">
-                {(selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages).map((src, idx) => (
-                  <img 
-                    key={src} 
-                    src={src} 
-                    className="w-full h-64 object-cover rounded-2xl cursor-pointer hover:opacity-90 transition-opacity" 
-                    alt={`Gallery ${idx + 1}`} 
-                    onClick={() => setEnlargedImage(src)}
-                  />
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {(isTranslating ? Array(8).fill(0) : (selectedUnit === 'apartment' ? apartmentImages : luxuryImages)).map((src, idx) => (
+                  <div key={src || idx} className="group relative overflow-hidden rounded-2xl shadow-lg aspect-square bg-[#3b2b1f]/5">
+                    {src ? (
+                      <>
+                        <img 
+                          src={src} 
+                          className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform duration-700" 
+                          alt={`Gallery ${idx + 1}`} 
+                          onClick={() => setEnlargedImage(src)}
+                        />
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex items-center justify-center">
+                          <Expand className="text-white w-8 h-8 scale-0 group-hover:scale-100 transition-transform" />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="w-full h-full animate-pulse bg-[#3b2b1f]/10" />
+                    )}
+                  </div>
                 ))}
               </div>
 
@@ -3181,7 +3260,7 @@ export default function App() {
               
               {/* Counter indicator */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/40 backdrop-blur-md rounded-full text-white/70 text-[10px] uppercase tracking-widest font-bold border border-white/10">
-                {(selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages).indexOf(enlargedImage) + 1} / {(selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages).length}
+                {(selectedUnit === 'apartment' ? apartmentImages : luxuryImages).indexOf(enlargedImage || '') + 1} / {(selectedUnit === 'apartment' ? apartmentImages : luxuryImages).length}
               </div>
             </motion.div>
           </motion.div>
