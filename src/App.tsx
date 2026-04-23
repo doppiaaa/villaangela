@@ -2150,8 +2150,24 @@ export default function App() {
             .filter(f => f.name.match(/\.(jpg|jpeg|png|webp|avif)$/i))
             .map(f => `${baseUrl}/videos/${f.name}`);
           
-          setApartmentImages(fetchedApartment);
+          // Force include specific new photos to ensure they appear even if bucket listing is cached
+          const explicitNew = [
+            `${baseUrl}/videos/7d3ff214-b629-4b8f-bfff-75128638c746.avif`,
+            `${baseUrl}/videos/7f51b4d8-add9-4b82-9027-cbd58bdd1161.avif`,
+            `${baseUrl}/videos/ae17cccb-e264-444c-b168-a8efe051e243.avif`,
+            `${baseUrl}/videos/b3b86883-fa6b-445a-9fcd-0f9d42516a52.avif`
+          ];
+          
+          const combinedApartment = Array.from(new Set([...explicitNew, ...fetchedApartment]));
+          setApartmentImages(combinedApartment);
         } else {
+          // Emergency fallback with those 4 files
+          setApartmentImages([
+            `${baseUrl}/videos/7d3ff214-b629-4b8f-bfff-75128638c746.avif`,
+            `${baseUrl}/videos/7f51b4d8-add9-4b82-9027-cbd58bdd1161.avif`,
+            `${baseUrl}/videos/ae17cccb-e264-444c-b168-a8efe051e243.avif`,
+            `${baseUrl}/videos/b3b86883-fa6b-445a-9fcd-0f9d42516a52.avif`
+          ]);
           if (aptErr) console.warn('Apartment fetch error:', aptErr);
         }
       } catch (err) {
