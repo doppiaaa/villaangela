@@ -46,6 +46,12 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Analytics } from '@vercel/analytics/react';
 import Dashboard from './Dashboard';
 import { supabase } from './lib/supabase';
+import AnimatedGradientLayer from './AnimatedGradientLayer';
+import HeroParticles from './HeroParticles';
+import WaveDecoration from './WaveDecoration';
+import RealShaderBackground from './RealShaderBackground';
+import SectionRevealWrapper from './SectionRevealWrapper';
+import { useScroll, useTransform } from 'motion/react';
 
 
 // --- Types & Constants ---
@@ -84,8 +90,9 @@ interface Content {
     guests: string;
     checkIn: string;
     checkOut: string;
-    message: string;
-    desc: string;
+    personalInfo: string;
+    stayDetails: string;
+    messageSection: string;
     submit: string;
   };
   footer: {
@@ -153,7 +160,9 @@ const translations: Record<string, Content> = {
         desc: "An exclusive sanctuary surrounded by tranquility. Elegant design, premium services, and total privacy for an upscale group experience.",
         features: ["Non-smoking accommodation", "Apartment: 80 m²", "Dryer", "Vacuum cleaner", "Air-conditioned", "Consumption costs incl.", "Dishwasher", "Washing machine", "Garden furniture", "Moka", "On-site/free parking: 2 Parking spaces", "Smart TV", "All inclusive", "WiFi"]
       },
-      viewDetails: "View Details"
+      viewDetails: "View Details",
+      commonAmenities: "Shared Amenities",
+      exclusiveAmenities: "Only Here"
     },
     amenities: { 
       title: "Amenities",
@@ -198,8 +207,9 @@ const translations: Record<string, Content> = {
       guests: "Guests",
       checkIn: "Check-in Date",
       checkOut: "Check-out Date",
-      message: "Your Message",
-      desc: "Ready to experience the Mediterranean? Fill out the form below and we will get back to you with availability and a personalized offer.",
+      personalInfo: "Personal Information",
+      stayDetails: "Stay Details",
+      messageSection: "Message",
       submit: "Send Inquiry"
     },
     footer: {
@@ -265,7 +275,9 @@ const translations: Record<string, Content> = {
         desc: "Un santuario esclusivo circondato dalla tranquillità. Design sofisticato, servizi premium e privacy totale per un'esperienza di gruppo di alto livello.",
         features: ["Alloggio per non fumatori", "Appartamento: 80 m²", "Asciugatrice", "Aspirapolvere", "Climatizzata", "Costi a consumo incl.", "Lavastoviglie", "Lavatrice", "Mobili da giardino", "Moka", "Parcheggio in loco/gratuito: 2 Parcheggi", "Smart TV", "Tutto incluso", "WiFi"]
       },
-      viewDetails: "Scopri di più"
+      viewDetails: "Scopri di più",
+      commonAmenities: "Servizi in comune",
+      exclusiveAmenities: "Solo qui"
     },
     amenities: { 
       title: "Servizi",
@@ -310,8 +322,9 @@ const translations: Record<string, Content> = {
       guests: "Ospiti",
       checkIn: "Data Check-in",
       checkOut: "Data Check-out",
-      message: "Il Tuo Messaggio",
-      desc: "Pronti a vivere il Mediterraneo? Compilate il modulo sottostante e vi risponderemo con la disponibilità e un'offerta personalizzata.",
+      personalInfo: "Informazioni Personali",
+      stayDetails: "Dettagli del Soggiorno",
+      messageSection: "Messaggio",
       submit: "Invia Richiesta"
     },
     footer: {
@@ -377,7 +390,9 @@ const translations: Record<string, Content> = {
         desc: "Un sanctuaire exclusif 5 étoiles pour le voyageur exigeant. Design sophistiqué, équipements haut de gamme et intimité inégalée.",
         features: ["Hébergement non-fumeur", "Appartement : 80 m²", "Sèche-linge", "Aspirateur", "Climatisé", "Frais de consommation inclus", "Lave-vaisselle", "Lave-linge", "Mobilier de jardin", "Moka", "Parking sur place/gratuit : 2 Parkings", "Smart TV", "Tout inclus", "WiFi"]
       },
-      viewDetails: "Voir Détails"
+      viewDetails: "Voir Détails",
+      commonAmenities: "Services communs",
+      exclusiveAmenities: "Seulement ici"
     },
     amenities: {
       title: "Services",
@@ -396,8 +411,9 @@ const translations: Record<string, Content> = {
       guests: "Invités",
       checkIn: "Arrivée",
       checkOut: "Départ",
-      message: "Votre message",
-      desc: "Prêt à vivre la Méditerranée ? Remplissez le formulaire ci-dessous et nous vous répondrons avec les disponibilités et une offre personnalisée.",
+      personalInfo: "Informations Personnelles",
+      stayDetails: "Détails du Séjour",
+      messageSection: "Message",
       submit: "Envoyer la demande"
     },
     footer: {
@@ -463,7 +479,9 @@ const translations: Record<string, Content> = {
         desc: "Un santuario exclusivo de 5 estrellas para el viajero exigente. Diseño sofisticado, comodidades premium y privacidad inigualable.",
         features: ["Alojamiento para no fumadores", "Apartamento: 80 m²", "Secadora", "Aspiradora", "Aire acondicionado", "Gastos de consumo incl.", "Lavavajillas", "Lavadora", "Muebles de jardín", "Moka", "Aparcamiento gratuito in situ: 2 Plazas", "Smart TV", "Todo incluido", "WiFi"]
       },
-      viewDetails: "Ver Detalles"
+      viewDetails: "Ver Detalles",
+      commonAmenities: "Servicios comunes",
+      exclusiveAmenities: "Solo aquí"
     },
     amenities: {
       title: "Servicios",
@@ -482,8 +500,9 @@ const translations: Record<string, Content> = {
       guests: "Huéspedes",
       checkIn: "Entrada",
       checkOut: "Salida",
-      message: "Su mensaje",
-      desc: "¿Listo para vivir el Mediterráneo? Complete el formulario a continuación y nos pondremos en contacto con usted con la disponibilidad y una oferta personalizada.",
+      personalInfo: "Información Personal",
+      stayDetails: "Detalles de la Estancia",
+      messageSection: "Mensaje",
       submit: "Enviar consulta"
     },
     footer: {
@@ -549,7 +568,9 @@ const translations: Record<string, Content> = {
         desc: "Ein exklusives 5-Sterne-Heiligtum für den anspruchsvollen Reisenden. Anspruchsvolles Design, erstklassige Annehmlichkeiten und unvergleichliche Privatsphäre.",
         features: ["Nichtraucherunterkunft", "Wohnung: 80 m²", "Wäschetrockner", "Staubsauger", "Klimatisiert", "Nebenkosten inkl.", "Geschirrspüler", "Waschmaschine", "Gartenmöbel", "Moka", "Parkplatz vor Ort/kostenlos: 2 Parkplätze", "Smart TV", "Alles inklusive", "WiFi"]
       },
-      viewDetails: "Details Anzeigen"
+      viewDetails: "Details Anzeigen",
+      commonAmenities: "Gemeinsame Ausstattung",
+      exclusiveAmenities: "Nur hier"
     },
     amenities: {
       title: "Ausstattung",
@@ -568,8 +589,9 @@ const translations: Record<string, Content> = {
       guests: "Gäste",
       checkIn: "Anreise",
       checkOut: "Abreise",
-      message: "Ihre Nachricht",
-      desc: "Bereit, das Mittelmeer zu erleben? Füllen Sie das folgende Formular aus und wir werden uns mit Verfügbarkeit und einem personalisierten Angebot bei Ihnen melden.",
+      personalInfo: "Persönliche Informationen",
+      stayDetails: "Aufenthaltsdetails",
+      messageSection: "Nachricht",
       submit: "Anfrage senden"
     },
     footer: {
@@ -635,7 +657,9 @@ const translations: Record<string, Content> = {
         desc: "Ekskluzywne, 5-gwiazdkowe sanktuarium dla wymagających podróżników. Wyrafinowany design, udogodnienia premium i niezrównana prywatność.",
         features: ["Zakwaterowanie dla niepalących", "Apartament: 80 m²", "Suszarka", "Odkurzacz", "Klimatyzacja", "Koszty zużycia w cenie", "Zmywarka", "Pralka", "Meble ogrodowe", "Moka", "Parking bezpłatny: 2 Miejsca", "Smart TV", "Wszystko w cenie", "WiFi"]
       },
-      viewDetails: "Zobacz Szczegóły"
+      viewDetails: "Zobacz Szczegóły",
+      commonAmenities: "Wspólne udogodnienia",
+      exclusiveAmenities: "Tylko tutaj"
     },
     amenities: {
       title: "Udogodnienia",
@@ -654,8 +678,9 @@ const translations: Record<string, Content> = {
       guests: "Goście",
       checkIn: "Przyjazd",
       checkOut: "Wyjazd",
-      message: "Twoja wiadomość",
-      desc: "Gotowy na doświadczenie śródziemnomorskie? Wypełnij poniższy formularz, a my skontaktujemy się z Tobą w sprawie dostępności i spersonalizowanej oferty.",
+      personalInfo: "Dane osobowe",
+      stayDetails: "Szczegóły pobytu",
+      messageSection: "Wiadomość",
       submit: "Wyślij zapytanie"
     },
     footer: {
@@ -721,7 +746,9 @@ const translations: Record<string, Content> = {
         desc: "优雅的套房，专为追求绝对舒适和风格的客人设计。",
         features: ["禁烟住宿", "公寓：80 平方米", "烘干机", "吸尘器", "空调", "包含能耗费用", "洗碗机", "洗衣机", "户外家具", "咖啡机", "免费停车：2 个车位", "智能电视", "全包服务", "WiFi"]
       },
-      viewDetails: "查看详情"
+      viewDetails: "查看详情",
+      commonAmenities: "共用设施",
+      exclusiveAmenities: "仅限此处"
     },
     amenities: {
       title: "设施",
@@ -742,8 +769,9 @@ const translations: Record<string, Content> = {
       guests: "人数",
       checkIn: "入住日期",
       checkOut: "离店日期",
-      message: "您的留言",
-      desc: "准备好体验地中海了吗？填写下方表格，我们将为您提供空房情况和个性化报价。",
+      personalInfo: "个人信息",
+      stayDetails: "住宿详情",
+      messageSection: "留言",
       submit: "发送查询"
     },
     footer: {
@@ -809,7 +837,9 @@ const translations: Record<string, Content> = {
         desc: "جناح أنيق مصمم للضيوف الذين يبحثون عن الراحة المطلقة والأناقة.",
         features: ["أماكن إقامة لغير المدخنين", "شقة: 80 م²", "مجفف ملابس", "مكنسة كهربائية", "تكييف هواء", "تكاليف الاستهلاك مشمولة", "غسالة أطباق", "غسالة ملابس", "أثاث حدائق", "موكا", "موقف سيارات مجاني: موقفان", "تلفزيون ذكي", "كل شيء مشمول", "WiFi"]
       },
-      viewDetails: "عرض التفاصيل"
+      viewDetails: "عرض التفاصيل",
+      commonAmenities: "مرافق مشتركة",
+      exclusiveAmenities: "حصرياً هنا"
     },
     amenities: {
       title: "المرافق",
@@ -830,8 +860,9 @@ const translations: Record<string, Content> = {
       guests: "الضيوف",
       checkIn: "تاريخ الوصول",
       checkOut: "تاريخ المغادرة",
-      message: "رسالتك",
-      desc: "مستعد لتجربة البحر الأبيض المتوسط؟ املأ النموذج أدناه وسنعاود الاتصال بك لمعرفة التوفر وعرض أسعار مخصص.",
+      personalInfo: "معلومات شخصية",
+      stayDetails: "تفاصيل الإقامة",
+      messageSection: "الرسالة",
       submit: "إرسال الاستفسار"
     },
     footer: {
@@ -897,7 +928,9 @@ const translations: Record<string, Content> = {
         desc: "Elegant suite designet til gæster, der søger absolut komfort og stil.",
         features: ["Røgfri feriebolig", "Lejlighed: 80 m²", "Tørretumbler", "Støvsuger", "Aircondition", "Forbrugsomkostninger inkl.", "Opvaskemaskine", "Vaskemaskine", "Havemøbler", "Moka", "Gratis parkering: 2 Pladser", "Smart TV", "Alt inkluderet", "WiFi"]
       },
-      viewDetails: "Se Detaljer"
+      viewDetails: "Se Detaljer",
+      commonAmenities: "Fælles faciliteter",
+      exclusiveAmenities: "Kun her"
     },
     amenities: {
       title: "Faciliteter",
@@ -918,8 +951,9 @@ const translations: Record<string, Content> = {
       guests: "Gäster",
       checkIn: "Indtjekningsdato",
       checkOut: "Udtjekningsdato",
-      message: "Din Besked",
-      desc: "Klar til at opleve Middelhavet? Udfyld formularen nedenfor, så vender vi tilbage til dig med tilgængelighed og et personligt tilbud.",
+      personalInfo: "Personlige oplysninger",
+      stayDetails: "Opholdsdetaljer",
+      messageSection: "Besked",
       submit: "Send Forespørgsel"
     },
     footer: {
@@ -985,7 +1019,9 @@ const translations: Record<string, Content> = {
         desc: "Elegant svit designad för gäster som söker absolut komfort och stil.",
         features: ["Rökfritt boende", "Lägenhet: 80 m²", "Torktumlare", "Dammsugare", "Luftkonditionering", "Förbrukningskostnader inkl.", "Diskmaskine", "Tvättmaskine", "Utemöbler", "Moka", "Gratis parkering: 2 Platser", "Smart TV", "Allt inkluderat", "WiFi"]
       },
-      viewDetails: "Visa Detaljer"
+      viewDetails: "Visa Detaljer",
+      commonAmenities: "Gemensamma faciliteter",
+      exclusiveAmenities: "Endast här"
     },
     amenities: {
       title: "Faciliteter",
@@ -1006,8 +1042,9 @@ const translations: Record<string, Content> = {
       guests: "Gäster",
       checkIn: "Incheckningsdatum",
       checkOut: "Utcheckningsdatum",
-      message: "Ditt Meddelande",
-      desc: "Redo att uppleva Medelhavet? Fyll i formuläret nedan så återkommer vi till dig med tillgänglighet och ett personligt erbjudande.",
+      personalInfo: "Personlig information",
+      stayDetails: "Vistelsedetaljer",
+      messageSection: "Meddelande",
       submit: "Skicka Förfrågan"
     },
     footer: {
@@ -1905,14 +1942,135 @@ const Concierge = ({ lang, today }: { lang: Language, today: string }) => {
   );
 };
 
-interface Review {
-  name: string;
-  platform: string;
-  metadata: string;
-  stars: number;
-  date: string;
-  quote: string;
-}
+const bookingPortals = {
+  apartment: [
+    {
+      name: 'Airbnb',
+      logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/airbnb-logo.png',
+      color: '#FF5A5F',
+      url: 'https://www.airbnb.it/rooms/1409282031863396948?adults=3&check_in=2026-04-13&check_out=2026-04-20&search_mode=regular_search&source_impression_id=p3_1774436822_P3vo99Wn-EUzQs90&previous_page_section_name=1000&federated_search_id=08a1bc04-c55b-46a1-a785-871dc25a2476',
+      badge: '★ 5.0 · Guest Favourite',
+      textLogo: null
+    },
+    {
+      name: 'Booking.com',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Booking.com_logo.svg',
+      color: '#003580',
+      url: 'https://www.booking.com/hotel/it/amazing-apartment-in-angri.it.html?aid=866831&app_hotel_id=14025234&checkin=2025-05-18&checkout=2025-05-25&from_sn=ios&group_adults=2&group_children=0&label=Share-s5ewYy%401747414014-MUD5hUI%401747419654&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA%2C',
+      badge: '⭐ 9.7 / 10',
+      textLogo: null
+    },
+    {
+      name: 'HomeToGo',
+      logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/hometogo-logo.png',
+      color: '#009B8C',
+      url: 'https://www.hometogo.it/rental/a7c2258e5b60041a73a7fbae9befdf78',
+      badge: null,
+      textLogo: null
+    },
+    {
+      name: 'VRBO',
+      logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/vrbo-logo.png',
+      logoScale: 'scale-[2.0]',
+      color: '#3A5CAB',
+      url: 'https://www.vrbo.com/5615436ha',
+      badge: null,
+      textLogo: null
+    },
+    {
+      name: 'Expedia',
+      logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/expedia-logo.png',
+      color: '#FEC022',
+      url: 'https://www.expedia.it/Angri-Hotel-Villa-Angela-Holiday-Apartment.h115349584.Informazioni-Hotel',
+      badge: null,
+      textLogo: null
+    },
+    {
+      name: 'Agoda',
+      logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/agoda-logo.png',
+      logoScale: 'scale-[1.4]',
+      color: '#5373BB',
+      url: 'https://www.agoda.com/it-it/villa-angela-holiday-apartment/hotel/all/angri-it.html',
+      badge: null,
+      textLogo: null
+    }
+  ],
+  luxury: [
+    {
+      name: 'Booking.com',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Booking.com_logo.svg',
+      color: '#003580',
+      url: 'https://www.booking.com/hotel/it/villa-angela-luxury-house-angri.it.html',
+      badge: null,
+      textLogo: null
+    },
+    {
+      name: 'VRBO',
+      logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/vrbo-logo.png',
+      logoScale: 'scale-[2.0]',
+      color: '#3A5CAB',
+      url: 'https://www.vrbo.com/it-it/affitto-vacanze/p5773777',
+      badge: null,
+      textLogo: null
+    },
+    {
+      name: 'HomeToGo',
+      logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/hometogo-logo.png',
+      color: '#009B8C',
+      url: 'https://www.hometogo.it/rental/d1518f2db437a777c1972b29cb2cd4c9',
+      badge: null,
+      textLogo: null
+    },
+    {
+      name: 'Novasol',
+      logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/novasol.png',
+      color: '#004B87',
+      url: 'https://www.novasol.it/casa-vacanze/angri-iks018',
+      badge: null,
+      textLogo: null
+    }
+  ]
+};
+
+const BookingGrid = ({ portals, content }: { portals: any[], content: any }) => (
+  <div className="grid grid-cols-2 gap-4 content-start">
+    {portals.map((platform) => (
+      <a
+        key={platform.name}
+        href={platform.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ '--platform-color': platform.color } as any}
+        className="group bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-3xl p-4 md:p-6 flex flex-col items-center justify-center gap-4 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-[180px]"
+      >
+        <div className="flex items-center justify-center w-full">
+          {platform.logo ? (
+            <div className={`flex items-center justify-center ${platform.logoScale || ''}`}>
+              <img 
+                src={platform.logo} 
+                alt={platform.name} 
+                className="max-h-[48px] max-w-[120px] object-contain group-hover:scale-110 transition-transform duration-300" 
+              />
+            </div>
+          ) : (
+            <span className={`${platform.textLogo!.style} group-hover:scale-105 transition-transform inline-block`} style={{ color: platform.textLogo!.color }}>
+              {platform.textLogo!.text}
+            </span>
+          )}
+        </div>
+        <span
+          className="text-[9px] min-w-max font-bold uppercase tracking-widest px-2 md:px-3 py-1 rounded-full text-center shrink-0"
+          style={{ backgroundColor: platform.color + '18', color: platform.color }}
+        >
+          {platform.badge || content.legal.bookingPlatforms.availableNow}
+        </span>
+        <span className="text-[9px] uppercase tracking-widest font-bold text-[#3D2B1F]/50 flex items-center gap-1 group-hover:text-[var(--platform-color)] transition-colors shrink-0">
+          {content.legal.bookingPlatforms.viewListing} →
+        </span>
+      </a>
+    ))}
+  </div>
+);
 
 export default function App() {
   const supportedLangs: Language[] = ['en', 'it', 'fr', 'es', 'de', 'pl', 'zh', 'ar', 'da', 'sv'];
@@ -2153,10 +2311,41 @@ export default function App() {
     return () => observer.disconnect();
   }, []);
 
+  const { scrollYProgress } = useScroll();
+
+  // Optimized color mapping for the 3D Shader Background
+  // Transitioning through Villa Angela palette based on scroll position
+  const color1 = useTransform(scrollYProgress, 
+    [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1], 
+    ["#E8DDD0", "#F5EFE6", "#a67c52", "#C9A84C", "#9A8070", "#F5EFE6", "#C9A84C", "#a67c52"]
+  );
+  const color2 = useTransform(scrollYProgress, 
+    [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1], 
+    ["#F5EFE6", "#E8DDD0", "#C9A84C", "#a67c52", "#F5EFE6", "#a67c52", "#9A8070", "#E8DDD0"]
+  );
+  const color3 = useTransform(scrollYProgress, 
+    [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1], 
+    ["#a67c52", "#C9A84C", "#F5EFE6", "#E8DDD0", "#a67c52", "#C9A84C", "#F5EFE6", "#9A8070"]
+  );
+
   return (
-    <div className="bg-transparent text-[#5C4A3A] selection:bg-[#a67c52] selection:text-white overflow-x-hidden">
-      <div className="bg-[linear-gradient(135deg,#C8B89A_0%,#E8DDD0_40%,#F5F0E8_70%,#D4C5B0_100%)]">
-      {/* Styles moved to index.css to prevent scroll blocking on state updates */}
+    <div 
+      className="text-[#5C4A3A] selection:bg-[#a67c52] selection:text-white overflow-x-hidden"
+      style={{ 
+        background: 'linear-gradient(135deg, #C8B89A 0%, #E8DDD0 40%, #F5F0E8 70%, #D4C5B0 100%)',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      {/* REAL 3D WEBGL BACKGROUND — Synchronized with scroll */}
+      <motion.div>
+        <RealShaderBackground 
+          color1={color1.get()} 
+          color2={color2.get()} 
+          color3={color3.get()} 
+        />
+      </motion.div>
+
+      <div className="relative">
       <Nav lang={lang} setLang={setLang} />
       
       {/* Hero Section */}
@@ -2187,11 +2376,14 @@ export default function App() {
         {/* Pellicola opaca (Overlay) */}
         <div className="absolute inset-0 hero-overlay z-10 pointer-events-none transition-colors duration-1000"></div>
         
+        {/* D) Hero — floating luminous particles */}
+        <HeroParticles />
+        
         {/* Top fade — for smooth transition to status bar */}
         <div className="absolute top-0 left-0 right-0 pointer-events-none z-30" style={{ height: '140px', background: 'linear-gradient(to top, transparent 0%, rgba(30,50,60,0.3) 40%, rgba(30,50,60,0.8) 85%, #1E323C 100%)' }}></div>
         
         {/* Bottom fade — inside the hero, within overflow-hidden */}
-        <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-30" style={{ height: '280px', background: 'linear-gradient(to bottom, transparent 0%, rgba(200,184,154,0.25) 30%, rgba(216,200,178,0.55) 55%, rgba(232,221,208,0.82) 75%, #E8DDD0 100%)' }}></div>
+        <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-30" style={{ height: '420px', background: 'linear-gradient(to bottom, transparent 0%, rgba(200,184,154,0.25) 30%, rgba(216,200,178,0.55) 55%, rgba(232,221,208,0.82) 75%, #E8DDD0 100%)' }}></div>
         
         <div className="relative z-20 flex flex-col items-center justify-center w-full h-full gap-8 md:gap-20 pt-8 md:pt-16">
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-16 w-full max-w-6xl px-4">
@@ -2239,42 +2431,80 @@ export default function App() {
         </div>
       </section>
 
+      {/* Bridge between Hero and About, perfectly full-width, not clipped */}
+      <div className="relative w-full z-20 pointer-events-none" style={{ height: 0 }}>
+        <div className="absolute top-[0px] left-0 right-0" style={{ height: '200px', background: 'linear-gradient(to bottom, #E8DDD0 0%, rgba(232,221,208,0.6) 50%, transparent 100%)' }}></div>
+      </div>
+
       {/* About Section */}
-      <section id="about" className="relative py-12 md:py-24 px-4 md:px-12 flex flex-col items-center text-center bg-transparent">
-        {/* Top bridge: matches hero gradient end color and fades into the page background */}
-        <div className="absolute top-0 left-0 right-0 pointer-events-none" style={{ height: '150px', background: 'linear-gradient(to bottom, #E8DDD0 0%, rgba(232,221,208,0.6) 50%, transparent 100%)' }}></div>
-        <div className="max-w-4xl fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-16 rounded-[2.5rem]">
-          <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-8">{content.about.title}</h2>
-          <div className="w-24 h-px bg-[#a67c52] mx-auto mb-10"></div>
-          <p className="text-[1.05rem] md:text-[1.15rem] leading-[2] md:leading-[2.2] text-[#3D2B1F] font-medium max-w-2xl mx-auto">
-            {content.about.text}
-          </p>
+      <SectionRevealWrapper id="about">
+        <div className="relative w-full max-w-4xl mx-auto px-4">
+          <div className="fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-16 rounded-[2.5rem] w-full">
+            <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-8">{content.about.title}</h2>
+            <div className="w-24 h-px bg-[#a67c52] mx-auto mb-10"></div>
+            <p className="text-[1.05rem] md:text-[1.15rem] leading-[2] md:leading-[2.2] text-[#3D2B1F] font-medium max-w-2xl mx-auto">
+              {content.about.text}
+            </p>
+          </div>
         </div>
-      </section>
+      </SectionRevealWrapper>
 
       {/* The Two Units Section */}
-      <section id="units" className="py-12 md:py-24 px-4 md:px-12 bg-transparent">
+      <SectionRevealWrapper id="units">
         <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-16 text-center fade-in">{content.units.title}</h2>
-        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto w-full">
           {/* Apartment Card */}
           <div className="unit-card bg-white/85 backdrop-blur-[2px] border border-white/20 text-[#3D2B1F] p-6 md:p-12 rounded-3xl flex flex-col items-center text-center fade-in shadow-[0_8px_32px_rgba(100,70,40,0.08)]">
             <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/holiday-fixed.png" alt="Villa Angela Holiday Apartment Logo" className="h-40 mb-8 rounded-xl object-contain shadow-md" />
             <h3 className="font-serif text-[1.8rem] md:text-[2.2rem] font-medium text-[#3D2B1F] mb-4">{content.units.apartment.name}</h3>
             <p className="text-[#5C4A3A] mb-8 flex-1 font-medium leading-[1.7] text-[0.95rem]">{content.units.apartment.desc}</p>
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              {content.units.apartment.features.map(f => (
-                <span key={f} className="text-[10px] uppercase tracking-widest border border-[#a67c52]/50 px-3 py-1 rounded-full text-[#a67c52] font-bold">
-                  {f}
-                </span>
-              ))}
+            
+            <div className="w-full text-left mb-8 mt-auto">
+              <h4 className="text-[11px] uppercase tracking-[0.15em] font-extrabold text-[#5C4A3A] mb-4 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#5C4A3A] rounded-full"></span>
+                {content.units.commonAmenities}
+              </h4>
+              <div className="grid grid-cols-2 gap-y-3 gap-x-2">
+                <div className="flex items-center gap-2 text-[#5C4A3A] text-[13px] font-medium tracking-wide">
+                  <Wifi size={16} strokeWidth={1.5} className="min-w-[16px]" /> <span className="truncate">{content.units.apartment.features[0]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#5C4A3A] text-[13px] font-medium tracking-wide">
+                  <Car size={16} strokeWidth={1.5} className="min-w-[16px]" /> <span className="truncate">{content.units.apartment.features[4]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#5C4A3A] text-[13px] font-medium tracking-wide">
+                  <Wind size={16} strokeWidth={1.5} className="min-w-[16px]" /> <span className="truncate">{content.units.apartment.features[6]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#5C4A3A] text-[13px] font-medium tracking-wide">
+                  <Shirt size={16} strokeWidth={1.5} className="min-w-[16px]" /> <span className="truncate">{content.units.apartment.features[8]}</span>
+                </div>
+              </div>
+
+              <div className="w-full h-px bg-[#a67c52]/20 my-6"></div>
+
+              <h4 className="text-[11px] uppercase tracking-[0.15em] font-extrabold text-[#a67c52] mb-4 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#a67c52] rounded-full"></span>
+                {content.units.exclusiveAmenities || "Only Here"}
+              </h4>
+              <div className="grid grid-cols-2 gap-y-3 gap-x-2">
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Utensils size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.apartment.features[1]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Home size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.apartment.features[2]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Maximize size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.apartment.features[3]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Dog size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.apartment.features[5]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Bath size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.apartment.features[7]}</span>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-4 gap-6 mb-10 text-[#5C4A3A]/70">
-              <Wifi size={24} />
-              <Utensils size={24} />
-              <Wind size={24} />
-              <Tv size={24} />
-            </div>
-            <button onClick={() => setSelectedUnit('apartment')} className="bg-[#a67c52] text-white px-8 py-3 rounded-full uppercase tracking-widest text-xs font-bold hover:bg-white hover:text-[#3D2B1F] transition-colors shadow-md">
+
+            <button onClick={() => setSelectedUnit('apartment')} className="bg-[#a67c52] text-white px-8 py-3 rounded-full uppercase tracking-widest text-xs font-bold hover:bg-white hover:text-[#3D2B1F] transition-colors shadow-md w-[80%]">
               {content.units.viewDetails}
             </button>
           </div>
@@ -2284,28 +2514,78 @@ export default function App() {
             <img src="https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/luxury-fixed.jpg" alt="Villa Angela Luxury House Logo" className="h-40 mb-8 rounded-xl object-contain shadow-md opacity-90" />
             <h3 className="font-serif text-[1.8rem] md:text-[2.2rem] font-medium text-[#3D2B1F] mb-4">{content.units.luxury.name}</h3>
             <p className="text-[#5C4A3A] mb-8 flex-1 font-medium leading-[1.7] text-[0.95rem]">{content.units.luxury.desc}</p>
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              {content.units.luxury.features.map(f => (
-                <span key={f} className="text-[10px] uppercase tracking-widest border border-[#a67c52]/50 px-3 py-1 rounded-full text-[#a67c52] font-bold">
-                  {f}
-                </span>
-              ))}
+            
+            <div className="w-full text-left mb-8 mt-auto">
+              <h4 className="text-[11px] uppercase tracking-[0.15em] font-extrabold text-[#5C4A3A] mb-4 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#5C4A3A] rounded-full"></span>
+                {content.units.commonAmenities || "Shared Amenities"}
+              </h4>
+              <div className="grid grid-cols-2 gap-y-3 gap-x-2">
+                <div className="flex items-center gap-2 text-[#5C4A3A] text-[13px] font-medium tracking-wide">
+                  <Wifi size={16} strokeWidth={1.5} className="min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[13]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#5C4A3A] text-[13px] font-medium tracking-wide">
+                  <Car size={16} strokeWidth={1.5} className="min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[10]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#5C4A3A] text-[13px] font-medium tracking-wide">
+                  <Wind size={16} strokeWidth={1.5} className="min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[4]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#5C4A3A] text-[13px] font-medium tracking-wide">
+                  <Shirt size={16} strokeWidth={1.5} className="min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[7]}</span>
+                </div>
+              </div>
+
+              <div className="w-full h-px bg-[#a67c52]/20 my-6"></div>
+
+              <h4 className="text-[11px] uppercase tracking-[0.15em] font-extrabold text-[#a67c52] mb-4 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#a67c52] rounded-full"></span>
+                {content.units.exclusiveAmenities || "Only Here"}
+              </h4>
+              <div className="grid grid-cols-2 gap-y-3 gap-x-2">
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Circle size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[0]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Maximize size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[1]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Fan size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[2]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Fan size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[3]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Circle size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[5]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Waves size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[6]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Palmtree size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[8]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Coffee size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[9]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Tv size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[11]}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[#3D2B1F] text-[13px] font-medium tracking-wide">
+                  <Star size={16} strokeWidth={1.5} className="text-[#a67c52] min-w-[16px]" /> <span className="truncate">{content.units.luxury.features[12]}</span>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-4 gap-6 mb-10 text-[#5C4A3A]/70">
-              <Waves size={24} />
-              <Wind size={24} />
-              <Coffee size={24} />
-              <Sun size={24} />
-            </div>
-            <button onClick={() => setSelectedUnit('luxury')} className="bg-[#a67c52] text-white px-8 py-3 rounded-full uppercase tracking-widest text-xs font-bold hover:bg-white hover:text-[#3D2B1F] transition-colors shadow-md">
+
+            <button onClick={() => setSelectedUnit('luxury')} className="bg-[#a67c52] text-white px-8 py-3 rounded-full uppercase tracking-widest text-xs font-bold hover:bg-white hover:text-[#3D2B1F] transition-colors shadow-md w-[80%]">
               {content.units.viewDetails}
             </button>
           </div>
         </div>
-      </section>
+        {/* E) Units — elegant wave separator */}
+        <WaveDecoration variant="separator" className="mt-8" />
+      </SectionRevealWrapper>
 
       {/* Gallery Section */}
-      <section id="gallery" className="py-12 md:py-24 px-0 bg-transparent overflow-hidden fade-in">
+      <SectionRevealWrapper id="gallery">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">
           {content.gallery}
         </h2>
@@ -2352,22 +2632,21 @@ export default function App() {
             ))}
           </div>
         </div>
-      </section>
+      </SectionRevealWrapper>
 
-      <section className="py-6 md:py-24 px-6 md:px-12 bg-transparent" id="servizi-section">
+      <SectionRevealWrapper id="servizi-section">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-6 md:mb-10 fade-in">
           {content.amenities.title}
         </h2>
-        <div className="max-w-[1100px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch px-4 md:px-0">
+        <div className="max-w-[1100px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch px-4 md:px-0 w-full">
           {content.amenities.items.map((item, idx) => (
             <AmenityCard key={idx} item={item} index={idx} />
           ))}
         </div>
-      </section>
+      </SectionRevealWrapper>
 
-      {/* Location Section */}
-      <section id="location" className="py-6 md:py-24 px-4 md:px-12 bg-transparent">
-        <div className="max-w-4xl mx-auto text-center fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-16 rounded-[2.5rem]">
+      <SectionRevealWrapper id="location">
+        <div className="max-w-4xl mx-auto text-center fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-16 rounded-[2.5rem] w-full">
           <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-6 md:mb-10">{content.location.title}</h2>
           <div className="w-16 h-px bg-[#a67c52] mx-auto mb-6 md:mb-10"></div>
           <p className="text-lg text-[#3D2B1F] mb-8 font-medium leading-relaxed">{content.location.desc}</p>
@@ -2386,10 +2665,10 @@ export default function App() {
             ></iframe>
           </div>
         </div>
-      </section>
-      
-      {/* Surroundings Horizontal Gallery */}
-      <section className="py-6 md:py-20 px-0 bg-transparent overflow-hidden fade-in">
+      </SectionRevealWrapper>
+
+      {/* Surroundings Horizontal Gallery — Kept inline but animated */}
+      <section className="relative py-6 md:py-20 px-0 bg-transparent overflow-hidden fade-in">
         <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-6 md:mb-10">{content.location.galleryTitle}</h2>
         
         <div ref={locationContainerRef} className="w-full overflow-hidden relative cursor-grab active:cursor-grabbing select-none">
@@ -2426,8 +2705,8 @@ export default function App() {
       </section>
 
       {/* Reviews Section */}
-      <section id="reviews" className="relative py-6 md:py-24 px-4 md:px-12 bg-transparent overflow-hidden">
-        <div className="max-w-7xl mx-auto text-center fade-in">
+      <SectionRevealWrapper id="reviews">
+        <div className="max-w-7xl mx-auto text-center fade-in w-full px-4">
           <h2 className="text-center font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-6 md:mb-12">{content.reviews.title}</h2>
           
           <div className="relative group">
@@ -2532,112 +2811,60 @@ export default function App() {
             </div>
           )}
         </div>
-      </section>
+      </SectionRevealWrapper>
 
       {/* Booking Platforms Section */}
-      <section id="booking" className="py-20 px-6 md:px-12 bg-transparent">
-        <div className="max-w-5xl mx-auto text-center fade-in">
+      <SectionRevealWrapper id="booking">
+        <div className="max-w-6xl mx-auto text-center fade-in w-full px-4">
           <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-10">
             {content.legal.bookingPlatforms.title}
           </h2>
           <p className="text-[#5C4A3A] font-medium mb-16 text-lg">
             {content.legal.bookingPlatforms.subtitle}
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-5">
-            {[
-              {
-                name: 'Airbnb',
-                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/airbnb-logo.png',
-                color: '#FF5A5F',
-                url: 'https://www.airbnb.it/rooms/1409282031863396948?adults=3&check_in=2026-04-13&check_out=2026-04-20&search_mode=regular_search&source_impression_id=p3_1774436822_P3vo99Wn-EUzQs90&previous_page_section_name=1000&federated_search_id=08a1bc04-c55b-46a1-a785-871dc25a2476',
-                badge: '★ 5.0 · Guest Favourite',
-                textLogo: null
-              },
-              {
-                name: 'Booking.com',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Booking.com_logo.svg',
-                color: '#003580',
-                url: 'https://www.booking.com/hotel/it/amazing-apartment-in-angri.it.html?aid=866831&app_hotel_id=14025234&checkin=2025-05-18&checkout=2025-05-25&from_sn=ios&group_adults=2&group_children=0&label=Share-s5ewYy%401747414014-MUD5hUI%401747419654&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA%2C',
-                badge: '⭐ 9.7 / 10',
-                textLogo: null
-              },
-              {
-                name: 'HomeToGo',
-                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/hometogo-logo.png',
-                color: '#009B8C',
-                url: 'https://www.hometogo.it/rental/a7c2258e5b60041a73a7fbae9befdf78',
-                badge: content.legal.bookingPlatforms.availableNow,
-                textLogo: null
-              },
-              {
-                name: 'VRBO',
-                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/vrbo-logo.png',
-                logoScale: 'scale-[2.0]',
-                color: '#3A5CAB',
-                url: 'https://www.vrbo.com/5615436ha',
-                badge: content.legal.bookingPlatforms.directListing,
-                textLogo: null
-              },
-              {
-                name: 'Expedia',
-                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/expedia-logo.png',
-                color: '#FEC022',
-                url: 'https://www.expedia.it/Angri-Hotel-Villa-Angela-Holiday-Apartment.h115349584.Informazioni-Hotel',
-                badge: content.legal.bookingPlatforms.directListing,
-                textLogo: null
-              },
-              {
-                name: 'Agoda',
-                logo: 'https://lizeyrhkjhqhoeafonzi.supabase.co/storage/v1/object/public/videos/agoda-logo.png',
-                logoScale: 'scale-[1.4]',
-                color: '#5373BB',
-                url: 'https://www.agoda.com/it-it/villa-angela-holiday-apartment/hotel/all/angri-it.html',
-                badge: content.legal.bookingPlatforms.directListing,
-                textLogo: null
-              }
-            ].map((platform) => (
-              <a
-                key={platform.name}
-                href={platform.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ '--platform-color': platform.color } as any}
-                className="group bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-3xl p-6 flex flex-col items-center gap-4 hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
-              >
-                <div className="h-12 flex items-center justify-center w-full">
-                  {platform.logo ? (
-                    <div className={`flex items-center justify-center ${platform.logoScale || ''}`}>
-                      <img 
-                        src={platform.logo} 
-                        alt={platform.name} 
-                        className="max-h-9 max-w-[120px] object-contain group-hover:scale-110 transition-transform duration-300" 
-                      />
-                    </div>
-                  ) : (
-                    <span className={`${platform.textLogo!.style} group-hover:scale-105 transition-transform inline-block`} style={{ color: platform.textLogo!.color }}>
-                      {platform.textLogo!.text}
-                    </span>
-                  )}
-                </div>
-                <span
-                  className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full text-center"
-                  style={{ backgroundColor: platform.color + '18', color: platform.color }}
-                >
-                  {platform.badge}
-                </span>
-                <span className="text-[10px] uppercase tracking-widest font-bold text-[#3D2B1F]/50 flex items-center gap-1 group-hover:text-[var(--platform-color)] transition-colors">
-                  {content.legal.bookingPlatforms.viewListing} →
-                </span>
-              </a>
-            ))}
+          <div className="grid lg:grid-cols-[1fr_auto_1fr] gap-8 md:gap-10 w-full max-w-6xl mx-auto">
+            
+            {/* Holiday Apartment */}
+            <div className="flex flex-col">
+              <h3 className="font-serif text-[1.4rem] md:text-[1.8rem] font-medium text-[#3D2B1F] mb-6 flex-wrap flex justify-center items-center gap-3 w-full">
+                <span className="w-8 h-px bg-[#a67c52]/30 hidden sm:block"></span>
+                <span className="text-center">{content.units.apartment.name}</span>
+                <span className="w-8 h-px bg-[#a67c52]/30 hidden sm:block"></span>
+              </h3>
+              <BookingGrid portals={bookingPortals.apartment} content={content} />
+            </div>
+
+            {/* Vertical Divider for desktop */}
+            <div className="hidden lg:flex justify-center items-center w-8">
+              <div className="w-px h-[85%] bg-[#a67c52]/20 mt-12"></div>
+            </div>
+
+            {/* Divider for mobile */}
+            <div className="w-full h-px bg-[#a67c52]/20 lg:hidden block"></div>
+
+            {/* Luxury House */}
+            <div className="flex flex-col">
+              <h3 className="font-serif text-[1.4rem] md:text-[1.8rem] font-medium text-[#3D2B1F] mb-6 flex-wrap flex justify-center items-center gap-3 w-full">
+                <span className="w-8 h-px bg-[#a67c52]/30 hidden sm:block"></span>
+                <span className="text-center">{content.units.luxury.name}</span>
+                <span className="w-8 h-px bg-[#a67c52]/30 hidden sm:block"></span>
+              </h3>
+              <BookingGrid portals={bookingPortals.luxury} content={content} />
+            </div>
+
           </div>
         </div>
-      </section>
+      </SectionRevealWrapper>
 
       {/* Contact Section */}
 
-      <section id="contact" className="relative py-6 md:py-24 px-4 md:px-12" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)' }}>
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16">
+      <SectionRevealWrapper 
+        id="contact"
+        style={{
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(196,168,130,0.08) 20%, rgba(196,168,130,0.25) 45%, rgba(196,168,130,0.50) 65%, rgba(196,168,130,0.78) 82%, #C4A882 100%)'
+        }}
+      >
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 w-full px-4">
           <div className="fade-in">
             <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-12">{content.contact.title}</h2>
             <p className="text-[#3D2B1F] font-medium mb-10 md:mb-16 leading-relaxed text-[1.05rem] md:text-[1.1rem]">
@@ -2692,7 +2919,7 @@ export default function App() {
               <div className="border-b border-[#a67c52]/10 pb-3">
                 <h3 className="text-[16px] font-extrabold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
-                  {lang === 'it' ? 'Informazioni Personali' : 'Personal Information'}
+                  {content.contact.personalInfo}
                 </h3>
               </div>
               <div className="grid md:grid-cols-2 gap-5">
@@ -2712,7 +2939,7 @@ export default function App() {
               <div className="border-b border-[#a67c52]/10 pb-3">
                 <h3 className="text-[16px] font-extrabold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
-                  {lang === 'it' ? 'Dettagli del Soggiorno' : 'Stay Details'}
+                  {content.contact.stayDetails}
                 </h3>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -2769,7 +2996,7 @@ export default function App() {
               <div className="border-b border-[#a67c52]/10 pb-3">
                 <h3 className="text-[16px] font-extrabold uppercase tracking-[0.2em] text-[#a67c52] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#a67c52]"></span>
-                  {lang === 'it' ? 'Messaggio' : 'Message'}
+                  {content.contact.messageSection}
                 </h3>
               </div>
               <div className="space-y-2">
@@ -2783,11 +3010,13 @@ export default function App() {
             </button>
           </form>
         </div>
-      </section>
+      </SectionRevealWrapper>
       </div>
 
       {/* Footer Section */}
-      <footer className="text-[#e3d1ba] pt-16 px-6 md:px-12 text-center" style={{ background: 'linear-gradient(to bottom, #C4A882 0%, #9B7A52 35%, #7A5C38 65%, #5C3D1E 100%)', paddingBottom: 'calc(2rem + env(safe-area-inset-bottom))' }}>
+      <footer className="relative text-[#e3d1ba] pt-16 px-6 md:px-12 text-center" style={{ background: 'linear-gradient(to bottom, #C4A882 0%, #9B7A52 35%, #7A5C38 65%, #5C3D1E 100%)', paddingBottom: 'calc(2rem + env(safe-area-inset-bottom))' }}>
+        {/* F) Footer — ambient wave texture */}
+        <WaveDecoration variant="footer" />
         <h2 className="font-serif text-2xl mb-5 tracking-widest uppercase text-[#e3d1ba]">VILLA ANGELA</h2>
         
         <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-6 mb-3 text-[13px] md:text-[15px] tracking-widest uppercase font-medium text-[#e3d1ba]/80">
@@ -2867,7 +3096,7 @@ export default function App() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-20">
                 {(selectedUnit === 'apartment' ? apartmentGalleryImages : luxuryGalleryImages).map((src, idx) => (
                   <img 
                     key={src} 
@@ -2877,6 +3106,22 @@ export default function App() {
                     onClick={() => setEnlargedImage(src)}
                   />
                 ))}
+              </div>
+
+              {/* Unit Specific Booking Section */}
+              <div className="max-w-4xl mx-auto w-full border-t border-[#a67c52]/10 pt-16 mt-16">
+                <div className="text-center mb-12">
+                  <h3 className="font-serif text-[2.2rem] md:text-[2.8rem] text-[#3D2B1F] mb-4">
+                    {content.legal.bookingPlatforms.title}
+                  </h3>
+                  <div className="w-16 h-px bg-[#a67c52] mx-auto mb-6"></div>
+                </div>
+                <div className="max-w-3xl mx-auto">
+                  <BookingGrid 
+                    portals={selectedUnit === 'apartment' ? bookingPortals.apartment : bookingPortals.luxury} 
+                    content={content} 
+                  />
+                </div>
               </div>
               
             </div>

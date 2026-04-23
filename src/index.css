@@ -22,7 +22,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: #5C3D1E; /* Brown for bottom overscroll */
+    background: linear-gradient(135deg, #C8B89A 0%, #E8DDD0 40%, #F5F0E8 70%, #D4C5B0 100%);
   }
   
   body {
@@ -207,4 +207,37 @@
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 12px;
   align-items: stretch;
+}
+
+/* ── Dynamic Effects: Animated Gradient ── */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 100% 0%; }
+  50% { background-position: 100% 100%; }
+  75% { background-position: 0% 100%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Dynamic Effects: Accessibility ── */
+@media (prefers-reduced-motion: reduce) {
+  [data-shader],
+  [data-rive],
+  .animated-gradient-layer,
+  .hero-particles,
+  .wave-decoration {
+    display: none !important;
+  }
+}
+
+/* ── Dynamic Effects: Mobile Performance ── */
+@media (max-width: 767px) {
+  .animated-gradient-layer {
+    display: none !important;
+  }
+  .hero-particles {
+    opacity: 0.08 !important;
+  }
+  .wave-decoration {
+    opacity: 0.06 !important;
+  }
 }
