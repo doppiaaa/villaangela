@@ -2509,9 +2509,9 @@ export default function App() {
       <SectionRevealWrapper id="about">
         <div className="relative w-full max-w-4xl mx-auto px-4">
           <div className="fade-in bg-white/30 backdrop-blur-[12px] border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6 md:p-16 rounded-[2.5rem] w-full">
-            <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-8">{content.about.title}</h2>
+            <h2 className="font-serif text-[2.8rem] md:text-[3.5rem] font-medium text-[#3D2B1F] tracking-wide mb-8 text-center">{content.about.title}</h2>
             <div className="w-24 h-px bg-[#a67c52] mx-auto mb-10"></div>
-            <p className="text-[1.05rem] md:text-[1.15rem] leading-[2] md:leading-[2.2] text-[#3D2B1F] font-medium max-w-2xl mx-auto">
+            <p className="text-[1.05rem] md:text-[1.15rem] leading-[2] md:leading-[2.2] text-[#3D2B1F] font-medium max-w-2xl mx-auto text-center">
               {content.about.text}
             </p>
           </div>
