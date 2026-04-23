@@ -38,7 +38,6 @@ import {
   Palmtree,
   Zap,
   Fan,
-  Snowflake,
   Microwave,
   Refrigerator,
   Circle
