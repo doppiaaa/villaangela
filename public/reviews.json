@@ -1,5 +1,13 @@
 [
   {
+    "name": "Esther",
+    "platform": "airbnb",
+    "metadata": "10 anni su Airbnb",
+    "stars": 5,
+    "date": "Aprile 2026",
+    "quote": "Che posizione fantastica, perfetta per visitare la Costiera Amalfitana. Lo consiglio a tutti; la casa è molto pulita. Davvero meravigliosa."
+  },
+  {
     "name": "Tommasina",
     "platform": "airbnb",
     "metadata": "4 anni su Airbnb",
